@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+:root {
+  --background: #010916;
+  --foreground: #f6f7fb;
+  --accent: #5dd2ff;
+  --muted: #93a0c0;
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--accent);
+}
+
+::selection {
+  background: rgba(93, 210, 255, 0.3);
+}
