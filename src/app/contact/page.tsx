@@ -1,3 +1,5 @@
+"use client";
+
 export default function ContactPage() {
   return (
     <main className="max-w-6xl mx-auto px-6 py-20">
