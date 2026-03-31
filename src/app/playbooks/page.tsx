@@ -6,6 +6,22 @@ export const metadata: Metadata = {
   title: "Playbooks — OnboardSuccess",
   description:
     "Deep dives into AI-powered Customer Success strategy for B2B SaaS teams.",
+  openGraph: {
+    title: "Playbooks — OnboardSuccess",
+    description:
+      "Deep dives into AI-powered Customer Success strategy for B2B SaaS teams.",
+    url: "https://www.onboard-success.com/playbooks",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Playbooks — OnboardSuccess",
+    description:
+      "Deep dives into AI-powered Customer Success strategy for B2B SaaS teams.",
+  },
+  alternates: {
+    canonical: "/playbooks",
+  },
 };
 
 export default function PlaybooksPage() {

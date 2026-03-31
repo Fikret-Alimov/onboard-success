@@ -2,12 +2,32 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import Link from "next/link";
 import EmailCapture from "@/components/EmailCapture";
+import JsonLd from "@/components/JsonLd";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.onboard-success.com"),
   title: "OnboardSuccess — CS AI Resources for B2B SaaS Teams",
   description:
     "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, and integrator listings for mid-market B2B SaaS.",
+  openGraph: {
+    title: "OnboardSuccess — CS AI Resources for B2B SaaS Teams",
+    description:
+      "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, and integrator listings for mid-market B2B SaaS.",
+    url: "https://www.onboard-success.com",
+    siteName: "OnboardSuccess",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OnboardSuccess — CS AI Resources for B2B SaaS Teams",
+    description:
+      "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, and integrator listings for mid-market B2B SaaS.",
+  },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 function Navbar() {
@@ -104,6 +124,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-navy text-white min-h-screen flex flex-col">
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Onboard Success",
+            url: "https://www.onboard-success.com",
+            description:
+              "The AI resource hub for Customer Success teams in mid-market B2B SaaS",
+          }}
+        />
         <Navbar />
         <main className="flex-1 pt-16">{children}</main>
         <Footer />

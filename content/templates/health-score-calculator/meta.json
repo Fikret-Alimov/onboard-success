@@ -1,0 +1,15 @@
+{
+  "id": "health-score-calculator",
+  "name": "AI Health Score Calculator",
+  "description": "Aggregates multi-source signals (usage, support, engagement, sentiment) into a dynamic health score updated daily.",
+  "longDescription": "Creates a composite health score from multiple data sources: product usage data from Mixpanel, support ticket frequency and severity from Zendesk, email engagement metrics, NPS/CSAT scores from Salesforce, and stakeholder activity signals. Runs daily to update each account's health score and posts a summary to Slack with accounts that changed status.",
+  "category": "Health Monitoring",
+  "platform": "n8n",
+  "difficulty": "Advanced",
+  "setupTime": "45 minutes",
+  "integrations": ["Salesforce", "Zendesk", "Mixpanel", "Slack"],
+  "tier": "pro",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-31",
+  "downloads": 0
+}

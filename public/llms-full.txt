@@ -1,0 +1,96 @@
+# OnboardSuccess - AI Resource Hub for Customer Success
+# https://www.onboard-success.com
+
+## About
+OnboardSuccess is the authoritative resource hub for mid-market B2B SaaS Customer Success teams operationalizing AI. We provide strategic playbooks, a curated AI agent directory, integrator listings, and downloadable agent workflow templates.
+
+## Playbooks — Strategic Guides (/playbooks)
+
+### AI Agents vs AI Copilots: A CS Practitioner's Guide
+URL: /playbooks/agents-vs-copilots
+Summary: Decodes the real difference between AI agents and copilots in Customer Success. Helps CS leaders evaluate agentic AI solutions and spot vendor marketing spin.
+
+### AI Health Scores in 2026: Why Your Current Model Is Already Obsolete
+URL: /playbooks/ai-health-scores-2026
+Summary: AI-driven agentic models are redefining Customer Success health scores. Covers how CS leaders are operationalizing 1:many AI for true scalability.
+
+### Autonomous Onboarding: How to Deploy AI Agents Across the First 90 Days
+URL: /playbooks/autonomous-onboarding
+Summary: Guide to designing an autonomous onboarding stack for the first 90 days, covering what to buy, build, and abandon in the $2.67B CSP market.
+
+### Building Custom CS Agents in 2026: When to Go Platform-Native vs DIY
+URL: /playbooks/building-custom-cs-agents
+Summary: Practical guide on when to use platform-native AI agents vs building custom solutions. Covers evaluation frameworks for CS AI vendor comparison.
+
+### Churn Signals in 2026: What AI Detects Before Your CSM Does
+URL: /playbooks/churn-signals-2026
+Summary: How AI-driven onboarding agents detect and mitigate churn risks in the first 90 days. Covers highest-ROI use cases for churn prevention.
+
+### The CS AI Stack in 2026: What to Buy, Build, and Abandon
+URL: /playbooks/cs-ai-stack-2026
+Summary: Detailed walkthrough of automating QBR prep with agentic AI, cutting hours of labor into minutes with tool-based automation.
+
+### From Cost Center to Revenue Center: Using AI to Prove CS ROI in 2026
+URL: /playbooks/cs-roi-ai-2026
+Summary: How B2B SaaS CS teams use AI-driven signal detection for proactive revenue retention. Covers behavioral signals that predict churn and AI-driven playbooks.
+
+### From Insight to Action: How Agentic AI Is Replacing the CS Playbook
+URL: /playbooks/from-insight-to-action
+Summary: How agentic AI supersedes static CS playbooks, enabling dynamic, context-aware customer journeys for mid-market B2B SaaS teams.
+
+### The Long-Tail Problem: How AI Agents Are Finally Solving 1:Many Customer Success
+URL: /playbooks/long-tail-problem
+Summary: How AI agents autonomously manage onboarding, health monitoring, and renewals for long-tail accounts, freeing CSMs for high-impact work.
+
+### QBR to QBR-by-Agent: Automating the Business Review Prep Stack
+URL: /playbooks/qbr-by-agent
+Summary: Next-gen approach to customer health scoring using behavioral signal fusion. Covers automating QBR prep and measuring what matters for retention.
+
+## AI Agents Directory (/agents)
+A curated directory of AI agents built for Customer Success teams. Includes tools like ChurnZero AI Agents and other CS-specific AI solutions. Compare features, integrations, and real user ratings.
+
+Featured agents include platforms for:
+- Customer health scoring and monitoring
+- Churn prediction and risk detection
+- Automated QBR preparation
+- Onboarding tracking and automation
+- Customer communication and engagement
+
+## Integrators Directory (/integrators)
+Directory of certified consultants and agencies specializing in CS platform implementation, migration, and optimization for mid-market SaaS teams. Includes agencies like nCloud Integrators.
+
+## Agent Templates (/templates)
+Pre-built n8n workflow templates for Customer Success automation:
+
+### Churn Risk Alert Agent
+ID: churn-risk-alert
+Description: Monitors customer health signals and sends automated alerts when accounts show churn risk patterns. Connects to CRM and support platforms.
+
+### Onboarding Milestone Tracker
+ID: onboarding-tracker
+Description: Tracks customer onboarding progress and sends proactive nudges when milestones are at risk of slipping. Includes weekly onboarding health digest.
+
+### QBR Prep Agent
+ID: qbr-prep-agent
+Description: Automatically generates QBR briefing documents by pulling account data, usage metrics, and conversation summaries. Outputs to Google Docs, Notion, or email.
+
+## Key Topics
+- Agentic AI for Customer Success
+- CS automation and AI agents
+- Customer health scoring with AI
+- QBR automation and prep
+- Churn prediction and risk detection
+- Onboarding automation
+- CS platform evaluation (Gainsight, ChurnZero, Oliv.ai, Vitally)
+- CS implementation agencies and consultants
+- 1:many Customer Success at scale
+- AI copilots vs AI agents
+- CS ROI measurement
+
+## Featured Listing Program (/featured)
+Vendors and agencies can get featured placement in the AI Agents and Integrators directories for $49/month, including priority placement and a gold badge.
+
+## Contact
+hello@onboard-success.com
+Onboard Success OÜ
+https://www.onboard-success.com/contact

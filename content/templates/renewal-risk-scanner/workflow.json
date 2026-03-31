@@ -1,0 +1,116 @@
+{
+  "name": "Renewal Risk Scanner",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "weeks", "weeksInterval": 1 }]
+        }
+      },
+      "id": "weekly-trigger",
+      "name": "Weekly Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://your-crm.example.com/api/accounts?renewal_before={{ $now.plus(90, 'days').format('yyyy-MM-dd') }}&status=active",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "salesforceOAuth2Api",
+        "options": {
+          "response": { "response": { "responseFormat": "json" } }
+        }
+      },
+      "id": "fetch-renewals",
+      "name": "Fetch Upcoming Renewals",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://your-crm.example.com/api/accounts/{{ $json.account_id }}/health-signals",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "salesforceOAuth2Api",
+        "options": {}
+      },
+      "id": "fetch-health",
+      "name": "Fetch Health Signals",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const account = $input.item.json;\n\nconst daysToRenewal = Math.floor((new Date(account.renewal_date) - new Date()) / (1000*60*60*24));\nlet riskLevel = 'Low';\nconst riskSignals = [];\n\n// Usage decline\nif (account.usage_trend < -15) {\n  riskSignals.push(`Usage declined ${Math.abs(account.usage_trend)}% over 30 days`);\n}\n\n// Support issues\nif (account.open_tickets > 3) {\n  riskSignals.push(`${account.open_tickets} open support tickets`);\n}\n\n// Low NPS\nif (account.latest_nps !== null && account.latest_nps < 7) {\n  riskSignals.push(`NPS score: ${account.latest_nps}`);\n}\n\n// No recent engagement\nif (account.days_since_last_meeting > 30) {\n  riskSignals.push(`No meeting in ${account.days_since_last_meeting} days`);\n}\n\n// Champion departure\nif (account.champion_status === 'departed') {\n  riskSignals.push('Champion has left the organization');\n}\n\nif (riskSignals.length >= 3) riskLevel = 'High';\nelse if (riskSignals.length >= 1) riskLevel = 'Medium';\n\nconst actions = [];\nif (riskLevel === 'High') actions.push('Schedule executive sponsor call within 1 week');\nif (account.champion_status === 'departed') actions.push('Identify new champion contact');\nif (account.usage_trend < -15) actions.push('Arrange product re-engagement session');\nif (account.open_tickets > 3) actions.push('Escalate open support tickets');\nif (riskLevel !== 'Low') actions.push('Prepare renewal risk mitigation plan');\n\nreturn [{\n  json: {\n    account_id: account.account_id,\n    account_name: account.account_name,\n    arr: account.arr,\n    renewal_date: account.renewal_date,\n    days_to_renewal: daysToRenewal,\n    risk_level: riskLevel,\n    risk_signals: riskSignals,\n    recommended_actions: actions,\n    csm_email: account.csm_email,\n    csm_name: account.csm_name\n  }\n}];"
+      },
+      "id": "assess-risk",
+      "name": "Assess Renewal Risk",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "" },
+          "conditions": [
+            {
+              "id": "has-risk",
+              "leftValue": "={{ $json.risk_level }}",
+              "rightValue": "Low",
+              "operator": { "type": "string", "operation": "notEquals" }
+            }
+          ]
+        }
+      },
+      "id": "filter-risk",
+      "name": "Has Risk Signals?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [880, 0]
+    },
+    {
+      "parameters": {
+        "channel": "#cs-renewals",
+        "text": "=🔄 *Renewal Risk Report*\n\n*Account:* {{ $json.account_name }}\n*ARR:* ${{ $json.arr }}\n*Renewal:* {{ $json.renewal_date }} ({{ $json.days_to_renewal }} days)\n*Risk Level:* {{ $json.risk_level }}\n\n*Risk Signals:*\n• {{ $json.risk_signals.join('\\n• ') }}\n\n*Recommended Actions:*\n• {{ $json.recommended_actions.join('\\n• ') }}\n\n*CSM:* {{ $json.csm_name }} ({{ $json.csm_email }})",
+        "otherOptions": {}
+      },
+      "id": "slack-report",
+      "name": "Send Slack Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1100, -100],
+      "credentials": { "slackApi": { "id": "1", "name": "Slack API" } }
+    },
+    {
+      "parameters": {
+        "fromEmail": "cs-alerts@yourcompany.com",
+        "toEmail": "={{ $json.csm_email }}",
+        "subject": "=Renewal Risk Alert: {{ $json.account_name }} ({{ $json.risk_level }})",
+        "emailType": "html",
+        "html": "=<h2>Renewal Risk Alert</h2><p><strong>Account:</strong> {{ $json.account_name }}<br><strong>ARR:</strong> ${{ $json.arr }}<br><strong>Renewal:</strong> {{ $json.renewal_date }} ({{ $json.days_to_renewal }} days)<br><strong>Risk Level:</strong> {{ $json.risk_level }}</p><h3>Risk Signals</h3><ul>{{ $json.risk_signals.map(s => '<li>' + s + '</li>').join('') }}</ul><h3>Recommended Actions</h3><ul>{{ $json.recommended_actions.map(a => '<li>' + a + '</li>').join('') }}</ul>",
+        "options": {}
+      },
+      "id": "email-csm",
+      "name": "Email CSM Briefing",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1100, 100],
+      "credentials": { "smtp": { "id": "2", "name": "SMTP" } }
+    }
+  ],
+  "connections": {
+    "Weekly Schedule": { "main": [[{ "node": "Fetch Upcoming Renewals", "type": "main", "index": 0 }]] },
+    "Fetch Upcoming Renewals": { "main": [[{ "node": "Fetch Health Signals", "type": "main", "index": 0 }]] },
+    "Fetch Health Signals": { "main": [[{ "node": "Assess Renewal Risk", "type": "main", "index": 0 }]] },
+    "Assess Renewal Risk": { "main": [[{ "node": "Has Risk Signals?", "type": "main", "index": 0 }]] },
+    "Has Risk Signals?": { "main": [[{ "node": "Send Slack Report", "type": "main", "index": 0 }, { "node": "Email CSM Briefing", "type": "main", "index": 0 }], []] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": [{ "name": "customer-success" }, { "name": "renewal-risk" }]
+}

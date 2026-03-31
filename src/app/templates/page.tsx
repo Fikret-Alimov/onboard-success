@@ -1,11 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllTemplates, type TemplateMeta } from "@/lib/templates";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "Agent Templates — OnboardSuccess",
   description:
     "Pre-built AI agent workflow templates for Customer Success teams. Deploy in minutes with n8n.",
+  openGraph: {
+    title: "Agent Templates — OnboardSuccess",
+    description:
+      "Pre-built AI agent workflow templates for Customer Success teams. Deploy in minutes with n8n.",
+    url: "https://www.onboard-success.com/templates",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Agent Templates — OnboardSuccess",
+    description:
+      "Pre-built AI agent workflow templates for Customer Success teams. Deploy in minutes with n8n.",
+  },
+  alternates: {
+    canonical: "/templates",
+  },
 };
 
 function TierBadge({ tier }: { tier: string }) {
@@ -86,6 +103,32 @@ export default function TemplatesPage() {
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-16">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "AI Agent Workflow Templates",
+          description:
+            "Pre-built AI agent workflow templates for Customer Success teams. Deploy in minutes with n8n.",
+          url: "https://www.onboard-success.com/templates",
+          itemListElement: templates.map((template, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            item: {
+              "@type": "SoftwareApplication",
+              name: template.name,
+              description: template.description,
+              applicationCategory: "Business",
+              operatingSystem: "Web",
+              offers: {
+                "@type": "Offer",
+                price: template.tier === "free" ? "0" : "29",
+                priceCurrency: "USD",
+              },
+            },
+          })),
+        }}
+      />
       {/* Hero */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">

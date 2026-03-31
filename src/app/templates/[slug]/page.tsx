@@ -19,6 +19,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${template.name} — OnboardSuccess Templates`,
     description: template.description,
+    openGraph: {
+      title: template.name,
+      description: template.description,
+      url: `https://www.onboard-success.com/templates/${slug}`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: template.name,
+      description: template.description,
+    },
+    alternates: {
+      canonical: `/templates/${slug}`,
+    },
   };
 }
 

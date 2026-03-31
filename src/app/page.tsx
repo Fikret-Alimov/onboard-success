@@ -1,5 +1,6 @@
 import Link from "next/link";
-
+import { getAllPosts } from "@/lib/posts";
+import JsonLd from "@/components/JsonLd";
 
 const sections = [
   {
@@ -23,8 +24,27 @@ const sections = [
 ];
 
 export default function HomePage() {
+  const latestPosts = getAllPosts().slice(0, 3);
+
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "OnboardSuccess",
+          url: "https://www.onboard-success.com",
+          description:
+            "The AI resource hub for Customer Success teams in mid-market B2B SaaS",
+          potentialAction: {
+            "@type": "SearchAction",
+            target:
+              "https://www.onboard-success.com/playbooks?q={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        }}
+      />
+
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 pt-24 pb-20">
         <div className="max-w-3xl">
@@ -60,6 +80,48 @@ export default function HomePage() {
               </span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* Latest Playbooks */}
+      <section className="max-w-6xl mx-auto px-6 pb-24">
+        <h2 className="text-2xl font-bold tracking-tight mb-8">
+          Latest from the Blog
+        </h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {latestPosts.map((post) => (
+            <Link
+              key={post.slug}
+              href={`/playbooks/${post.slug}`}
+              className="group block p-6 rounded-xl border border-white/5 bg-navy-light hover:border-accent/30 transition-all"
+            >
+              <div className="flex items-center gap-2 text-xs text-muted mb-3">
+                <time>
+                  {new Date(post.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </time>
+                <span>·</span>
+                <span>{post.readingTime}</span>
+              </div>
+              <h3 className="text-lg font-semibold mb-2 group-hover:text-accent transition-colors leading-snug">
+                {post.title}
+              </h3>
+              <p className="text-sm text-muted leading-relaxed line-clamp-3">
+                {post.description}
+              </p>
+            </Link>
+          ))}
+        </div>
+        <div className="text-center mt-8">
+          <Link
+            href="/playbooks"
+            className="text-accent hover:text-accent-hover font-medium transition-colors"
+          >
+            View all playbooks →
+          </Link>
         </div>
       </section>
 

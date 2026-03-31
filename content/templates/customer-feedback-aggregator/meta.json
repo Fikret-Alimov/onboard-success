@@ -1,0 +1,15 @@
+{
+  "id": "customer-feedback-aggregator",
+  "name": "Customer Feedback Aggregator",
+  "description": "Collects and analyzes feedback from NPS surveys, support tickets, and reviews into a unified sentiment dashboard.",
+  "longDescription": "Aggregates customer feedback from multiple sources — NPS survey responses from Typeform, support ticket sentiment from Zendesk, and product reviews from G2. Runs sentiment analysis on all feedback, categorizes by theme, and sends a weekly summary to Slack with overall sentiment trends, top issues, and accounts requiring attention.",
+  "category": "Health Monitoring",
+  "platform": "n8n",
+  "difficulty": "Beginner",
+  "setupTime": "20 minutes",
+  "integrations": ["Typeform", "Zendesk", "G2", "Slack"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-31",
+  "downloads": 0
+}

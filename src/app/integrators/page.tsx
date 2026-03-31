@@ -1,11 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import IntegratorsDirectory from "@/components/IntegratorsDirectory";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "Integrators Directory — OnboardSuccess",
   description:
     "Find certified consultants and agencies specializing in CS platform implementation for mid-market SaaS.",
+  openGraph: {
+    title: "Integrators Directory — OnboardSuccess",
+    description:
+      "Find certified consultants and agencies specializing in CS platform implementation for mid-market SaaS.",
+    url: "https://www.onboard-success.com/integrators",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Integrators Directory — OnboardSuccess",
+    description:
+      "Find certified consultants and agencies specializing in CS platform implementation for mid-market SaaS.",
+  },
+  alternates: {
+    canonical: "/integrators",
+  },
 };
 
 interface Integrator {
@@ -42,6 +59,30 @@ export default async function IntegratorsPage() {
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-16">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "CS Platform Integrators & Agencies",
+          description:
+            "Certified consultants and agencies specializing in CS platform implementation for mid-market SaaS.",
+          url: "https://www.onboard-success.com/integrators",
+          itemListElement: integrators.map((integrator, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            item: {
+              "@type": "LocalBusiness",
+              name: integrator.name,
+              description: integrator.description,
+              url: integrator.website,
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: integrator.location,
+              },
+            },
+          })),
+        }}
+      />
       <h1 className="text-4xl font-bold tracking-tight mb-3">Integrators</h1>
       <p className="text-muted text-lg mb-8 max-w-2xl">
         Certified consultants and agencies who specialize in CS platform

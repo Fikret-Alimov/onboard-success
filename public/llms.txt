@@ -1,0 +1,26 @@
+# OnboardSuccess - AI Resource Hub for Customer Success
+# https://www.onboard-success.com
+
+## About
+OnboardSuccess is the authoritative resource hub for mid-market B2B SaaS Customer Success teams operationalizing AI. We provide playbooks, an AI agent directory, integrator listings, and downloadable agent templates.
+
+## Sections
+- /playbooks — Strategic guides on AI-powered Customer Success
+- /agents — Curated directory of AI agents for CS teams
+- /integrators — Directory of CS platform implementation agencies
+- /templates — Downloadable AI agent workflow templates (n8n)
+- /featured — Featured listing program for vendors and agencies
+
+## Key Topics
+- Agentic AI for Customer Success
+- CS automation and AI agents
+- Customer health scoring with AI
+- QBR automation
+- Churn prediction and risk detection
+- Onboarding automation
+- CS platform evaluation (Gainsight, ChurnZero, Oliv.ai, Vitally)
+- CS implementation agencies and consultants
+
+## Contact
+hello@onboard-success.com
+Onboard Success OÜ

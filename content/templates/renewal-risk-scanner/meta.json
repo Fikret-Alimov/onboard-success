@@ -1,0 +1,15 @@
+{
+  "id": "renewal-risk-scanner",
+  "name": "Renewal Risk Scanner",
+  "description": "Scans accounts approaching renewal and flags those showing risk signals, with automated CSM briefing.",
+  "longDescription": "Runs weekly to check all accounts renewing in the next 90 days. Cross-references renewal dates with health signals including usage trends, support ticket patterns, NPS scores, and stakeholder engagement. Generates a prioritized risk report and sends it to the assigned CSM via Slack and email with recommended actions for each flagged account.",
+  "category": "Risk Detection",
+  "platform": "n8n",
+  "difficulty": "Intermediate",
+  "setupTime": "30 minutes",
+  "integrations": ["Salesforce", "HubSpot", "Slack", "Email"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-31",
+  "downloads": 0
+}

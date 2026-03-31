@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms of Service — OnboardSuccess",
   description: "Terms of Service for OnboardSuccess.com",
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 export default function TermsPage() {
