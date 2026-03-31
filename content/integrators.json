@@ -182,5 +182,267 @@
     "featured": false,
     "featuredUntil": "",
     "featuredBadge": ""
+  },
+  {
+    "id": "customer-success-associates",
+    "name": "Customer Success Associates",
+    "type": "Implementation Partner",
+    "location": "United States",
+    "description": "Customer Success Associates specializes in implementing customer success platforms and helping companies optimize their CS strategies. They focus on scalable CS program design and execution.",
+    "specialties": [
+      "CS platform implementation",
+      "Customer success strategy",
+      "CS program optimization"
+    ],
+    "website": "https://www.customersuccessassociates.com",
+    "contactUrl": "https://www.customersuccessassociates.com/contact",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "totango",
+    "name": "Totango",
+    "type": "Enterprise AI",
+    "location": "United States",
+    "description": "Totango provides a customer success platform that leverages AI to help businesses improve customer retention. They offer extensive strategy consulting and implementation services to maximize platform impact.",
+    "specialties": [
+      "Customer success AI",
+      "CS platform implementation",
+      "Customer health scoring"
+    ],
+    "website": "https://www.totango.com",
+    "contactUrl": "https://www.totango.com/contact-us",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "successco",
+    "name": "SuccessCOACHING",
+    "type": "Strategy Consultant",
+    "location": "United States",
+    "description": "SuccessCOACHING provides leadership and consulting services focused on customer success strategy and platform adoption. They help companies implement CS technologies and align organizational processes.",
+    "specialties": [
+      "CS strategy consulting",
+      "Platform adoption",
+      "Customer success training"
+    ],
+    "website": "https://www.successcoaching.co",
+    "contactUrl": "https://www.successcoaching.co/contact/",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "logic20-20",
+    "name": "Logic20/20",
+    "type": "Digital Transformation",
+    "location": "United States",
+    "description": "Logic20/20 is a digital transformation consultancy expert in Salesforce Service Cloud implementations. They support enterprises in deploying customer service solutions with AI integrations to improve customer experiences.",
+    "specialties": [
+      "Salesforce Service Cloud",
+      "Digital transformation",
+      "AI integration"
+    ],
+    "website": "https://www.logic2020.com",
+    "contactUrl": "https://www.logic2020.com/contact-us/",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "service-rocket",
+    "name": "ServiceRocket",
+    "type": "Implementation Partner",
+    "location": "Global",
+    "description": "ServiceRocket provides implementation and training services for customer success platforms including Gainsight and Salesforce. They specialize in accelerating adoption and delivering measurable value.",
+    "specialties": [
+      "Gainsight implementation",
+      "Salesforce Service Cloud",
+      "Customer success enablement"
+    ],
+    "website": "https://www.servicerocket.com",
+    "contactUrl": "https://www.servicerocket.com/contact/",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "cloudtask",
+    "name": "CloudTask",
+    "type": "RevOps",
+    "location": "United States",
+    "description": "CloudTask offers RevOps and customer success consulting with a focus on implementing tools like HubSpot Service Hub and AI-powered customer engagement systems. They help businesses scale CS operations efficiently.",
+    "specialties": [
+      "HubSpot Service Hub",
+      "RevOps consulting",
+      "CS platform implementation"
+    ],
+    "website": "https://www.cloudtask.com",
+    "contactUrl": "https://www.cloudtask.com/contact-us/",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "coastal-cloud",
+    "name": "Coastal Cloud",
+    "type": "Implementation Partner",
+    "location": "United States",
+    "description": "Coastal Cloud is a Salesforce platinum partner specializing in Service Cloud implementations. They offer custom solutions to optimize customer service operations and integrate AI capabilities to improve support.",
+    "specialties": [
+      "Salesforce Service Cloud",
+      "AI integration",
+      "CS platform customization"
+    ],
+    "website": "https://www.coastalcloud.us",
+    "contactUrl": "https://www.coastalcloud.us/contact/",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "kane-analytics",
+    "name": "Kane Analytics",
+    "type": "CS Operations",
+    "location": "United States",
+    "description": "Kane Analytics helps companies launch and optimize customer success platforms with a strong emphasis on CS operations and data-driven AI strategy. They combine operational insights with technology enablement.",
+    "specialties": [
+      "CS operations",
+      "AI-based customer success",
+      "Platform launch and optimization"
+    ],
+    "website": "https://kaneanalytics.com",
+    "contactUrl": "https://kaneanalytics.com/contact/",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "accenture-customer-experience-emea",
+    "name": "Accenture Customer Experience",
+    "type": "Consultancy",
+    "location": "EMEA",
+    "description": "Accenture's Customer Experience practice in EMEA offers strategy, design, and technology services to transform customer engagement. They blend insights, AI, and digital solutions to elevate brand experiences across sectors.",
+    "specialties": [
+      "Customer Experience",
+      "AI Transformation",
+      "Digital Strategy",
+      "Customer Insights"
+    ],
+    "website": "https://www.accenture.com/emea-en/services/interactive/customer-experience",
+    "contactUrl": "",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "kgp-advisory",
+    "name": "KGP Advisory",
+    "type": "Boutique Consultancy",
+    "location": "EMEA",
+    "description": "KGP Advisory is a boutique consultancy specializing in customer success operations and strategy across Europe. They assist SaaS firms in optimizing customer journeys and scaling CS teams efficiently.",
+    "specialties": [
+      "Customer Success Operations",
+      "SaaS Customer Strategy",
+      "CS Scaling",
+      "Process Optimization"
+    ],
+    "website": "https://kgpadvisory.com/",
+    "contactUrl": "",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "indra-asia-pacific",
+    "name": "Indra Asia Pacific",
+    "type": "Consultancy",
+    "location": "APAC",
+    "description": "Indra operates extensive digital transformation and customer experience projects throughout the Asia-Pacific region. They focus on AI-driven solutions to enhance CX and operational efficiencies in telecom and finance industries.",
+    "specialties": [
+      "Digital Transformation",
+      "AI Solutions",
+      "Customer Experience",
+      "Telecom and Finance CX"
+    ],
+    "website": "https://www.indracompany.com/en/markets/digital-business/customer-experience",
+    "contactUrl": "",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "thedigitaltransformationhub",
+    "name": "The Digital Transformation Hub",
+    "type": "AI Transformation Agency",
+    "location": "EMEA",
+    "description": "The Digital Transformation Hub offers AI-led customer success and experience solutions tailored for enterprises in Europe and the Middle East. They integrate next-gen AI technologies with customer operations to drive growth and retention.",
+    "specialties": [
+      "AI Customer Solutions",
+      "Customer Success Transformation",
+      "Data-driven CX",
+      "Enterprise AI"
+    ],
+    "website": "https://digitaltransformationhub.ai/",
+    "contactUrl": "",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "ces-partners",
+    "name": "CES Partners",
+    "type": "Boutique CS Operations",
+    "location": "EMEA",
+    "description": "CES Partners is a boutique consultancy providing specialist customer success operations, training, and enablement to SaaS companies primarily in the UK and Europe. They focus on aligning CS operations with business outcomes.",
+    "specialties": [
+      "Customer Success Operations",
+      "Training and Enablement",
+      "SaaS Consulting",
+      "Customer Journey Mapping"
+    ],
+    "website": "https://www.cespartners.co.uk/",
+    "contactUrl": "",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "cloudbridge-consulting",
+    "name": "CloudBridge Consulting",
+    "type": "Consultancy",
+    "location": "APAC",
+    "description": "CloudBridge Consulting empowers APAC-based enterprises in their AI and customer success transformations. They specialize in cloud and AI enablement to boost customer experience and operational excellence.",
+    "specialties": [
+      "AI Transformation",
+      "Cloud Enablement",
+      "Customer Success Strategy",
+      "Operational Excellence"
+    ],
+    "website": "https://www.cloudbridgeconsulting.com/",
+    "contactUrl": "",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "transform-ai-cx",
+    "name": "Transform AI CX",
+    "type": "AI Transformation Agency",
+    "location": "EMEA",
+    "description": "Transform AI CX is a boutique AI transformation agency based in Germany, delivering innovative AI-powered customer experience solutions. They combine deep customer insights with machine learning to optimize engagement and loyalty.",
+    "specialties": [
+      "AI-powered CX",
+      "Machine Learning",
+      "Customer Insights",
+      "Engagement Optimization"
+    ],
+    "website": "https://transformaicx.com/",
+    "contactUrl": "",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
   }
 ]

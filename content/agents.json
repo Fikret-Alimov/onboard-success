@@ -235,5 +235,559 @@
       "Predictive case intelligence",
       "Agent copilot"
     ]
+  },
+  {
+    "id": "taskade",
+    "name": "Taskade",
+    "category": "CS Platform",
+    "description": "Collaborative workspace for task and project management.",
+    "longDescription": "Taskade is a collaborative workspace designed to help teams organize tasks and projects efficiently. It integrates real-time communication with project management to streamline customer success workflows.",
+    "bestFor": "CS teams wanting unified task and communication management.",
+    "g2Rating": "4.7/5",
+    "g2Reviews": "1000+",
+    "pricing": "Free plan available; paid plans start at $5/user/month",
+    "website": "https://www.taskade.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Slack",
+      "Google Drive",
+      "Zapier"
+    ],
+    "features": [
+      "Real-time collaboration",
+      "Task management",
+      "Video chat",
+      "Templates"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "playbasis",
+    "name": "Playbasis",
+    "category": "Digital CS",
+    "description": "AI-powered gamification for customer engagement and loyalty.",
+    "longDescription": "Playbasis offers gamification solutions to increase customer engagement and retention through AI-driven personalized experiences and loyalty programs. It supports building long-lasting user relationships.",
+    "bestFor": "Customer success teams seeking to boost engagement with gamification.",
+    "g2Rating": "4.5/5",
+    "g2Reviews": "50+",
+    "pricing": "Custom pricing",
+    "website": "https://www.playbasis.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Shopify",
+      "Zendesk"
+    ],
+    "features": [
+      "Gamified workflows",
+      "Personalized rewards",
+      "Analytics dashboard"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "customerlabs",
+    "name": "CustomerLabs",
+    "category": "Product Analytics",
+    "description": "No-code CDP and product analytics platform.",
+    "longDescription": "CustomerLabs empowers teams to collect customer behavioral data without engineering. It offers product analytics and segmentation to enhance customer success strategies and personalize experiences.",
+    "bestFor": "CS teams wanting no-code product analytics and customer data integration.",
+    "g2Rating": "4.4/5",
+    "g2Reviews": "60+",
+    "pricing": "Starts at $299/month",
+    "website": "https://customerlabs.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Segment",
+      "Google Analytics",
+      "HubSpot"
+    ],
+    "features": [
+      "No-code data collection",
+      "Segmentation",
+      "Behavioral analytics"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "avoma",
+    "name": "Avoma",
+    "category": "Conversation Intelligence",
+    "description": "AI meeting assistant & conversation intelligence platform.",
+    "longDescription": "Avoma automates meeting note-taking, transcription, and analysis. It provides insights for customer conversations to improve outcomes and onboarding, aiding customer success teams in optimizing engagement.",
+    "bestFor": "CS teams seeking automated meeting insights and transcript analysis.",
+    "g2Rating": "4.6/5",
+    "g2Reviews": "700+",
+    "pricing": "Free trial; paid plans from $20/user/month",
+    "website": "https://www.avoma.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Zoom",
+      "Slack",
+      "Salesforce"
+    ],
+    "features": [
+      "AI transcription",
+      "Meeting highlights",
+      "Interaction analytics"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "observeai",
+    "name": "Observe.AI",
+    "category": "Support AI",
+    "description": "AI-driven contact center QA & agent performance platform.",
+    "longDescription": "Observe.AI leverages AI to analyze support calls, improving quality assurance and agent coaching. It helps CS teams enhance service quality using conversation intelligence and insights from customer interactions.",
+    "bestFor": "CS teams aiming to improve support call quality and coaching with AI.",
+    "g2Rating": "4.5/5",
+    "g2Reviews": "120+",
+    "pricing": "Custom pricing",
+    "website": "https://www.observe.ai",
+    "affiliateUrl": "",
+    "integrations": [
+      "Five9",
+      "Salesforce Service Cloud",
+      "Zendesk"
+    ],
+    "features": [
+      "Call transcription",
+      "Agent scoring",
+      "Quality assurance workflows"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "intellimize",
+    "name": "Intellimize",
+    "category": "CX Operations",
+    "description": "AI-powered conversion rate optimization platform.",
+    "longDescription": "Intellimize uses AI to personalize web experiences and optimize conversion rates dynamically. Customer success teams benefit from improved user engagement and retention through adaptive digital experiences.",
+    "bestFor": "CS teams looking to increase user adoption and retention via personalization.",
+    "g2Rating": "4.6/5",
+    "g2Reviews": "100+",
+    "pricing": "Custom pricing",
+    "website": "https://www.intellimize.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Google Analytics",
+      "Marketo",
+      "HubSpot"
+    ],
+    "features": [
+      "Personalization",
+      "AI optimization",
+      "A/B testing"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "conversica",
+    "name": "Conversica",
+    "category": "Autonomous Agent",
+    "description": "AI virtual assistants for customer engagement and follow-up.",
+    "longDescription": "Conversica provides AI virtual assistants that autonomously engage and nurture prospects and customers via natural conversations. This helps CS teams automate follow-ups and improve customer engagement at scale.",
+    "bestFor": "CS teams automating customer outreach and lead nurturing.",
+    "g2Rating": "4.3/5",
+    "g2Reviews": "200+",
+    "pricing": "Custom pricing",
+    "website": "https://www.conversica.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "HubSpot",
+      "Marketo"
+    ],
+    "features": [
+      "AI assistants",
+      "Automated follow-ups",
+      "Natural language conversations"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "khoros",
+    "name": "Khoros",
+    "category": "Support AI",
+    "description": "Customer engagement platform with AI-powered support.",
+    "longDescription": "Khoros delivers AI-driven digital customer engagement and support solutions, including chatbots and analytics. It helps CS teams automate support and gain insights to improve customer satisfaction.",
+    "bestFor": "CS teams seeking scalable AI customer support and community management.",
+    "g2Rating": "4.1/5",
+    "g2Reviews": "300+",
+    "pricing": "Custom pricing",
+    "website": "https://khoros.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "Microsoft Dynamics"
+    ],
+    "features": [
+      "Chatbots",
+      "Community management",
+      "Analytics"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "whatfix",
+    "name": "Whatfix",
+    "category": "Digital CS",
+    "description": "Digital adoption platform for onboarding and training.",
+    "longDescription": "Whatfix is a digital adoption platform that delivers contextual onboarding, training, and user guidance for customer success teams. It improves product usage, reduces churn, and accelerates time to value with interactive flows.",
+    "bestFor": "CS teams focused on user onboarding and training automation.",
+    "g2Rating": "4.7/5",
+    "g2Reviews": "800+",
+    "pricing": "Custom pricing",
+    "website": "https://www.whatfix.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "ServiceNow"
+    ],
+    "features": [
+      "Guided walkthroughs",
+      "User analytics",
+      "In-app support"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "strikedeck",
+    "name": "Strikedeck",
+    "category": "Customer Success Platform",
+    "description": "Customer success automation and playbooks platform.",
+    "longDescription": "Strikedeck provides a complete customer success platform with AI-powered automation, health scoring, and playbook orchestration. It helps CS teams effectively drive retention and reduce churn through intelligent workflows.",
+    "bestFor": "CS teams needing automated, scalable customer success workflows.",
+    "g2Rating": "4.3/5",
+    "g2Reviews": "150+",
+    "pricing": "Custom pricing",
+    "website": "https://www.strikedeck.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "Slack"
+    ],
+    "features": [
+      "Customer health scoring",
+      "Playbook automation",
+      "Task management"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "totango",
+    "name": "Totango",
+    "category": "Customer Success",
+    "description": "AI-driven customer success platform for growth and retention.",
+    "longDescription": "Totango uses AI to help businesses increase customer retention and drive growth by providing actionable insights and health scores. It tracks customer engagement and risk signals to enable proactive success strategies.",
+    "bestFor": "Mid-market to enterprise companies focusing on customer growth and retention.",
+    "g2Rating": "4.4/5",
+    "g2Reviews": "800+",
+    "pricing": "Custom pricing based on company size and features.",
+    "website": "https://www.totango.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "HubSpot",
+      "Slack",
+      "Stripe"
+    ],
+    "features": [
+      "Customer Health Scores",
+      "Segmentation",
+      "Success Plays",
+      "Renewal Management",
+      "Churn Prediction"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "planhat",
+    "name": "Planhat",
+    "category": "Customer Success",
+    "description": "Customer success management platform with predictive AI.",
+    "longDescription": "Planhat leverages AI to analyze customer behavior and usage data, enabling teams to automate workflows and reduce churn. Its robust segmentation and reporting help teams prioritize high-value accounts.",
+    "bestFor": "Customer success teams needing predictive insights and workflow automation.",
+    "g2Rating": "4.3/5",
+    "g2Reviews": "200+",
+    "pricing": "Contact vendor for pricing.",
+    "website": "https://planhat.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "Intercom",
+      "HubSpot",
+      "Slack"
+    ],
+    "features": [
+      "AI-driven Health Scores",
+      "Customer Segmentation",
+      "Playbooks",
+      "Renewal Tracking",
+      "Behavior Tracking"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "customeros",
+    "name": "CustomerOS",
+    "category": "Customer Success",
+    "description": "Unified customer data platform for success teams with AI analytics.",
+    "longDescription": "CustomerOS unifies customer data across multiple platforms into a single source of truth. It uses AI to uncover insights and customer health signals, enabling customer success teams to make data-driven decisions.",
+    "bestFor": "Teams needing a centralized customer data platform with AI insights.",
+    "g2Rating": "4.5/5",
+    "g2Reviews": "50+",
+    "pricing": "Contact for custom pricing.",
+    "website": "https://customeros.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "Marketo",
+      "Stripe",
+      "HubSpot"
+    ],
+    "features": [
+      "Data Unification",
+      "AI Analytics",
+      "Health Scoring",
+      "Alerting",
+      "Segment Builder"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "catalyst",
+    "name": "Catalyst",
+    "category": "Customer Success",
+    "description": "Customer success platform focused on usage data and insights.",
+    "longDescription": "Catalyst helps customer success teams understand product usage and customer behavior through AI-powered analytics. It assists with onboarding success and reducing churn by predicting risk early.",
+    "bestFor": "Teams seeking usage-based customer insights and health prediction.",
+    "g2Rating": "4.2/5",
+    "g2Reviews": "80+",
+    "pricing": "Custom pricing available.",
+    "website": "https://www.catalyst.co",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Intercom",
+      "Slack",
+      "Zendesk"
+    ],
+    "features": [
+      "Usage Analytics",
+      "Churn Prediction",
+      "Customer Scoring",
+      "Automated Playbooks",
+      "Alerts"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "freshsuccess",
+    "name": "Freshsuccess",
+    "category": "Customer Success",
+    "description": "Customer success platform with AI-powered health scores and automation.",
+    "longDescription": "Freshsuccess by Freshworks integrates AI and automation to help customer success teams manage customer lifecycles effectively. It offers comprehensive health scoring, playbooks, and renewal tracking.",
+    "bestFor": "SMBs looking for affordable AI-powered customer success tools.",
+    "g2Rating": "4.5/5",
+    "g2Reviews": "120+",
+    "pricing": "Starts at $29/user/month.",
+    "website": "https://freshsuccess.freshworks.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "Zapier",
+      "HubSpot",
+      "Slack"
+    ],
+    "features": [
+      "Health Scores",
+      "Automation",
+      "Renewal Management",
+      "Playbooks",
+      "Customer Segmentation"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "akita",
+    "name": "Akita",
+    "category": "Customer Success",
+    "description": "AI-driven customer success insights platform to reduce churn.",
+    "longDescription": "Akita leverages AI to analyze customer touchpoints and usage data, providing proactive alerts and health scores to accelerate adoption and reduce churn. It focuses on prioritizing at-risk customers.",
+    "bestFor": "Customer success teams focusing on predictive health and risk mitigation.",
+    "g2Rating": "4.1/5",
+    "g2Reviews": "40+",
+    "pricing": "Custom pricing.",
+    "website": "https://www.akita.so",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "Intercom",
+      "Slack"
+    ],
+    "features": [
+      "AI Health Scores",
+      "Churn Prediction",
+      "Alerts",
+      "Usage Analytics",
+      "Customer Segmentation"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "churn360",
+    "name": "Churn360",
+    "category": "Customer Success",
+    "description": "Customer success platform for churn and revenue growth management.",
+    "longDescription": "Churn360 combines AI and data to help customer success teams detect churn risk and expand revenue through cross-sells and upsells. It offers automation features to streamline customer lifecycle management.",
+    "bestFor": "Businesses aiming to reduce churn and drive expansion revenue.",
+    "g2Rating": "4.0/5",
+    "g2Reviews": "30+",
+    "pricing": "Available on request.",
+    "website": "https://churn360.io",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "HubSpot",
+      "Zendesk"
+    ],
+    "features": [
+      "Churn Prediction",
+      "Revenue Growth Analytics",
+      "Workflow Automation",
+      "Account Scoring"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "custify",
+    "name": "Custify",
+    "category": "Customer Success",
+    "description": "AI-powered platform to drive customer retention and success.",
+    "longDescription": "Custify helps SaaS companies reduce churn and increase revenue with AI-based health scores, automation, and customer segmentation. It integrates deeply with product usage data to boost engagement.",
+    "bestFor": "SaaS businesses seeking AI-driven customer success automation.",
+    "g2Rating": "4.6/5",
+    "g2Reviews": "180+",
+    "pricing": "Starts at $79/month.",
+    "website": "https://custify.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Stripe",
+      "Intercom",
+      "Zendesk",
+      "HubSpot"
+    ],
+    "features": [
+      "Health Scoring",
+      "Automation",
+      "Customer Segmentation",
+      "Playbooks",
+      "Renewal Management"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "smartkarrot",
+    "name": "SmartKarrot",
+    "category": "Customer Success",
+    "description": "AI-driven customer success and experience platform.",
+    "longDescription": "SmartKarrot delivers AI-powered customer insights, health scoring and automation to improve retention and expansion. It focuses on customer journey orchestration and risk detection in real-time.",
+    "bestFor": "Enterprises seeking customer journey orchestration combined with AI.",
+    "g2Rating": "4.2/5",
+    "g2Reviews": "90+",
+    "pricing": "Contact vendor for pricing details.",
+    "website": "https://www.smartkarrot.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "Intercom",
+      "Slack"
+    ],
+    "features": [
+      "AI Health Scoring",
+      "Journey Orchestration",
+      "Risk Detection",
+      "Usage Analytics",
+      "Playbooks"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "useriq",
+    "name": "UserIQ",
+    "category": "Customer Success",
+    "description": "Customer success software with AI-driven product adoption analytics.",
+    "longDescription": "UserIQ provides customer success teams with AI-powered product adoption insights and health scores to reduce churn and increase upsell opportunities. Features include automation and integration with CRMs.",
+    "bestFor": "Customer success teams needing product adoption and behavior insights.",
+    "g2Rating": "4.1/5",
+    "g2Reviews": "70+",
+    "pricing": "Custom pricing.",
+    "website": "https://www.useriq.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "Intercom",
+      "Slack"
+    ],
+    "features": [
+      "Product Adoption Analytics",
+      "Health Scoring",
+      "Automation",
+      "Customer Segmentation",
+      "Alerts"
+    ],
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
   }
 ]
