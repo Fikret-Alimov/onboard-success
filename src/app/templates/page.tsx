@@ -137,7 +137,14 @@ export default function TemplatesPage() {
         <p className="text-muted text-lg max-w-2xl mx-auto">
           Pre-built workflow templates you can deploy in minutes. Download n8n
           configurations for churn detection, QBR prep, onboarding tracking,
-          and more.
+          and more. New to CS automation? Start with our{" "}
+          <Link href="/playbooks/from-insight-to-action" className="text-accent hover:text-accent-hover transition-colors">
+            guide to operationalizing agentic AI
+          </Link>{" "}
+          or learn about{" "}
+          <Link href="/playbooks/cs-ai-stack-2026" className="text-accent hover:text-accent-hover transition-colors">
+            the 2026 CS AI stack
+          </Link>.
         </p>
       </div>
 

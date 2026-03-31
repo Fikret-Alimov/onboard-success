@@ -74,7 +74,15 @@ export default async function AgentsPage() {
       <h1 className="text-4xl font-bold tracking-tight mb-3">AI Agents</h1>
       <p className="text-muted text-lg mb-8 max-w-2xl">
         A curated directory of AI agents built for Customer Success. Compare
-        features, integrations, and real user ratings.
+        features, integrations, and real user ratings. Not sure what to look for?
+        Read our{" "}
+        <Link href="/playbooks/cs-ai-stack-2026" className="text-accent hover:text-accent-hover transition-colors">
+          playbook on evaluating the CS AI stack
+        </Link>{" "}
+        or learn the difference between{" "}
+        <Link href="/playbooks/agents-vs-copilots" className="text-accent hover:text-accent-hover transition-colors">
+          AI agents and copilots
+        </Link>.
       </p>
 
       <p className="text-xs text-muted/50 max-w-2xl mb-8">

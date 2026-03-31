@@ -86,7 +86,15 @@ export default async function IntegratorsPage() {
       <h1 className="text-4xl font-bold tracking-tight mb-3">Integrators</h1>
       <p className="text-muted text-lg mb-8 max-w-2xl">
         Certified consultants and agencies who specialize in CS platform
-        implementation, migration, and optimization.
+        implementation, migration, and optimization. Not sure what you need?
+        Read our{" "}
+        <Link href="/playbooks/building-custom-cs-agents" className="text-accent hover:text-accent-hover transition-colors">
+          guide to building custom CS agents
+        </Link>{" "}
+        or explore our{" "}
+        <Link href="/playbooks/autonomous-onboarding" className="text-accent hover:text-accent-hover transition-colors">
+          autonomous onboarding playbook
+        </Link>.
       </p>
 
       <p className="text-xs text-muted/50 max-w-2xl mb-8">

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAllTemplates, getTemplateBySlug } from "@/lib/templates";
+import { getAllTemplates, getTemplateBySlug, type TemplateMeta } from "@/lib/templates";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -74,12 +74,41 @@ function renderMarkdown(md: string): string {
   return html;
 }
 
+function RelatedTemplateCard({ template }: { template: TemplateMeta }) {
+  return (
+    <Link
+      href={`/templates/${template.id}`}
+      className="block border border-white/5 rounded-xl bg-navy-light p-5 hover:border-accent/30 hover:bg-navy-lighter transition-all group"
+    >
+      <span className="text-xs text-muted font-medium uppercase tracking-wider">
+        {template.category}
+      </span>
+      <h3 className="text-lg font-semibold text-white mt-2 mb-2 group-hover:text-accent transition-colors">
+        {template.name}
+      </h3>
+      <p className="text-sm text-muted line-clamp-2">{template.description}</p>
+      <div className="flex items-center gap-3 mt-3 text-xs text-muted">
+        <span>{template.difficulty}</span>
+        <span>·</span>
+        <span>⏱ {template.setupTime}</span>
+      </div>
+    </Link>
+  );
+}
+
 export default async function TemplateDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const template = getTemplateBySlug(slug);
   if (!template) notFound();
 
   const isFree = template.tier === "free";
+
+  // Get related templates (same category first, then others, exclude current)
+  const allTemplates = getAllTemplates();
+  const relatedTemplates = [
+    ...allTemplates.filter((t) => t.id !== slug && t.category === template.category),
+    ...allTemplates.filter((t) => t.id !== slug && t.category !== template.category),
+  ].slice(0, 3);
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-16">
@@ -243,6 +272,20 @@ export default async function TemplateDetailPage({ params }: PageProps) {
           </div>
         </div>
       </div>
+
+      {/* Related Templates */}
+      {relatedTemplates.length > 0 && (
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold tracking-tight mb-6">
+            You Might Also Like
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {relatedTemplates.map((t) => (
+              <RelatedTemplateCard key={t.id} template={t} />
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
