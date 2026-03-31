@@ -21,6 +21,9 @@ interface Agent {
   affiliateUrl?: string;
   integrations?: string[];
   features?: string[];
+  featured?: boolean;
+  featuredUntil?: string;
+  featuredBadge?: string;
 }
 
 async function getAgents(): Promise<Agent[]> {

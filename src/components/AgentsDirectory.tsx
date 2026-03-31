@@ -16,6 +16,15 @@ interface Agent {
   affiliateUrl?: string;
   integrations?: string[];
   features?: string[];
+  featured?: boolean;
+  featuredUntil?: string;
+  featuredBadge?: string;
+}
+
+function isFeaturedActive(agent: Agent): boolean {
+  if (!agent.featured) return false;
+  if (!agent.featuredUntil) return true;
+  return new Date(agent.featuredUntil) > new Date();
 }
 
 const CATEGORIES = [
@@ -43,7 +52,7 @@ export default function AgentsDirectory({ agents }: { agents: Agent[] }) {
   const allIntegrations = useMemo(() => extractUniqueIntegrations(agents), [agents]);
 
   const filtered = useMemo(() => {
-    return agents.filter((agent) => {
+    const result = agents.filter((agent) => {
       const q = search.toLowerCase();
       const matchesSearch =
         !q ||
@@ -55,6 +64,15 @@ export default function AgentsDirectory({ agents }: { agents: Agent[] }) {
         selectedIntegrations.length === 0 ||
         selectedIntegrations.some((i) => agent.integrations?.includes(i));
       return matchesSearch && matchesCategory && matchesIntegration;
+    });
+
+    // Sort: featured first, then alphabetical
+    return result.sort((a, b) => {
+      const aFeatured = isFeaturedActive(a);
+      const bFeatured = isFeaturedActive(b);
+      if (aFeatured && !bFeatured) return -1;
+      if (!aFeatured && bFeatured) return 1;
+      return a.name.localeCompare(b.name);
     });
   }, [agents, search, selectedCategories, selectedIntegrations]);
 
@@ -167,12 +185,24 @@ export default function AgentsDirectory({ agents }: { agents: Agent[] }) {
             const url = agent.affiliateUrl || agent.website;
             const isAffiliate = !!agent.affiliateUrl;
             const isExpanded = expandedId === agent.id;
+            const featured = isFeaturedActive(agent);
 
             return (
               <div
                 key={agent.id}
-                className="p-6 rounded-xl border border-white/5 bg-navy-light flex flex-col"
+                className={`p-6 rounded-xl border bg-navy-light flex flex-col relative ${
+                  featured
+                    ? "border-amber-500/40 ring-1 ring-amber-500/20"
+                    : "border-white/5"
+                }`}
               >
+                {/* Featured badge */}
+                {featured && (
+                  <div className="absolute -top-3 left-4 px-3 py-0.5 bg-amber-500 text-navy text-xs font-bold rounded-full">
+                    {agent.featuredBadge || "Featured Tool"}
+                  </div>
+                )}
+
                 <div className="text-xs text-accent font-medium mb-2 uppercase tracking-wide">
                   {agent.category}
                 </div>

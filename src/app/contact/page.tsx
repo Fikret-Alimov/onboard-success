@@ -4,6 +4,7 @@ import { useState, useEffect, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
+import { supabase } from "@/lib/supabase";
 
 const categories = [
   "General",
@@ -17,6 +18,8 @@ const categories = [
 function ContactForm() {
   const searchParams = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const type = searchParams.get("type") || "";
   const integratorParam = searchParams.get("integrator") || "";
@@ -36,11 +39,57 @@ function ContactForm() {
     }
   }, [type, integratorParam, listingParam]);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
+
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    console.log("Contact form submission:", data);
+    const data = Object.fromEntries(formData.entries()) as Record<string, string>;
+
+    // Insert into contact_submissions
+    const { error: contactError } = await supabase
+      .from("contact_submissions")
+      .insert({
+        name: data.name,
+        email: data.email,
+        category: data.category,
+        message: data.message,
+        company: data.company || null,
+        role: data.role || null,
+        integrator: data.integrator || null,
+        listing: data.listing || null,
+      });
+
+    if (contactError) {
+      setLoading(false);
+      setError("Something went wrong. Please try again.");
+      return;
+    }
+
+    // For "Request a Quote", also insert into quote_requests
+    if (data.category === "Request a Quote") {
+      await supabase.from("quote_requests").insert({
+        name: data.name,
+        email: data.email,
+        company: data.company || null,
+        integrator: data.integrator || null,
+        message: data.message,
+      });
+    }
+
+    // For "Claim a Listing", also insert into listing_claims
+    if (data.category === "Claim a Listing") {
+      await supabase.from("listing_claims").insert({
+        name: data.name,
+        email: data.email,
+        role: data.role || null,
+        listing: data.listing || null,
+        message: data.message,
+      });
+    }
+
+    setLoading(false);
     setSubmitted(true);
   }
 
@@ -62,6 +111,11 @@ function ContactForm() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="text-sm px-4 py-3 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">
+              {error}
+            </div>
+          )}
           {/* Show context banner for quote requests */}
           {category === "Request a Quote" && integrator && (
             <div className="p-4 rounded-lg border border-accent/20 bg-accent/5">
@@ -197,9 +251,12 @@ function ContactForm() {
 
           <button
             type="submit"
-            className="w-full bg-accent hover:bg-accent-hover text-white font-medium py-3 rounded-lg transition-colors"
+            disabled={loading}
+            className="w-full bg-accent hover:bg-accent-hover text-white font-medium py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {category === "Request a Quote"
+            {loading
+              ? "Sending..."
+              : category === "Request a Quote"
               ? "Request Quote"
               : category === "Claim a Listing"
               ? "Submit Claim"

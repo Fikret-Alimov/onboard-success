@@ -2,14 +2,34 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
 export default function EmailCapture() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("Newsletter signup:", email);
+    setError(null);
+    setLoading(true);
+
+    const { error: insertError } = await supabase
+      .from("subscribers")
+      .insert({ email, source: "website" });
+
+    setLoading(false);
+
+    if (insertError) {
+      if (insertError.code === "23505") {
+        setError("You're already subscribed!");
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+      return;
+    }
+
     setSubmitted(true);
     setEmail("");
   }
@@ -35,6 +55,15 @@ export default function EmailCapture() {
         Curated insights on agentic AI for Customer Success teams. No spam,
         unsubscribe anytime.
       </p>
+      {error && (
+        <div className={`text-sm mb-4 px-4 py-2 rounded-lg ${
+          error.includes("already") 
+            ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" 
+            : "bg-red-500/10 text-red-400 border border-red-500/20"
+        }`}>
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex gap-3">
         <input
           type="email"
@@ -46,9 +75,10 @@ export default function EmailCapture() {
         />
         <button
           type="submit"
-          className="bg-accent hover:bg-accent-hover text-white font-medium px-6 py-3 rounded-lg transition-colors text-sm whitespace-nowrap"
+          disabled={loading}
+          className="bg-accent hover:bg-accent-hover text-white font-medium px-6 py-3 rounded-lg transition-colors text-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Subscribe
+          {loading ? "Subscribing..." : "Subscribe"}
         </button>
       </form>
       <p className="text-xs text-muted/60 mt-3">
