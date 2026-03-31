@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Integrators Directory — OnboardSuccess",
@@ -12,11 +13,30 @@ interface Integrator {
   location: string;
   specialties: string[];
   website: string;
+  featured?: boolean;
+  featuredUntil?: string;
+  featuredBadge?: string;
 }
 
 async function getIntegrators(): Promise<Integrator[]> {
   const data = await import("@/../content/integrators.json");
-  return data.default as Integrator[];
+  const integrators = data.default as Integrator[];
+
+  // Sort: featured first (only if not expired), then alphabetical
+  const now = new Date().toISOString();
+  return integrators.sort((a, b) => {
+    const aFeatured = a.featured && (!a.featuredUntil || a.featuredUntil > now);
+    const bFeatured = b.featured && (!b.featuredUntil || b.featuredUntil > now);
+    if (aFeatured && !bFeatured) return -1;
+    if (!aFeatured && bFeatured) return 1;
+    return a.name.localeCompare(b.name);
+  });
+}
+
+function isFeaturedActive(integrator: Integrator): boolean {
+  if (!integrator.featured) return false;
+  if (!integrator.featuredUntil) return true;
+  return new Date(integrator.featuredUntil) > new Date();
 }
 
 export default async function IntegratorsPage() {
@@ -45,36 +65,69 @@ export default async function IntegratorsPage() {
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {integrators.map((integrator) => (
-            <div
-              key={integrator.name}
-              className="p-6 rounded-xl border border-white/5 bg-navy-light"
-            >
-              <div className="text-xs text-accent font-medium mb-2 uppercase tracking-wide">
-                {integrator.type}
-              </div>
-              <h3 className="text-lg font-semibold mb-1">{integrator.name}</h3>
-              <p className="text-xs text-muted mb-3">📍 {integrator.location}</p>
-              <div className="flex flex-wrap gap-1 mb-4">
-                {integrator.specialties.map((s) => (
-                  <span
-                    key={s}
-                    className="text-xs px-2 py-0.5 rounded-full bg-navy-lighter text-muted"
-                  >
-                    {s}
-                  </span>
-                ))}
-              </div>
-              <a
-                href={integrator.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-accent hover:underline"
+          {integrators.map((integrator) => {
+            const featured = isFeaturedActive(integrator);
+            return (
+              <div
+                key={integrator.name}
+                className={`p-6 rounded-xl border bg-navy-light relative ${
+                  featured
+                    ? "border-amber-500/40 ring-1 ring-amber-500/20"
+                    : "border-white/5"
+                }`}
               >
-                Visit website →
-              </a>
-            </div>
-          ))}
+                {/* Featured badge */}
+                {featured && (
+                  <div className="absolute -top-3 left-4 px-3 py-0.5 bg-amber-500 text-navy text-xs font-bold rounded-full">
+                    {integrator.featuredBadge || "Featured Partner"}
+                  </div>
+                )}
+
+                <div className="text-xs text-accent font-medium mb-2 uppercase tracking-wide">
+                  {integrator.type}
+                </div>
+                <h3 className="text-lg font-semibold mb-1">{integrator.name}</h3>
+                <p className="text-xs text-muted mb-3">📍 {integrator.location}</p>
+                <div className="flex flex-wrap gap-1 mb-4">
+                  {integrator.specialties.map((s) => (
+                    <span
+                      key={s}
+                      className="text-xs px-2 py-0.5 rounded-full bg-navy-lighter text-muted"
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-3 mb-3">
+                  <a
+                    href={integrator.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-accent hover:underline"
+                  >
+                    Visit website →
+                  </a>
+                </div>
+
+                {/* Request a Quote CTA */}
+                <Link
+                  href={`/contact?type=quote&integrator=${encodeURIComponent(integrator.name)}`}
+                  className="block w-full text-center bg-accent hover:bg-accent-hover text-white font-medium py-2.5 rounded-lg transition-colors text-sm mb-2"
+                >
+                  Request a Quote
+                </Link>
+
+                {/* Claim listing */}
+                <Link
+                  href={`/contact?type=claim&listing=${encodeURIComponent(integrator.name)}`}
+                  className="block text-center text-xs text-muted/50 hover:text-muted transition-colors"
+                >
+                  Claim this listing
+                </Link>
+              </div>
+            );
+          })}
         </div>
       )}
     </section>

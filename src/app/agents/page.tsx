@@ -14,6 +14,7 @@ interface Agent {
   g2Rating: number;
   website: string;
   integrations: string[];
+  affiliateUrl?: string;
 }
 
 async function getAgents(): Promise<Agent[]> {
@@ -47,34 +48,45 @@ export default async function AgentsPage() {
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {agents.map((agent) => (
-            <div
-              key={agent.name}
-              className="p-6 rounded-xl border border-white/5 bg-navy-light"
-            >
-              <div className="text-xs text-accent font-medium mb-2 uppercase tracking-wide">
-                {agent.category}
-              </div>
-              <h3 className="text-lg font-semibold mb-1">{agent.name}</h3>
-              <p className="text-sm text-muted mb-3">{agent.description}</p>
-              <p className="text-xs text-muted mb-2">
-                <span className="text-white/60">Best for:</span> {agent.bestFor}
-              </p>
-              {agent.g2Rating > 0 && (
-                <p className="text-xs text-muted mb-3">
-                  G2 Rating: {agent.g2Rating}/5
-                </p>
-              )}
-              <a
-                href={agent.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-accent hover:underline"
+          {agents.map((agent) => {
+            const url = agent.affiliateUrl || agent.website;
+            const isAffiliate = !!agent.affiliateUrl;
+            return (
+              <div
+                key={agent.name}
+                className="p-6 rounded-xl border border-white/5 bg-navy-light"
               >
-                Visit website →
-              </a>
-            </div>
-          ))}
+                <div className="text-xs text-accent font-medium mb-2 uppercase tracking-wide">
+                  {agent.category}
+                </div>
+                <h3 className="text-lg font-semibold mb-1">{agent.name}</h3>
+                <p className="text-sm text-muted mb-3">{agent.description}</p>
+                <p className="text-xs text-muted mb-2">
+                  <span className="text-white/60">Best for:</span> {agent.bestFor}
+                </p>
+                {agent.g2Rating > 0 && (
+                  <p className="text-xs text-muted mb-3">
+                    G2 Rating: {agent.g2Rating}/5
+                  </p>
+                )}
+                <div>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel={isAffiliate ? "noopener noreferrer sponsored" : "noopener noreferrer"}
+                    className="text-sm text-accent hover:underline"
+                  >
+                    Visit website →
+                  </a>
+                  {isAffiliate && (
+                    <p className="text-[10px] text-muted/40 mt-1">
+                      Partner link — we may earn a commission
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </section>

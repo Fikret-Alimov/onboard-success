@@ -1,4 +1,5 @@
 import Link from "next/link";
+import EmailCapture from "@/components/EmailCapture";
 
 const sections = [
   {
@@ -59,6 +60,13 @@ export default function HomePage() {
               </span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* Email Capture */}
+      <section className="max-w-6xl mx-auto px-6 pb-24">
+        <div className="max-w-xl mx-auto">
+          <EmailCapture />
         </div>
       </section>
     </>
