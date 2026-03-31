@@ -1,26 +1,66 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-export default function Home() {
+const sections = [
+  {
+    title: "Playbooks",
+    description:
+      "Deep dives into how AI is transforming Customer Success strategy. From agentic workflows to predictive health scoring — actionable intelligence for CS leaders.",
+    href: "/playbooks",
+  },
+  {
+    title: "AI Agents",
+    description:
+      "A curated directory of AI agents built for Customer Success. Compare features, integrations, and real user ratings to find the right fit for your stack.",
+    href: "/agents",
+  },
+  {
+    title: "Integrators",
+    description:
+      "Find certified consultants and agencies who specialize in CS platform implementation, migration, and optimization for mid-market SaaS teams.",
+    href: "/integrators",
+  },
+];
+
+export default function HomePage() {
   return (
-    <main className="max-w-6xl mx-auto px-6 py-20">
-      <h1 className="text-4xl font-bold mb-6">Onboard Success</h1>
-      <p className="text-lg mb-12">
-        CS AI resource hub for mid-market B2B SaaS Customer Success teams.
-      </p>
-      <section className="grid gap-8 grid-cols-1 md:grid-cols-3">
-        <Link href="/playbooks" className="block rounded-lg border p-6 hover:bg-blue-900 hover:text-white">
-          <h2 className="text-2xl font-semibold mb-2">Playbooks</h2>
-          <p>Explore practical customer success AI playbooks.</p>
-        </Link>
-        <Link href="/agents" className="block rounded-lg border p-6 hover:bg-blue-900 hover:text-white">
-          <h2 className="text-2xl font-semibold mb-2">Agents</h2>
-          <p>Directory of agentic AI tools for CS teams.</p>
-        </Link>
-        <Link href="/integrators" className="block rounded-lg border p-6 hover:bg-blue-900 hover:text-white">
-          <h2 className="text-2xl font-semibold mb-2">Integrators</h2>
-          <p>Find agencies specializing in CS AI implementations.</p>
-        </Link>
+    <>
+      {/* Hero */}
+      <section className="max-w-6xl mx-auto px-6 pt-24 pb-20">
+        <div className="max-w-3xl">
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
+            The AI Resource Hub
+            <br />
+            <span className="text-muted">for Customer Success</span>
+          </h1>
+          <p className="text-lg text-muted leading-relaxed max-w-2xl">
+            Playbooks, tools, and expert directories for mid-market B2B SaaS
+            teams navigating the shift to AI-powered Customer Success.
+          </p>
+        </div>
       </section>
-    </main>
+
+      {/* Section CTAs */}
+      <section className="max-w-6xl mx-auto px-6 pb-24">
+        <div className="grid md:grid-cols-3 gap-6">
+          {sections.map((s) => (
+            <Link
+              key={s.href}
+              href={s.href}
+              className="group block p-8 rounded-xl border border-white/5 bg-navy-light hover:border-accent/30 transition-all"
+            >
+              <h2 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors">
+                {s.title}
+              </h2>
+              <p className="text-sm text-muted leading-relaxed">
+                {s.description}
+              </p>
+              <span className="inline-block mt-4 text-sm text-accent font-medium">
+                Explore →
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </>
   );
 }

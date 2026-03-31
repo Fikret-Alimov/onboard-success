@@ -1,94 +1,97 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import Link from "next/link";
-import { Analytics } from "@vercel/analytics/react";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-});
-
-const navLinks = [
-  { href: "/playbooks", label: "Playbooks" },
-  { href: "/agents", label: "Agents" },
-  { href: "/integrators", label: "Integrators" },
-  { href: "/contact", label: "Contact" },
-];
-
 export const metadata: Metadata = {
-  title: "Onboard Success — CS AI Resource Hub",
+  title: "OnboardSuccess — CS AI Resources for B2B SaaS Teams",
   description:
-    "Onboard Success is the CS AI resource hub for mid-market SaaS teams: playbooks, agentic tools, and integrators that help excellence in customer success.",
-  metadataBase: new URL("https://onboard-success.com"),
-  openGraph: {
-    title: "Onboard Success",
-    description:
-      "Practical playbooks, agentic AI tools, and integrators tailored for mid-market Customer Success teams.",
-    type: "website",
-  },
+    "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, and integrator listings for mid-market B2B SaaS.",
 };
+
+function Navbar() {
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-navy border-b border-white/5">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <Link href="/" className="text-xl font-bold text-white tracking-tight">
+          OnboardSuccess
+        </Link>
+        <div className="flex items-center gap-8">
+          <Link
+            href="/playbooks"
+            className="text-sm text-muted hover:text-white transition-colors"
+          >
+            Playbooks
+          </Link>
+          <Link
+            href="/agents"
+            className="text-sm text-muted hover:text-white transition-colors"
+          >
+            Agents
+          </Link>
+          <Link
+            href="/integrators"
+            className="text-sm text-muted hover:text-white transition-colors"
+          >
+            Integrators
+          </Link>
+          <Link
+            href="/contact"
+            className="text-sm bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-lg transition-colors font-medium"
+          >
+            Submit a Tool
+          </Link>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="border-t border-white/5 bg-navy">
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="flex flex-wrap gap-6 text-sm text-muted">
+            <Link href="/playbooks" className="hover:text-white transition-colors">
+              Playbooks
+            </Link>
+            <Link href="/agents" className="hover:text-white transition-colors">
+              Agents
+            </Link>
+            <Link href="/integrators" className="hover:text-white transition-colors">
+              Integrators
+            </Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-white transition-colors">
+              Terms
+            </Link>
+            <Link href="/contact" className="hover:text-white transition-colors">
+              Contact
+            </Link>
+          </div>
+          <p className="text-sm text-muted/60">
+            © 2026 Onboard Success OÜ
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} min-h-full bg-[#010916] text-white`}
-    >
-      <body className="min-h-full flex flex-col">
-        <div className="min-h-screen flex flex-col">
-          <header className="border-b border-white/10 backdrop-blur-lg bg-[#010916]/80 sticky top-0 z-20">
-            <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-              <Link href="/" className="text-lg font-semibold tracking-wide">
-                Onboard Success
-              </Link>
-              <nav className="hidden items-center gap-6 text-sm font-medium lg:flex">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="transition hover:text-[#5dd2ff]"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                <Link
-                  href="/playbooks"
-                  className="rounded-full border border-[#5dd2ff] px-4 py-2 text-sm font-semibold text-[#5dd2ff] transition hover:bg-[#5dd2ff] hover:text-[#010916]"
-                >
-                  Submit a Tool
-                </Link>
-              </nav>
-            </div>
-          </header>
-          <main className="flex-1"> {children} </main>
-          <footer className="border-t border-white/10 bg-[#010916]/70">
-            <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-10 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex gap-4">
-                <Link href="/playbooks">Playbooks</Link>
-                <Link href="/agents">Agents</Link>
-                <Link href="/integrators">Integrators</Link>
-                <Link href="/privacy">Privacy</Link>
-                <Link href="/terms">Terms</Link>
-                <Link href="/contact">Contact</Link>
-              </div>
-              <div className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-white/50">
-                <Link href="https://www.linkedin.com/in/fikret" target="_blank" rel="noreferrer" className="hover:text-[#5dd2ff]">
-                  LinkedIn
-                </Link>
-              </div>
-            </div>
-          </footer>
-        </div>
+    <html lang="en">
+      <body className="bg-navy text-white min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1 pt-16">{children}</main>
+        <Footer />
         <Analytics />
       </body>
     </html>
