@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
 
@@ -100,7 +101,7 @@ export default async function PlaybookArticle({ params }: { params: Params }) {
       </header>
 
       <div className="prose">
-        <MDXRemote source={content} />
+        <MDXRemote source={content} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
       </div>
 
       {/* Template CTA */}
