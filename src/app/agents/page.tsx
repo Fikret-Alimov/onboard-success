@@ -77,6 +77,18 @@ export default async function AgentsPage() {
         features, integrations, and real user ratings.
       </p>
 
+      <p className="text-xs text-muted/50 max-w-2xl mb-8">
+        All product names, logos, and brands are property of their respective owners.
+        Ratings and reviews sourced from G2 and other public platforms — data may not
+        reflect current figures. OnboardSuccess is an independent directory and is not
+        affiliated with, endorsed by, or sponsored by any listed company. To request
+        changes or removal of a listing,{" "}
+        <Link href="/contact" className="underline hover:text-white/60">
+          contact us
+        </Link>
+        .
+      </p>
+
       <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/5 px-6 py-4 flex items-center justify-between">
         <p className="text-sm text-amber-200/80">
           ⭐ Want your AI agent featured? Get priority placement and a gold badge for <span className="font-semibold text-amber-300">$49/mo</span>

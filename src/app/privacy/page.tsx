@@ -106,7 +106,15 @@ export default function PrivacyPage() {
           (Andmekaitse Inspektsioon) or your local supervisory authority.
         </p>
 
-        <h2>8. Changes to This Policy</h2>
+        <h2>8. Third-Party Information</h2>
+        <p>
+          Our directories contain publicly available information about companies and
+          their products. This information is collected from public sources including
+          company websites, review platforms, and press releases. If you represent a
+          listed company and wish to update or remove your information, please contact us.
+        </p>
+
+        <h2>9. Changes to This Policy</h2>
         <p>
           We may update this Privacy Policy from time to time. Any changes will be posted
           on this page with an updated revision date. We encourage you to review this

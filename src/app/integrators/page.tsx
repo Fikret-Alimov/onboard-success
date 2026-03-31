@@ -89,6 +89,17 @@ export default async function IntegratorsPage() {
         implementation, migration, and optimization.
       </p>
 
+      <p className="text-xs text-muted/50 max-w-2xl mb-8">
+        All company names and brands are property of their respective owners.
+        OnboardSuccess is an independent directory and is not affiliated with, endorsed
+        by, or sponsored by any listed agency. Listing information is based on publicly
+        available data and may not be current. To request changes or removal,{" "}
+        <Link href="/contact" className="underline hover:text-white/60">
+          contact us
+        </Link>
+        .
+      </p>
+
       <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/5 px-6 py-4 flex items-center justify-between">
         <p className="text-sm text-amber-200/80">
           ⭐ Want your agency featured? Get priority placement and a gold badge for <span className="font-semibold text-amber-300">$49/mo</span>

@@ -238,7 +238,7 @@ export default function AgentsDirectory({ agents }: { agents: Agent[] }) {
                 {/* G2 Rating + Reviews */}
                 {agent.g2Rating && agent.g2Rating !== "N/A" && (
                   <p className="text-xs text-muted mb-3">
-                    ⭐ {agent.g2Rating}
+                    ⭐ G2 Rating: {agent.g2Rating}
                     {agent.g2Reviews && (
                       <span className="text-white/40 ml-1">({agent.g2Reviews} reviews)</span>
                     )}

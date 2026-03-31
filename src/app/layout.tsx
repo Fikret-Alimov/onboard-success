@@ -107,9 +107,14 @@ function Footer() {
               Contact
             </Link>
           </div>
-          <p className="text-sm text-muted/60">
-            © 2026 Onboard Success OÜ
-          </p>
+          <div className="text-right">
+            <p className="text-sm text-muted/60">
+              © 2026 Onboard Success OÜ
+            </p>
+            <p className="text-xs text-muted/40">
+              OnboardSuccess is an independent resource. We are not affiliated with any listed company unless explicitly stated.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

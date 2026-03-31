@@ -108,7 +108,25 @@ export default function TermsPage() {
           after changes are posted constitutes acceptance of the updated Terms.
         </p>
 
-        <h2>10. Contact</h2>
+        <h2>10. Third-Party Listings</h2>
+        <p>
+          OnboardSuccess features listings of third-party products, services, and
+          companies. These listings are provided for informational purposes only.
+          Inclusion in our directory does not imply endorsement, affiliation, or
+          sponsorship.
+        </p>
+        <p>
+          Product information, ratings, and pricing are based on publicly available data
+          and may not reflect current details. We make reasonable efforts to keep listings
+          accurate but cannot guarantee completeness or timeliness.
+        </p>
+        <p>
+          Companies and individuals listed in our directories may request modifications
+          or removal of their listings by contacting us at{" "}
+          <a href="mailto:hello@onboard-success.com">hello@onboard-success.com</a>.
+        </p>
+
+        <h2>11. Contact</h2>
         <p>
           For questions about these Terms, please contact us at{" "}
           <a href="mailto:legal@onboard-success.com">legal@onboard-success.com</a>.
