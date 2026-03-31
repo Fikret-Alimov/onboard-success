@@ -1,0 +1,15 @@
+{
+  "id": "onboarding-tracker",
+  "name": "Onboarding Milestone Tracker",
+  "description": "Tracks customer onboarding progress and sends proactive nudges when milestones are at risk of slipping.",
+  "longDescription": "Monitors onboarding milestones against your defined timeline. When a customer falls behind on key steps (first login, integration setup, training completion, first value moment), it automatically sends personalized nudge emails and alerts the CSM. Includes a weekly onboarding health digest.",
+  "category": "Onboarding",
+  "platform": "n8n",
+  "difficulty": "Beginner",
+  "setupTime": "20 minutes",
+  "integrations": ["HubSpot", "Intercom", "Email", "Slack"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-31",
+  "downloads": 0
+}

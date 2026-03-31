@@ -1,0 +1,15 @@
+{
+  "id": "qbr-prep-agent",
+  "name": "QBR Prep Agent",
+  "description": "Automatically generates QBR briefing documents by pulling account data, usage metrics, and conversation summaries.",
+  "longDescription": "Runs on a schedule (e.g., 7 days before each QBR). Pulls account data from your CRM, usage metrics from your product analytics, recent support tickets, and meeting notes. Generates a structured briefing document with key metrics, risk flags, expansion opportunities, and talking points. Outputs to Google Docs, Notion, or email.",
+  "category": "Meeting Prep",
+  "platform": "n8n",
+  "difficulty": "Advanced",
+  "setupTime": "45 minutes",
+  "integrations": ["Salesforce", "Gong", "Google Docs", "Slack"],
+  "tier": "pro",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-31",
+  "downloads": 0
+}

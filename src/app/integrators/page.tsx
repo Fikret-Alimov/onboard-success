@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import IntegratorsDirectory from "@/components/IntegratorsDirectory";
 
 export const metadata: Metadata = {
@@ -46,6 +47,18 @@ export default async function IntegratorsPage() {
         Certified consultants and agencies who specialize in CS platform
         implementation, migration, and optimization.
       </p>
+
+      <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/5 px-6 py-4 flex items-center justify-between">
+        <p className="text-sm text-amber-200/80">
+          ⭐ Want your agency featured? Get priority placement and a gold badge for <span className="font-semibold text-amber-300">$49/mo</span>
+        </p>
+        <Link
+          href="/featured"
+          className="shrink-0 ml-4 text-sm font-medium text-amber-400 hover:text-amber-300 transition-colors"
+        >
+          Get Featured →
+        </Link>
+      </div>
 
       {integrators.length === 0 ? (
         <div className="text-center py-20 border border-white/5 rounded-xl bg-navy-light">
