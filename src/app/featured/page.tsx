@@ -126,16 +126,10 @@ export default function FeaturedPage() {
       {!selectedType && (
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
-            onClick={() => handleCheckout("agent")}
+            onClick={() => handleCheckout("integrator")}
             className="px-8 py-3 rounded-lg bg-accent hover:bg-accent-hover text-white font-medium transition-colors"
           >
-            Feature an AI Agent
-          </button>
-          <button
-            onClick={() => handleCheckout("integrator")}
-            className="px-8 py-3 rounded-lg border border-white/10 hover:border-white/20 text-white font-medium transition-colors"
-          >
-            Feature an Integrator
+            Feature Your Agency
           </button>
         </div>
       )}
