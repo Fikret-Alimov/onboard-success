@@ -116,3 +116,39 @@ body {
   border-color: #1E293B;
   margin: 2rem 0;
 }
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  overflow-x: auto;
+  display: block;
+}
+
+.prose thead {
+  border-bottom: 2px solid #1E293B;
+}
+
+.prose th {
+  color: #FFFFFF;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  white-space: nowrap;
+  background: var(--color-navy-lighter);
+}
+
+.prose td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #1E293B;
+  vertical-align: top;
+}
+
+.prose tr:hover td {
+  background: var(--color-navy-lighter);
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: none;
+}
