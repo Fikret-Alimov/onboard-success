@@ -37,6 +37,12 @@ function Navbar() {
             Integrators
           </Link>
           <Link
+            href="/templates"
+            className="text-sm text-muted hover:text-white transition-colors"
+          >
+            Templates
+          </Link>
+          <Link
             href="/contact"
             className="text-sm bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-lg transition-colors font-medium"
           >
@@ -67,6 +73,9 @@ function Footer() {
             </Link>
             <Link href="/integrators" className="hover:text-white transition-colors">
               Integrators
+            </Link>
+            <Link href="/templates" className="hover:text-white transition-colors">
+              Templates
             </Link>
             <Link href="/privacy" className="hover:text-white transition-colors">
               Privacy

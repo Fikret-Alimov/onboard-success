@@ -1,0 +1,134 @@
+{
+  "name": "Churn Risk Alert Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "hoursInterval": 6 }]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://your-crm.example.com/api/accounts",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "salesforceOAuth2Api",
+        "options": {
+          "response": { "response": { "responseFormat": "json" } }
+        }
+      },
+      "id": "fetch-accounts",
+      "name": "Fetch Accounts from CRM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://your-support.example.com/api/tickets?account_id={{ $json.account_id }}&created_after={{ $now.minus(30, 'days').toISO() }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "zendeskApi",
+        "options": {}
+      },
+      "id": "fetch-support-tickets",
+      "name": "Fetch Support Tickets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://your-analytics.example.com/api/usage?account_id={{ $json.account_id }}&period=30d",
+        "options": {}
+      },
+      "id": "fetch-usage-metrics",
+      "name": "Fetch Usage Metrics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const account = $('Fetch Accounts from CRM').item.json;\nconst tickets = $('Fetch Support Tickets').item.json;\nconst usage = $('Fetch Usage Metrics').item.json;\n\nlet riskScore = 0;\nconst riskFactors = [];\n\n// Usage decline check\nif (usage.change_percent < -20) {\n  riskScore += 30;\n  riskFactors.push(`Usage declined ${Math.abs(usage.change_percent)}% in 30 days`);\n}\n\n// Support ticket spike\nif (tickets.count > 5) {\n  riskScore += 25;\n  riskFactors.push(`${tickets.count} support tickets in last 30 days`);\n}\n\n// NPS/CSAT drop\nif (account.latest_nps < 6) {\n  riskScore += 20;\n  riskFactors.push(`NPS dropped to ${account.latest_nps}`);\n}\n\n// Contract renewal approaching\nconst daysToRenewal = Math.floor((new Date(account.renewal_date) - new Date()) / (1000*60*60*24));\nif (daysToRenewal < 90) {\n  riskScore += 15;\n  riskFactors.push(`Renewal in ${daysToRenewal} days`);\n}\n\n// Stakeholder change\nif (account.champion_changed) {\n  riskScore += 10;\n  riskFactors.push('Key stakeholder change detected');\n}\n\nreturn [{\n  json: {\n    account_id: account.id,\n    account_name: account.name,\n    csm_email: account.csm_email,\n    risk_score: riskScore,\n    risk_level: riskScore >= 60 ? 'High' : riskScore >= 30 ? 'Medium' : 'Low',\n    risk_factors: riskFactors,\n    renewal_date: account.renewal_date,\n    arr: account.arr\n  }\n}];"
+      },
+      "id": "calculate-risk",
+      "name": "Calculate Risk Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 100]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "" },
+          "conditions": [
+            {
+              "id": "risk-threshold",
+              "leftValue": "={{ $json.risk_score }}",
+              "rightValue": 30,
+              "operator": { "type": "number", "operation": "gte" }
+            }
+          ]
+        }
+      },
+      "id": "risk-filter",
+      "name": "Risk Above Threshold?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [880, 100]
+    },
+    {
+      "parameters": {
+        "channel": "#cs-alerts",
+        "text": "=🚨 *Churn Risk Alert — {{ $json.risk_level }}*\n\n*Account:* {{ $json.account_name }}\n*Risk Score:* {{ $json.risk_score }}/100\n*ARR:* ${{ $json.arr }}\n*Renewal:* {{ $json.renewal_date }}\n\n*Risk Factors:*\n{{ $json.risk_factors.join('\\n• ') }}\n\n*CSM:* {{ $json.csm_email }}",
+        "otherOptions": {}
+      },
+      "id": "slack-alert",
+      "name": "Send Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1100, 0],
+      "credentials": { "slackApi": { "id": "1", "name": "Slack API" } }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-crm.example.com/api/tasks",
+        "body": {
+          "json": {
+            "title": "=Review churn risk: {{ $json.account_name }}",
+            "assigned_to": "={{ $json.csm_email }}",
+            "due_date": "={{ $now.plus(3, 'days').toISO() }}",
+            "priority": "={{ $json.risk_level === 'High' ? 'urgent' : 'high' }}",
+            "description": "=Auto-generated churn risk alert. Risk score: {{ $json.risk_score }}/100. Factors: {{ $json.risk_factors.join(', ') }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "create-task",
+      "name": "Create CSM Task",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1100, 200]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": { "main": [[{ "node": "Fetch Accounts from CRM", "type": "main", "index": 0 }]] },
+    "Fetch Accounts from CRM": { "main": [[{ "node": "Fetch Support Tickets", "type": "main", "index": 0 }, { "node": "Fetch Usage Metrics", "type": "main", "index": 0 }]] },
+    "Fetch Support Tickets": { "main": [[{ "node": "Calculate Risk Score", "type": "main", "index": 0 }]] },
+    "Fetch Usage Metrics": { "main": [[{ "node": "Calculate Risk Score", "type": "main", "index": 0 }]] },
+    "Calculate Risk Score": { "main": [[{ "node": "Risk Above Threshold?", "type": "main", "index": 0 }]] },
+    "Risk Above Threshold?": { "main": [[{ "node": "Send Slack Alert", "type": "main", "index": 0 }, { "node": "Create CSM Task", "type": "main", "index": 0 }], []] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": [{ "name": "customer-success" }, { "name": "churn-risk" }]
+}
