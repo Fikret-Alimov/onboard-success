@@ -1,0 +1,15 @@
+{
+  "id": "expansion-signal-detector",
+  "name": "Expansion Signal Detector",
+  "description": "Identifies accounts showing expansion readiness based on usage patterns, feature adoption, and engagement spikes.",
+  "longDescription": "Monitors customer accounts for signals that indicate expansion readiness — usage exceeding current plan limits, new department adoption, feature requests for higher-tier features, and positive sentiment trends. Scores each account's expansion potential and alerts the CSM and AE with a briefing on the opportunity including suggested upsell/cross-sell plays.",
+  "category": "Revenue",
+  "platform": "n8n",
+  "difficulty": "Intermediate",
+  "setupTime": "35 minutes",
+  "integrations": ["Salesforce", "Mixpanel", "Slack"],
+  "tier": "pro",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-31",
+  "downloads": 0
+}

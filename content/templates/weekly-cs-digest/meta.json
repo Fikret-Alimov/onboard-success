@@ -1,0 +1,15 @@
+{
+  "id": "weekly-cs-digest",
+  "name": "Weekly CS Digest Generator",
+  "description": "Compiles a weekly digest of account activity, risk alerts, wins, and action items for CS leadership.",
+  "longDescription": "Runs every Monday morning and aggregates the past week's customer success activity into a formatted digest. Includes new risk flags raised, issues resolved, expansion wins, upcoming renewals, and key action items. Sends the digest via Slack and email to CS leadership, providing a comprehensive snapshot of portfolio health without manual report-building.",
+  "category": "Reporting",
+  "platform": "n8n",
+  "difficulty": "Beginner",
+  "setupTime": "15 minutes",
+  "integrations": ["Salesforce", "Slack", "Email"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-31",
+  "downloads": 0
+}

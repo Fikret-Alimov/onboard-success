@@ -1,0 +1,125 @@
+{
+  "name": "Weekly CS Digest Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "cronExpression", "expression": "0 9 * * 1" }]
+        }
+      },
+      "id": "monday-trigger",
+      "name": "Monday 9 AM Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://your-crm.example.com/api/risk-alerts?created_after={{ $now.minus(7, 'days').format('yyyy-MM-dd') }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "salesforceOAuth2Api",
+        "options": {
+          "response": { "response": { "responseFormat": "json" } }
+        }
+      },
+      "id": "fetch-risks",
+      "name": "Fetch New Risk Alerts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, -200]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://your-crm.example.com/api/activities?type=issue_resolved&since={{ $now.minus(7, 'days').format('yyyy-MM-dd') }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "salesforceOAuth2Api",
+        "options": {}
+      },
+      "id": "fetch-resolved",
+      "name": "Fetch Resolved Issues",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://your-crm.example.com/api/opportunities?type=expansion&stage=closed_won&close_date_after={{ $now.minus(7, 'days').format('yyyy-MM-dd') }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "salesforceOAuth2Api",
+        "options": {}
+      },
+      "id": "fetch-expansions",
+      "name": "Fetch Expansion Wins",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 200]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://your-crm.example.com/api/accounts?renewal_before={{ $now.plus(30, 'days').format('yyyy-MM-dd') }}&renewal_after={{ $now.format('yyyy-MM-dd') }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "salesforceOAuth2Api",
+        "options": {}
+      },
+      "id": "fetch-renewals",
+      "name": "Fetch Upcoming Renewals",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const risks = $('Fetch New Risk Alerts').all().map(i => i.json);\nconst resolved = $('Fetch Resolved Issues').all().map(i => i.json);\nconst expansions = $('Fetch Expansion Wins').all().map(i => i.json);\nconst renewals = $('Fetch Upcoming Renewals').all().map(i => i.json);\n\nconst period = `${$now.minus(7, 'days').format('MMM dd')} - ${$now.format('MMM dd, yyyy')}`;\n\n// Risk summary\nconst riskSummary = risks.length > 0\n  ? risks.map(r => `• ${r.account_name} — ${r.risk_level} risk (${r.reason})`).join('\\n')\n  : '• No new risk alerts this week 🎉';\n\nconst highRiskCount = risks.filter(r => r.risk_level === 'High').length;\n\n// Resolved summary\nconst resolvedSummary = resolved.length > 0\n  ? resolved.map(r => `• ${r.account_name} — ${r.issue_type} resolved`).join('\\n')\n  : '• No issues resolved this week';\n\n// Expansion summary\nconst totalExpansionArr = expansions.reduce((sum, e) => sum + (e.amount || 0), 0);\nconst expansionSummary = expansions.length > 0\n  ? expansions.map(e => `• ${e.account_name} — +$${e.amount} ARR`).join('\\n')\n  : '• No expansion wins this week';\n\n// Renewal summary\nconst renewalSummary = renewals.length > 0\n  ? renewals.map(r => `• ${r.account_name} ($${r.arr}) — renews ${r.renewal_date}`).join('\\n')\n  : '• No renewals in the next 30 days';\n\n// Build digest\nconst slackDigest = `📊 *Weekly CS Digest* (${period})\\n\\n` +\n  `*📈 Key Metrics*\\n` +\n  `• New risk alerts: ${risks.length} (${highRiskCount} high)\\n` +\n  `• Issues resolved: ${resolved.length}\\n` +\n  `• Expansion wins: ${expansions.length} (+$${totalExpansionArr} ARR)\\n` +\n  `• Upcoming renewals (30d): ${renewals.length}\\n\\n` +\n  `*🚨 New Risk Alerts*\\n${riskSummary}\\n\\n` +\n  `*✅ Issues Resolved*\\n${resolvedSummary}\\n\\n` +\n  `*💰 Expansion Wins*\\n${expansionSummary}\\n\\n` +\n  `*🔄 Upcoming Renewals (30 days)*\\n${renewalSummary}`;\n\nconst htmlDigest = `<h2>Weekly CS Digest (${period})</h2>` +\n  `<h3>Key Metrics</h3><ul>` +\n  `<li>New risk alerts: ${risks.length} (${highRiskCount} high)</li>` +\n  `<li>Issues resolved: ${resolved.length}</li>` +\n  `<li>Expansion wins: ${expansions.length} (+$${totalExpansionArr} ARR)</li>` +\n  `<li>Upcoming renewals (30d): ${renewals.length}</li></ul>` +\n  `<h3>🚨 New Risk Alerts</h3><p>${riskSummary.replace(/\\n/g, '<br>')}</p>` +\n  `<h3>✅ Issues Resolved</h3><p>${resolvedSummary.replace(/\\n/g, '<br>')}</p>` +\n  `<h3>💰 Expansion Wins</h3><p>${expansionSummary.replace(/\\n/g, '<br>')}</p>` +\n  `<h3>🔄 Upcoming Renewals</h3><p>${renewalSummary.replace(/\\n/g, '<br>')}</p>`;\n\nreturn [{ json: { period, slackDigest, htmlDigest, riskCount: risks.length, resolvedCount: resolved.length, expansionCount: expansions.length, renewalCount: renewals.length, totalExpansionArr } }];"
+      },
+      "id": "compile-digest",
+      "name": "Compile Digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 100]
+    },
+    {
+      "parameters": {
+        "channel": "#cs-leadership",
+        "text": "={{ $json.slackDigest }}",
+        "otherOptions": {}
+      },
+      "id": "slack-digest",
+      "name": "Post to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [720, 0],
+      "credentials": { "slackApi": { "id": "1", "name": "Slack API" } }
+    },
+    {
+      "parameters": {
+        "fromEmail": "cs-digest@yourcompany.com",
+        "toEmail": "cs-leadership@yourcompany.com",
+        "subject": "=Weekly CS Digest — {{ $json.period }}",
+        "emailType": "html",
+        "html": "={{ $json.htmlDigest }}",
+        "options": {}
+      },
+      "id": "email-digest",
+      "name": "Email Digest",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [720, 200],
+      "credentials": { "smtp": { "id": "2", "name": "SMTP" } }
+    }
+  ],
+  "connections": {
+    "Monday 9 AM Schedule": { "main": [[{ "node": "Fetch New Risk Alerts", "type": "main", "index": 0 }, { "node": "Fetch Resolved Issues", "type": "main", "index": 0 }, { "node": "Fetch Expansion Wins", "type": "main", "index": 0 }, { "node": "Fetch Upcoming Renewals", "type": "main", "index": 0 }]] },
+    "Fetch New Risk Alerts": { "main": [[{ "node": "Compile Digest", "type": "main", "index": 0 }]] },
+    "Fetch Resolved Issues": { "main": [[{ "node": "Compile Digest", "type": "main", "index": 0 }]] },
+    "Fetch Expansion Wins": { "main": [[{ "node": "Compile Digest", "type": "main", "index": 0 }]] },
+    "Fetch Upcoming Renewals": { "main": [[{ "node": "Compile Digest", "type": "main", "index": 0 }]] },
+    "Compile Digest": { "main": [[{ "node": "Post to Slack", "type": "main", "index": 0 }, { "node": "Email Digest", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": [{ "name": "customer-success" }, { "name": "reporting" }, { "name": "digest" }]
+}
