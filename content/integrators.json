@@ -1,1 +1,186 @@
-[]
+[
+  {
+    "id": "ncloud-integrators",
+    "name": "nCloud Integrators",
+    "type": "Implementation Partner",
+    "location": "USA (remote-first)",
+    "description": "Market leader in Gainsight implementations and CS best practices, offering implementation, administration, and ongoing consulting. Serves startup to enterprise companies with a boutique approach that avoids Gainsight Professional Services pricing.",
+    "specialties": [
+      "Gainsight CS",
+      "Gainsight PX",
+      "health score architecture",
+      "playbook design",
+      "CS Ops"
+    ],
+    "website": "https://ncloudintegrators.com",
+    "contactUrl": "https://ncloudintegrators.com/contact",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "valuize",
+    "name": "Valuize",
+    "type": "Strategy Consultant",
+    "location": "USA/Canada",
+    "description": "Recognized for operationalizing CS strategy and being highly certified in Gainsight. Takes clients from CS vision to scalable, measurable execution with expertise in NRR optimization and Gainsight configuration, serving large and strategic customers.",
+    "specialties": [
+      "CS strategy",
+      "NRR optimization",
+      "Gainsight implementation",
+      "CS Ops design"
+    ],
+    "website": "https://valuize.co",
+    "contactUrl": "https://valuize.co",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "csm-practice",
+    "name": "CSM Practice",
+    "type": "Strategy Consultant",
+    "location": "USA (global clients)",
+    "description": "Offers management consulting and technology services focused on CS transformation and Gainsight implementation. Excels at building new CS functions or restructuring after growth with combined strategic program design and technical delivery.",
+    "specialties": [
+      "CS transformation",
+      "Gainsight",
+      "CS metrics design",
+      "team structure",
+      "retention strategy"
+    ],
+    "website": "https://csmpractice.com",
+    "contactUrl": "https://csmpractice.com/contact",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "growth-molecules",
+    "name": "Growth Molecules",
+    "type": "Implementation Partner",
+    "location": "USA (remote)",
+    "description": "Focuses on building strategic programs, systems, and enabling CS teams. Gainsight implementation partner emphasizing both technical delivery and comprehensive team training for enhanced CS maturity.",
+    "specialties": [
+      "Gainsight",
+      "CS enablement",
+      "team training",
+      "scalable CS programs",
+      "onboarding design"
+    ],
+    "website": "https://growthmolecules.com",
+    "contactUrl": "https://growthmolecules.com",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "grazitti-interactive",
+    "name": "Grazitti Interactive",
+    "type": "Implementation Partner",
+    "location": "India/USA (global delivery)",
+    "description": "Provides Gainsight implementations and custom AI platform development, with a large certified team. Also builds SearchUnify, offering custom agentic AI and integrations for organizations seeking to extend CSP infrastructure.",
+    "specialties": [
+      "Gainsight implementation",
+      "custom AI development",
+      "SearchUnify",
+      "knowledge management agents"
+    ],
+    "website": "https://grazitti.com",
+    "contactUrl": "https://grazitti.com/contact",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "winning-by-design",
+    "name": "Winning by Design",
+    "type": "Revenue Architecture",
+    "location": "USA (global)",
+    "description": "Methodology-first consultancy implementing the SPICED framework and post-sale revenue architecture. Specializes in designing repeatable frameworks that AI agents execute, with a platform-agnostic approach.",
+    "specialties": [
+      "SPICED framework",
+      "CS methodology",
+      "revenue architecture",
+      "post-sale motion design"
+    ],
+    "website": "https://winningbydesign.com",
+    "contactUrl": "https://winningbydesign.com/contact",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "satrix-solutions",
+    "name": "Satrix Solutions",
+    "type": "CX Consulting",
+    "location": "USA",
+    "description": "Consultancy focused on customer experience research, NPS programs, and retention analytics. Gainsight partner delivering measurement layers and insights-to-action workflows to optimize and strengthen CS programs.",
+    "specialties": [
+      "Customer experience research",
+      "NPS programs",
+      "retention analytics",
+      "CS ROI measurement"
+    ],
+    "website": "https://satrixsolutions.com",
+    "contactUrl": "https://satrixsolutions.com",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "clarkston-consulting",
+    "name": "Clarkston Consulting",
+    "type": "Enterprise AI",
+    "location": "USA",
+    "description": "Enterprise consulting firm with Salesforce Agentforce and AI implementation expertise. Builds agentic AI on Salesforce, offering data foundation, governance, and transformation for CS teams in Salesforce ecosystems.",
+    "specialties": [
+      "Salesforce Agentforce",
+      "AI governance",
+      "data foundations",
+      "enterprise transformation"
+    ],
+    "website": "https://clarkstonconsulting.com",
+    "contactUrl": "https://clarkstonconsulting.com/contact-us",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "revpartners",
+    "name": "RevPartners",
+    "type": "RevOps",
+    "location": "USA (remote)",
+    "description": "HubSpot Elite Partner specializing in RevOps automation and CS workflows for HubSpot Service Hub users. Best for mid-market SaaS building CS automation within CRM-native environments and needing ongoing RevOps support.",
+    "specialties": [
+      "HubSpot Service Hub",
+      "RevOps automation",
+      "CS workflows",
+      "CRM-native CS"
+    ],
+    "website": "https://revpartners.io",
+    "contactUrl": "https://revpartners.io/contact",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  },
+  {
+    "id": "completecsm",
+    "name": "CompleteCSM",
+    "type": "Methodology",
+    "location": "USA",
+    "description": "CS Methodology partner specializing in human-first AI frameworks and workflow design. Supports leaders with cultural and organizational change for AI adoption, focused on maximizing human CSM impact with strong enablement and manager training.",
+    "specialties": [
+      "CS methodology",
+      "human-AI workflow design",
+      "ChurnZero",
+      "team enablement",
+      "change management"
+    ],
+    "website": "https://completecsm.com",
+    "contactUrl": "https://completecsm.com",
+    "featured": false,
+    "featuredUntil": "",
+    "featuredBadge": ""
+  }
+]

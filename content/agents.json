@@ -1,1 +1,239 @@
-[]
+[
+  {
+    "id": "churnzero-ai-agents",
+    "name": "ChurnZero AI Agents",
+    "category": "CS Platform",
+    "description": "Purpose-built CS platform with 14+ embedded agentic AI agents for automation and risk detection.",
+    "longDescription": "ChurnZero AI Agents is a deeply integrated agentic customer success platform with over 14 native AI agents for data enrichment, risk detection, and workflow execution. Agents autonomously handle tasks such as health scanning, renewal risk, and customer communication analysis. March 2026 updates include knowledge source integrations and enhanced workflow capabilities.",
+    "bestFor": "Mid-market to enterprise CS teams already on ChurnZero seeking autonomous execution.",
+    "g2Rating": "4.7/5",
+    "g2Reviews": "680+",
+    "pricing": "Credit-based, self-serve AI Marketplace",
+    "website": "https://churnzero.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Zendesk",
+      "Confluence"
+    ],
+    "features": [
+      "Embedded AI agents",
+      "Data enrichment",
+      "Risk detection",
+      "Workflow automation",
+      "Native integrations"
+    ]
+  },
+  {
+    "id": "gainsight-atlas-ai-agents",
+    "name": "Gainsight Atlas AI Agents",
+    "category": "CS Platform",
+    "description": "AI agentic layer on top of Gainsight CS platform, with relationship intelligence and workflow agents.",
+    "longDescription": "Gainsight Atlas AI Agents add an agentic layer to the popular CS platform, providing advanced relationship intelligence via Staircase AI and workflow automation through Renewal AI Agent. The solution is suited for enterprise environments and offers a roadmap to customer-facing agents for in-app guidance and moderation. Forrester recognizes Gainsight as a wave leader in CS Platforms.",
+    "bestFor": "Enterprise SaaS companies with dedicated CS Ops and Salesforce-native stacks.",
+    "g2Rating": "4.4/5",
+    "g2Reviews": "1,100+",
+    "pricing": "Enterprise (est. $24k-$168k+/year)",
+    "website": "https://gainsight.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Slack",
+      "Outlook"
+    ],
+    "features": [
+      "Agentic AI layer",
+      "Relationship intelligence",
+      "Renewal automation",
+      "Customer-facing agents roadmap"
+    ]
+  },
+  {
+    "id": "olivai",
+    "name": "Oliv.ai",
+    "category": "AI-Native Platform",
+    "description": "AI-native CS platform with modular agents for revenue orchestration and rapid deployment.",
+    "longDescription": "Oliv.ai is a next-gen customer success platform built natively with agentic AI. It features modular agents for health monitoring, QBRs, MAPs, CRM management, and AE-to-CSM handoffs. The platform deploys in minutes versus months, positioning itself as an admin-replacing AI layer for teams moving away from legacy CSPs.",
+    "bestFor": "Mid-market teams without CS Ops resources, or those moving off Gainsight/Totango.",
+    "g2Rating": "4.8/5",
+    "g2Reviews": "N/A (New platform)",
+    "pricing": "Modular per-agent pricing, free data migration",
+    "website": "https://oliv.ai",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Google Workspace",
+      "Outlook"
+    ],
+    "features": [
+      "Health monitoring agent",
+      "QBR builder",
+      "CRM manager",
+      "Rapid deployment"
+    ]
+  },
+  {
+    "id": "everafter",
+    "name": "EverAfter",
+    "category": "Digital CS",
+    "description": "Customer-facing portal builder powered by AI, translating CS data to interactive self-serve experiences.",
+    "longDescription": "EverAfter enables CS teams to transform internal data into a branded, interactive interface for customers, supporting onboarding, journey mapping, and success plans. Its AI agent automates milestone creation and plan summaries, while the interface builder allows custom portals with no coding required. It integrates with Gainsight/Totango to power external customer journeys.",
+    "bestFor": "CS teams wanting to offer customers a self-service success interface powered by internal CS data.",
+    "g2Rating": "4.7/5",
+    "g2Reviews": "70+",
+    "pricing": "Mid-market to enterprise, custom quote",
+    "website": "https://everafter.ai",
+    "affiliateUrl": "",
+    "integrations": [
+      "Gainsight",
+      "Totango",
+      "Salesforce"
+    ],
+    "features": [
+      "Customer portal builder",
+      "AI milestone generation",
+      "Self-serve success plans"
+    ]
+  },
+  {
+    "id": "staircase-ai",
+    "name": "Staircase AI (by Gainsight)",
+    "category": "Relationship Intelligence",
+    "description": "Relationship intelligence agent scanning communications for health & stakeholder insights.",
+    "longDescription": "Staircase AI, now integrated into Gainsight, uses AI to analyze all customer communications—emails, meetings, Slack, and support tickets—identifying signals related to relationship health, stakeholder changes, and advocacy opportunities. It requires no manual data entry and has been shown to dramatically improve retention and expansion outcomes.",
+    "bestFor": "Gainsight enterprise customers needing automated relationship intelligence beyond product usage.",
+    "g2Rating": "4.4/5",
+    "g2Reviews": "See Gainsight reviews",
+    "pricing": "Included in Gainsight Atlas tier",
+    "website": "https://staircaseai.com",
+    "affiliateUrl": "",
+    "integrations": [
+      "Gainsight",
+      "Salesforce",
+      "Slack",
+      "Outlook"
+    ],
+    "features": [
+      "Comm channel scanning",
+      "Relationship health detection",
+      "Stakeholder intelligence"
+    ]
+  },
+  {
+    "id": "vitally",
+    "name": "Vitally",
+    "category": "CS Platform",
+    "description": "Mid-market CS platform with AI copilot, collaborative docs, and fast deployment.",
+    "longDescription": "Vitally is designed for scaling B2B SaaS teams, providing an AI copilot that turns customer data into actionable insights. Collaborative Vitally Docs support shared success plans, and the platform boasts one of the fastest implementation timelines in its class. AI features are built directly on the Vitally data model, requiring minimal admin overhead.",
+    "bestFor": "Scaling SaaS teams (10-100 CSMs) seeking AI-powered CS without a full CS Ops function.",
+    "g2Rating": "4.5/5",
+    "g2Reviews": "350+",
+    "pricing": "Starts ~$500/month, scales with team",
+    "website": "https://vitally.io",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "HubSpot",
+      "Zendesk",
+      "Slack"
+    ],
+    "features": [
+      "AI copilot",
+      "Collaborative docs",
+      "Rapid implementation"
+    ]
+  },
+  {
+    "id": "forethought-ai",
+    "name": "Forethought AI",
+    "category": "Support AI",
+    "description": "AI agent platform for customer support with automated ticket resolution and intent detection.",
+    "longDescription": "Forethought AI delivers AI-powered customer support automation, learning from historical tickets and knowledge articles to resolve issues from day one. Key capabilities include ticket intent detection, auto-routing, an agent copilot, and automated knowledge gap analysis. Recognized as an ROI leader, it significantly reduces ticket volume and improves support efficiency.",
+    "bestFor": "Enterprise support-heavy CS teams with high ticket volume seeking autonomous resolution.",
+    "g2Rating": "4.5/5",
+    "g2Reviews": "N/A",
+    "pricing": "Enterprise, contact sales",
+    "website": "https://forethought.ai",
+    "affiliateUrl": "",
+    "integrations": [
+      "Zendesk",
+      "Salesforce",
+      "Intercom"
+    ],
+    "features": [
+      "Ticket deflection",
+      "AI intent detection",
+      "Agent copilot"
+    ]
+  },
+  {
+    "id": "velaris",
+    "name": "Velaris",
+    "category": "CS Platform",
+    "description": "Simplified mid-market CS platform with integrated AI automation and project management.",
+    "longDescription": "Velaris is a user-friendly customer success platform that simplifies CS management through AI-powered account summaries, meeting analysis, and automated task management. The platform features 70+ integrations and built-in collaborative dashboards for managing renewal, onboarding, and success plans. No dedicated admin staff needed, making it ideal for small to mid-size teams.",
+    "bestFor": "CS teams under 30 reps needing integrated project management and AI automation without Gainsight complexity.",
+    "g2Rating": "4.8/5",
+    "g2Reviews": "N/A (growing base)",
+    "pricing": "Mid-market pricing, contact for quote",
+    "website": "https://velaris.io",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "HubSpot",
+      "Zendesk",
+      "Slack"
+    ],
+    "features": [
+      "AI account summaries",
+      "Automated tasks",
+      "Project management dashboards"
+    ]
+  },
+  {
+    "id": "agency-inc-kai",
+    "name": "Agency.inc (Kai)",
+    "category": "Autonomous Agent",
+    "description": "Autonomous CS agent that manages onboarding, renewals, and customer plans end-to-end.",
+    "longDescription": "Kai by Agency.inc offers a fully autonomous CS agent managing the entire customer lifecycle—from mapping a client’s stack day one, to implementation planning, configuration, and ongoing account management. This early-stage solution aims for rapid time-to-value and removes the need for prolonged onboarding or committee approvals.",
+    "bestFor": "Tech-forward CS leaders seeking the cutting edge of autonomous account management.",
+    "g2Rating": "N/A",
+    "g2Reviews": "Early stage",
+    "pricing": "Contact for pricing (startup stage)",
+    "website": "https://agency.inc",
+    "affiliateUrl": "",
+    "integrations": [
+      "Salesforce",
+      "Slack",
+      "Zendesk"
+    ],
+    "features": [
+      "Full lifecycle management",
+      "Automated onboarding",
+      "Autonomous renewal execution"
+    ]
+  },
+  {
+    "id": "theloops",
+    "name": "TheLoops",
+    "category": "CX Operations",
+    "description": "Predictive CX ops platform linking support signals to churn prediction and auto-QA.",
+    "longDescription": "TheLoops offers predictive customer experience operations, connecting support data to proactive customer success actions. AutoQA, Agent Copilot, and Predictive Case Intelligence help identify which escalations signal churn risk and automate cross-team CX insights. Integrated with Gainsight, it's ideal for teams wanting real-time linkage of support and CS data.",
+    "bestFor": "CS and support teams wanting to connect support signal data to proactive CS intervention.",
+    "g2Rating": "4.4/5",
+    "g2Reviews": "N/A",
+    "pricing": "Enterprise, contact for pricing",
+    "website": "https://theloops.ai",
+    "affiliateUrl": "",
+    "integrations": [
+      "Gainsight",
+      "Salesforce",
+      "Zendesk"
+    ],
+    "features": [
+      "AutoQA",
+      "Predictive case intelligence",
+      "Agent copilot"
+    ]
+  }
+]
