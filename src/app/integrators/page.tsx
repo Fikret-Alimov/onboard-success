@@ -2,21 +2,22 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import IntegratorsDirectory from "@/components/IntegratorsDirectory";
 import JsonLd from "@/components/JsonLd";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "Integrators Directory — OnboardSuccess",
+  title: "CS Platform Integrators & Agencies Directory | Onboard Success",
   description:
-    "Find certified consultants and agencies specializing in CS platform implementation for mid-market SaaS.",
+    "Find certified consultants and agencies specializing in Customer Success platform implementation, migration, and AI optimization for mid-market B2B SaaS teams.",
   openGraph: {
-    title: "Integrators Directory — OnboardSuccess",
+    title: "CS Platform Integrators & Agencies Directory | Onboard Success",
     description:
-      "Find certified consultants and agencies specializing in CS platform implementation for mid-market SaaS.",
+      "Find certified consultants and agencies specializing in CS platform implementation, migration, and AI optimization for mid-market SaaS.",
     url: "https://www.onboard-success.com/integrators",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Integrators Directory — OnboardSuccess",
+    title: "CS Platform Integrators & Agencies Directory | Onboard Success",
     description:
       "Find certified consultants and agencies specializing in CS platform implementation for mid-market SaaS.",
   },
@@ -59,6 +60,12 @@ export default async function IntegratorsPage() {
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-16">
+      <Breadcrumbs
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Integrators", href: "/integrators" },
+        ]}
+      />
       <JsonLd
         data={{
           "@context": "https://schema.org",

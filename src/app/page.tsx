@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
 import { getAllTemplates } from "@/lib/templates";
 import JsonLd from "@/components/JsonLd";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const sections = [
   {
@@ -50,6 +51,7 @@ export default function HomePage() {
 
   return (
     <>
+      <Breadcrumbs items={[{ name: "Home", href: "/" }]} />
       <JsonLd
         data={{
           "@context": "https://schema.org",

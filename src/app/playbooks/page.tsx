@@ -1,23 +1,24 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
 import type { Metadata } from "next";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "Playbooks — OnboardSuccess",
+  title: "AI Customer Success Playbooks for B2B SaaS | Onboard Success",
   description:
-    "Deep dives into AI-powered Customer Success strategy for B2B SaaS teams.",
+    "Strategic guides on AI-powered Customer Success for mid-market B2B SaaS. Agentic workflows, health scoring, churn prevention, onboarding automation, and platform comparisons.",
   openGraph: {
-    title: "Playbooks — OnboardSuccess",
+    title: "AI Customer Success Playbooks for B2B SaaS | Onboard Success",
     description:
-      "Deep dives into AI-powered Customer Success strategy for B2B SaaS teams.",
+      "Strategic guides on AI-powered Customer Success for mid-market B2B SaaS. Agentic workflows, health scoring, churn prevention, onboarding automation, and platform comparisons.",
     url: "https://www.onboard-success.com/playbooks",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Playbooks — OnboardSuccess",
+    title: "AI Customer Success Playbooks for B2B SaaS | Onboard Success",
     description:
-      "Deep dives into AI-powered Customer Success strategy for B2B SaaS teams.",
+      "Strategic guides on AI-powered Customer Success for mid-market B2B SaaS. Agentic workflows, health scoring, churn prevention, and platform comparisons.",
   },
   alternates: {
     canonical: "/playbooks",
@@ -29,6 +30,12 @@ export default function PlaybooksPage() {
 
   return (
     <section className="max-w-4xl mx-auto px-6 py-16">
+      <Breadcrumbs
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Playbooks", href: "/playbooks" },
+        ]}
+      />
       <h1 className="text-4xl font-bold tracking-tight mb-3">Playbooks</h1>
       <p className="text-muted text-lg mb-12 max-w-2xl">
         Strategic guides on how AI is reshaping Customer Success for mid-market

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllTemplates, getTemplateBySlug, type TemplateMeta } from "@/lib/templates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const template = getTemplateBySlug(slug);
   if (!template) return { title: "Template Not Found" };
   return {
-    title: `${template.name} — OnboardSuccess Templates`,
+    title: `${template.name} | Onboard Success Templates`,
     description: template.description,
     openGraph: {
       title: template.name,
@@ -112,6 +113,13 @@ export default async function TemplateDetailPage({ params }: PageProps) {
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-16">
+      <Breadcrumbs
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Templates", href: "/templates" },
+          { name: template.name, href: `/templates/${slug}` },
+        ]}
+      />
       {/* Breadcrumb */}
       <nav className="text-sm text-muted mb-8">
         <Link href="/templates" className="hover:text-white transition-colors">

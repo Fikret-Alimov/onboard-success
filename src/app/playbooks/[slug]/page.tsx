@@ -4,6 +4,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { getFAQsForSlug } from "@/lib/faq-data";
 
 type Params = Promise<{ slug: string }>;
 
@@ -16,7 +18,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   const { meta } = getPostBySlug(slug);
   return {
-    title: `${meta.title} — OnboardSuccess`,
+    title: `${meta.title} | Onboard Success`,
     description: meta.description,
     openGraph: {
       title: meta.title,
@@ -39,13 +41,27 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function PlaybookArticle({ params }: { params: Params }) {
   const { slug } = await params;
   const { meta, content } = getPostBySlug(slug);
+  const faqs = getFAQsForSlug(slug);
   const allPosts = getAllPosts();
-  const relatedArticles = allPosts
-    .filter((p) => p.slug !== slug)
+  // Score related articles by shared tags
+  const otherPosts = allPosts.filter((p) => p.slug !== slug);
+  const relatedArticles = otherPosts
+    .map((p) => ({
+      ...p,
+      _score: p.tags.filter((t) => meta.tags.includes(t)).length,
+    }))
+    .sort((a, b) => b._score - a._score)
     .slice(0, 3);
 
   return (
     <article className="max-w-3xl mx-auto px-6 py-16">
+      <Breadcrumbs
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Playbooks", href: "/playbooks" },
+          { name: meta.title, href: `/playbooks/${slug}` },
+        ]}
+      />
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -65,6 +81,23 @@ export default async function PlaybookArticle({ params }: { params: Params }) {
           mainEntityOfPage: `https://www.onboard-success.com/playbooks/${slug}`,
         }}
       />
+
+      {faqs && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+              },
+            })),
+          }}
+        />
+      )}
 
       <Link
         href="/playbooks"

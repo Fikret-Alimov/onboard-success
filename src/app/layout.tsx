@@ -7,13 +7,13 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.onboard-success.com"),
-  title: "OnboardSuccess — CS AI Resources for B2B SaaS Teams",
+  title: "Customer Success AI Resources for B2B SaaS | Onboard Success",
   description:
-    "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, and integrator listings for mid-market B2B SaaS.",
+    "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, integrator listings, and workflow templates for mid-market B2B SaaS.",
   openGraph: {
-    title: "OnboardSuccess — CS AI Resources for B2B SaaS Teams",
+    title: "Customer Success AI Resources for B2B SaaS | Onboard Success",
     description:
-      "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, and integrator listings for mid-market B2B SaaS.",
+      "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, integrator listings, and workflow templates for mid-market B2B SaaS.",
     url: "https://www.onboard-success.com",
     siteName: "OnboardSuccess",
     type: "website",
@@ -21,9 +21,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "OnboardSuccess — CS AI Resources for B2B SaaS Teams",
+    title: "Customer Success AI Resources for B2B SaaS | Onboard Success",
     description:
-      "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, and integrator listings for mid-market B2B SaaS.",
+      "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, integrator listings, and workflow templates for mid-market B2B SaaS.",
   },
   alternates: {
     canonical: "/",
@@ -134,9 +134,18 @@ export default function RootLayout({
             "@context": "https://schema.org",
             "@type": "Organization",
             name: "Onboard Success",
+            legalName: "Onboard Success OÜ",
             url: "https://www.onboard-success.com",
             description:
               "The AI resource hub for Customer Success teams in mid-market B2B SaaS",
+            foundingDate: "2026",
+            contactPoint: {
+              "@type": "ContactPoint",
+              email: "hello@onboard-success.com",
+              contactType: "customer support",
+              url: "https://www.onboard-success.com/contact",
+            },
+            sameAs: [],
           }}
         />
         <Navbar />

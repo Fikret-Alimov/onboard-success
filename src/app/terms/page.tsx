@@ -1,8 +1,21 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — OnboardSuccess",
-  description: "Terms of Service for OnboardSuccess.com",
+  title: "Terms of Service | Onboard Success",
+  description:
+    "Terms of Service for OnboardSuccess.com. Read about usage rights, intellectual property, directory listings, liability, and governing law for Onboard Success OÜ.",
+  openGraph: {
+    title: "Terms of Service | Onboard Success",
+    description:
+      "Terms of Service for OnboardSuccess.com. Usage rights, intellectual property, and liability.",
+    url: "https://www.onboard-success.com/terms",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Terms of Service | Onboard Success",
+    description: "Terms of Service for OnboardSuccess.com.",
+  },
   alternates: {
     canonical: "/terms",
   },

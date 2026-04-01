@@ -2,23 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllTemplates, type TemplateMeta } from "@/lib/templates";
 import JsonLd from "@/components/JsonLd";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "Agent Templates — OnboardSuccess",
+  title: "AI Agent Workflow Templates for Customer Success | Onboard Success",
   description:
-    "Pre-built AI agent workflow templates for Customer Success teams. Deploy in minutes with n8n.",
+    "Pre-built n8n workflow templates for Customer Success automation. Churn detection, QBR prep, onboarding tracking, and more. Free and Pro templates ready to deploy.",
   openGraph: {
-    title: "Agent Templates — OnboardSuccess",
+    title: "AI Agent Workflow Templates for Customer Success | Onboard Success",
     description:
-      "Pre-built AI agent workflow templates for Customer Success teams. Deploy in minutes with n8n.",
+      "Pre-built n8n workflow templates for Customer Success automation. Churn detection, QBR prep, onboarding tracking, and more.",
     url: "https://www.onboard-success.com/templates",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Agent Templates — OnboardSuccess",
+    title: "AI Agent Workflow Templates for Customer Success | Onboard Success",
     description:
-      "Pre-built AI agent workflow templates for Customer Success teams. Deploy in minutes with n8n.",
+      "Pre-built n8n workflow templates for Customer Success automation. Churn detection, QBR prep, onboarding tracking, and more.",
   },
   alternates: {
     canonical: "/templates",
@@ -103,6 +104,12 @@ export default function TemplatesPage() {
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-16">
+      <Breadcrumbs
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Templates", href: "/templates" },
+        ]}
+      />
       <JsonLd
         data={{
           "@context": "https://schema.org",

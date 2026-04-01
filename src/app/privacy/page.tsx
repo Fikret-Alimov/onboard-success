@@ -1,8 +1,22 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — OnboardSuccess",
-  description: "Privacy Policy for OnboardSuccess.com",
+  title: "Privacy Policy | Onboard Success",
+  description:
+    "Learn how Onboard Success OÜ handles your data. GDPR-compliant privacy policy covering data collection, analytics, cookies, and your rights as a data subject.",
+  openGraph: {
+    title: "Privacy Policy | Onboard Success",
+    description:
+      "Learn how Onboard Success OÜ handles your data. GDPR-compliant privacy policy covering data collection, analytics, cookies, and your rights.",
+    url: "https://www.onboard-success.com/privacy",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Privacy Policy | Onboard Success",
+    description:
+      "Learn how Onboard Success OÜ handles your data. GDPR-compliant privacy policy.",
+  },
   alternates: {
     canonical: "/privacy",
   },

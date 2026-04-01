@@ -2,23 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import AgentsDirectory from "@/components/AgentsDirectory";
 import JsonLd from "@/components/JsonLd";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "AI Agents Directory — OnboardSuccess",
+  title: "AI Agents for Customer Success — Directory & Reviews | Onboard Success",
   description:
-    "A curated directory of AI agents for Customer Success teams. Compare features, integrations, and ratings.",
+    "Compare the best AI agents for Customer Success teams in 2026. Features, integrations, G2 ratings, and pricing for ChurnZero, Gainsight, Oliv.ai, and more.",
   openGraph: {
-    title: "AI Agents Directory — OnboardSuccess",
+    title: "AI Agents for Customer Success — Directory & Reviews | Onboard Success",
     description:
-      "A curated directory of AI agents for Customer Success teams. Compare features, integrations, and ratings.",
+      "Compare the best AI agents for Customer Success teams in 2026. Features, integrations, G2 ratings, and pricing.",
     url: "https://www.onboard-success.com/agents",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Agents Directory — OnboardSuccess",
+    title: "AI Agents for Customer Success — Directory & Reviews | Onboard Success",
     description:
-      "A curated directory of AI agents for Customer Success teams. Compare features, integrations, and ratings.",
+      "Compare the best AI agents for Customer Success teams in 2026. Features, integrations, G2 ratings, and pricing.",
   },
   alternates: {
     canonical: "/agents",
@@ -54,6 +55,12 @@ export default async function AgentsPage() {
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-16">
+      <Breadcrumbs
+        items={[
+          { name: "Home", href: "/" },
+          { name: "AI Agents", href: "/agents" },
+        ]}
+      />
       <JsonLd
         data={{
           "@context": "https://schema.org",
