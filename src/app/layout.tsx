@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { PageViewAnalytics } from "@/components/PageViewAnalytics";
 import Link from "next/link";
 import EmailCapture from "@/components/EmailCapture";
 import JsonLd from "@/components/JsonLd";
@@ -152,6 +153,7 @@ export default function RootLayout({
         <main className="flex-1 pt-16">{children}</main>
         <Footer />
         <Analytics />
+        <PageViewAnalytics />
       </body>
     </html>
   );
