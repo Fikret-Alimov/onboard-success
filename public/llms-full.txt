@@ -94,3 +94,15 @@ Vendors and agencies can get featured placement in the AI Agents and Integrators
 hello@onboard-success.com
 Onboard Success OÜ
 https://www.onboard-success.com/contact
+
+### The Complete SaaS Onboarding Checklist for 2026: From Signup to Time-to-Value
+URL: /playbooks/saas-onboarding-checklist-2026
+Summary: Phase-by-phase onboarding checklist for B2B SaaS — pre-onboarding, Week 1, Weeks 2-4, Day 30-90. Covers activation metrics, self-serve vs high-touch decisions, AI-assisted onboarding tools, and downloadable checklist. For CS leaders and SaaS founders systematizing onboarding.
+
+### Churn Prediction Without Enterprise Tools: A Practical Guide for Mid-Market SaaS in 2026
+URL: /playbooks/churn-prediction-affordable-2026
+Summary: DIY health scoring and churn prediction for teams that can't afford Gainsight. Covers product usage signals, support signals, engagement signals, business signals, affordable tool stack (PostHog, Vitally, Planhat, Custify), and building an early warning system in a week.
+
+### The Digital CS Playbook: How to Scale Customer Success Without Hiring More CSMs (2026)
+URL: /playbooks/digital-cs-playbook-2026
+Summary: How to serve more customers with fewer CSMs using digital-first Customer Success. Covers the tech-touch spectrum, automated onboarding sequences, health-score-triggered campaigns, AI agents in CS, segmentation strategy (enterprise/mid-market/SMB), and metrics for digital CS.

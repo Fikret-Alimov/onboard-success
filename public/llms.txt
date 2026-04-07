@@ -24,3 +24,15 @@ OnboardSuccess is the authoritative resource hub for mid-market B2B SaaS Custome
 ## Contact
 hello@onboard-success.com
 Onboard Success OÜ
+
+### SaaS Onboarding Checklist 2026
+URL: /playbooks/saas-onboarding-checklist-2026
+Summary: Phase-by-phase B2B SaaS onboarding checklist from signup to time-to-value.
+
+### Churn Prediction for Mid-Market SaaS
+URL: /playbooks/churn-prediction-affordable-2026
+Summary: DIY health scoring and churn prediction without enterprise tools.
+
+### Digital CS Playbook 2026
+URL: /playbooks/digital-cs-playbook-2026
+Summary: Scale Customer Success without hiring more CSMs using digital-first strategies.

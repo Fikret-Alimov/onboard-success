@@ -99,6 +99,52 @@ const faqMap: Record<string, FAQ[]> = {
       answer: "AI agents are designed to augment CSMs, not replace them. They handle repetitive, data-heavy tasks like QBR prep, health monitoring, and long-tail account coverage, freeing CSMs to focus on strategic relationship-building and complex problem-solving.",
     },
   ],
+  "saas-onboarding-checklist-2026": [
+    {
+      question: "What is the most important metric for SaaS onboarding success?",
+      answer: "Time-to-value (TTV) is the most important onboarding metric. Customers who reach their 'aha moment' within the first 14 days retain at 4.2x the rate of those who don't, according to Gainsight PX 2026 data.",
+    },
+    {
+      question: "What are the key phases of SaaS customer onboarding?",
+      answer: "SaaS onboarding typically has four phases: Pre-onboarding (before Day 1 — welcome emails, account setup, stakeholder identification), Week 1 Foundation (kickoff call, core feature activation, quick wins), Weeks 2-4 Adoption (feature milestones, health score baseline, user training), and Day 30-90 Expansion (usage benchmarking, ROI documentation, first QBR prep).",
+    },
+    {
+      question: "When should SaaS companies use self-serve vs high-touch onboarding?",
+      answer: "Use high-touch onboarding (1:1 CSM) for enterprise accounts with complex needs and high ACV. Use self-serve onboarding for SMB accounts with straightforward use cases. Mid-market accounts benefit from a hybrid approach combining automated sequences with periodic CSM check-ins.",
+    },
+    {
+      question: "What percentage of SaaS churn happens during onboarding?",
+      answer: "According to OpenView Partners, 67% of net churn occurs within the first 90 days, overwhelmingly among users who never activated key features during onboarding. This makes onboarding the #1 predictor of long-term retention.",
+    },
+  ],
+  "churn-prediction-affordable-2026": [
+    {
+      question: "How can mid-market SaaS companies predict churn without expensive tools?",
+      answer: "Mid-market SaaS companies can build effective churn prediction using a DIY health scoring framework that combines product usage signals (login frequency, feature adoption), support signals (ticket volume, sentiment), engagement signals (email opens, meeting attendance), and business signals (renewal dates, stakeholder changes). Affordable tools like PostHog, Vitally, Planhat, and Custify can power this without enterprise-grade pricing.",
+    },
+    {
+      question: "What are the best affordable alternatives to Gainsight for churn prediction?",
+      answer: "For mid-market teams, the best alternatives include Vitally, Planhat, and Custify for CS platforms, PostHog or Mixpanel for product analytics, and GPT/Claude APIs for support ticket sentiment analysis. These can be connected via Make.com or Zapier to build a comprehensive early warning system at a fraction of Gainsight's $50K+/year cost.",
+    },
+    {
+      question: "What signals best predict customer churn in B2B SaaS?",
+      answer: "The strongest churn predictors are: declining product usage (login frequency, feature adoption depth, session duration), increasing support ticket volume with negative sentiment, decreasing engagement (missed meetings, unopened emails), and business signals like approaching renewal dates without expansion conversations or key stakeholder departures.",
+    },
+  ],
+  "digital-cs-playbook-2026": [
+    {
+      question: "What is Digital Customer Success?",
+      answer: "Digital Customer Success (Digital CS) is a strategy for serving customers primarily through automated, tech-driven touchpoints rather than 1:1 human interactions. It goes beyond email automation to include automated onboarding sequences, health-score-triggered campaigns, self-serve knowledge bases, AI chatbots, automated QBR data collection, and community-led support.",
+    },
+    {
+      question: "How many customers can one CSM manage with digital CS?",
+      answer: "With a digital-first approach, CSM-to-account ratios can scale significantly. Traditional high-touch models support ~50 accounts per CSM. With hybrid digital CS, CSMs can manage 200-500 mid-market accounts. Fully digital (SMB tier) can support 1,000+ accounts with automated workflows and escalation paths to human CSMs when needed.",
+    },
+    {
+      question: "What is the right segmentation for digital vs high-touch CS?",
+      answer: "A common segmentation model is: Enterprise accounts (high-touch, 1:1 CSM), Mid-market accounts (hybrid — CSM + automation), and SMB accounts (digital-first, mostly automated with human escalation paths). The thresholds depend on ACV, product complexity, and customer needs.",
+    },
+  ],
 };
 
 export function getFAQsForSlug(slug: string): FAQ[] | null {
