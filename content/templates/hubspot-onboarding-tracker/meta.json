@@ -1,0 +1,15 @@
+{
+  "id": "hubspot-onboarding-tracker",
+  "name": "HubSpot Onboarding Tracker",
+  "description": "Daily check of HubSpot onboarding deals to catch customers falling behind their milestone schedule.",
+  "longDescription": "Runs every morning at 9 AM and checks all deals in your HubSpot onboarding pipeline. For each deal, it calculates how many days the customer has been in their current stage and compares it to target milestones (Kickoff: 3d, Setup: 7d, Integration: 14d, Training: 21d, Go-Live: 30d). Deals behind schedule trigger a Slack alert to the CSM and an automated nudge email to the customer.",
+  "category": "Onboarding",
+  "platform": "n8n",
+  "difficulty": "Beginner",
+  "setupTime": "15 minutes",
+  "integrations": ["HubSpot", "Slack", "Email (SMTP)"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-14",
+  "downloads": 0
+}

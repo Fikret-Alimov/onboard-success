@@ -1,0 +1,375 @@
+{
+  "name": "Sales-to-Implementation Handoff Analyzer",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## ⚙️ SETUP: Salesforce Credentials\n\n1. Go to **Credentials → Salesforce OAuth2**\n2. Connect your Salesforce org\n3. The workflow fetches Opportunity + Account data\n\nThe Salesforce node uses standard fields by default. Custom fields (like `Primary_Use_Case__c`) need to be added to your SF org or removed from the code node.",
+        "height": 280,
+        "width": 340,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1040, -100],
+      "id": "note-sf-creds",
+      "name": "Note: Salesforce"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ SETUP: Gong API\n\n1. Go to **Credentials → Gong API**\n2. Enter your Gong API key + secret\n3. Replace `YOUR_WORKSPACE_ID` in both Gong nodes\n4. Update the base URL if you're not on the US region:\n   - US: `https://us-XXXXX.api.gong.io`\n   - EU: `https://eu-XXXXX.api.gong.io`\n\nFind your workspace ID in Gong → Company Settings → API.",
+        "height": 300,
+        "width": 340,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-780, -100],
+      "id": "note-gong",
+      "name": "Note: Gong"
+    },
+    {
+      "parameters": {
+        "content": "## 🎛️ CUSTOMIZE: Intake Checklist\n\nThe **Prepare LLM Context** code node contains an `intakeChecklist` array. This defines what information your implementation team needs before kickoff.\n\n**To customize:**\n1. Open the code node\n2. Find the `intakeChecklist` array (~line 70)\n3. Edit sections, labels, SF field names, and Gong keywords\n4. Mark items `required: true/false`\n\nThe readiness score is auto-calculated from this checklist.",
+        "height": 320,
+        "width": 360,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [750, -50],
+      "id": "note-checklist",
+      "name": "Note: Intake Checklist"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ SETUP: LLM (OpenAI)\n\nThe **Generate Brief** node uses GPT-4.1 Nano by default (fast + cheap).\n\nTo change the model:\n- Open the node → change `modelId`\n- For better quality briefs: `gpt-4o` or `gpt-4.1`\n- For lower cost: `gpt-4.1-mini` or `gpt-4.1-nano`\n\nConnect your OpenAI API credential.",
+        "height": 260,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1020, -50],
+      "id": "note-llm",
+      "name": "Note: LLM Setup"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ SETUP: Email Recipient\n\nIn the **Send Brief** node:\n1. Replace `implementation-team@yourcompany.com` with your team's email\n2. Connect your Gmail OAuth2 credential\n\nTip: Add multiple recipients comma-separated, or replace Gmail with Slack for channel delivery.",
+        "height": 240,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1490, -50],
+      "id": "note-email",
+      "name": "Note: Email"
+    },
+    {
+      "parameters": {
+        "content": "## 🎛️ CUSTOMIZE: Account Name Matching\n\nThe **Match Gong Calls to Account** node uses fuzzy matching to find calls related to the Salesforce account.\n\nThe `stripSuffixes` function removes common business suffixes (Inc, LLC, Corp, etc.) and your product/brand terms before matching.\n\n**Edit the function (~line 8)** to add your own product names, partner names, or internal labels that appear in call titles but shouldn't affect matching.\n\nThe match threshold is `0.3` (30%) — lower = more matches, higher = stricter.",
+        "height": 360,
+        "width": 360,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [240, -50],
+      "id": "note-matching",
+      "name": "Note: Call Matching"
+    },
+    {
+      "parameters": {
+        "content": "## 🎛️ CUSTOMIZE: System Prompt\n\nThe **Prepare LLM Context** node builds a system prompt for the AI brief generator. Update it to match your company:\n\n1. Find `systemPrompt` near the end of the code\n2. Replace the role description with your team's focus\n3. Adjust the brief sections in `userPrompt` to match your kickoff process\n\nThe prompt references your intake checklist data automatically.",
+        "height": 300,
+        "width": 340,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [750, 300],
+      "id": "note-prompt",
+      "name": "Note: LLM Prompt"
+    },
+    {
+      "parameters": {
+        "formTitle": "Implementation Handoff Analyzer",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Salesforce Opportunity ID",
+              "fieldName": "opportunityId"
+            },
+            {
+              "fieldLabel": "Conversation History (PDF, optional)",
+              "fieldType": "file",
+              "fieldName": "conversationHistory",
+              "acceptFileTypes": ".pdf"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [-1600, 208],
+      "id": "form-trigger",
+      "name": "On Form Submission"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "conversationHistory",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [-1184, 208],
+      "id": "extract-pdf",
+      "name": "Extract PDF Text"
+    },
+    {
+      "parameters": {
+        "resource": "opportunity",
+        "operation": "get",
+        "opportunityId": "={{ $('On Form Submission').item.json.opportunityId }}"
+      },
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [-992, 208],
+      "id": "sf-get-opp",
+      "name": "Salesforce - Get Opportunity"
+    },
+    {
+      "parameters": {
+        "url": "https://us-XXXXX.api.gong.io/v2/calls",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "gongApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fromDateTime",
+              "value": "={{ $('Salesforce - Get Opportunity').first().json.CreatedDate.replace('+0000', 'Z') }}"
+            },
+            {
+              "name": "toDateTime",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "workspaceId",
+              "value": "YOUR_WORKSPACE_ID"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [-736, 208],
+      "id": "gong-first-page",
+      "name": "Gong - First Page"
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nconst raw = $input.first().json;\n\n// Calls are at top level, cursor is inside records\nconst currentCalls = raw.calls || [];\nconst cursor = raw.records?.cursor || null;\n\nif (!staticData.gongCalls) {\n  staticData.gongCalls = [];\n}\nstaticData.gongCalls.push(...currentCalls);\n\nreturn [{\n  json: {\n    cursor: cursor,\n    pageSize: currentCalls.length,\n    runningTotal: staticData.gongCalls.length,\n    pageNumber: Math.ceil(staticData.gongCalls.length / 100)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-480, 208],
+      "id": "collect-page",
+      "name": "Collect Page"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cursor-check",
+              "leftValue": "={{ $json.cursor }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [-240, 208],
+      "id": "if-cursor",
+      "name": "More Pages?"
+    },
+    {
+      "parameters": {
+        "url": "https://us-XXXXX.api.gong.io/v2/calls",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "gongApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fromDateTime",
+              "value": "={{ $('Salesforce - Get Opportunity').first().json.CreatedDate.replace('+0000', 'Z') }}"
+            },
+            {
+              "name": "toDateTime",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "workspaceId",
+              "value": "YOUR_WORKSPACE_ID"
+            },
+            {
+              "name": "cursor",
+              "value": "={{ $json.cursor }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [0, 0],
+      "id": "gong-next-page",
+      "name": "Gong - Next Page"
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nconst allCalls = staticData.gongCalls || [];\n\n// Clear for next workflow run\ndelete staticData.gongCalls;\n\nreturn [{\n  json: {\n    calls: allCalls,\n    totalCount: allCalls.length\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [32, 384],
+      "id": "output-all-calls",
+      "name": "Output All Calls"
+    },
+    {
+      "parameters": {
+        "jsCode": "const accountName = $('Salesforce - Get Opportunity')\n  .first().json.Account?.Name \n  || $('Salesforce - Get Opportunity').first().json.Name \n  || '';\n\n// Strips common suffixes and noise from names for fuzzy matching.\n// ✏️ ADD your own product names, partner names, and internal labels\n// to the second .replace() line below so they don't interfere with matching.\nconst stripSuffixes = (name) => {\n  return name\n    .toLowerCase()\n    .replace(/[.,\\-()\\/<>]/g, ' ')\n    // Business suffixes — keep these\n    .replace(/\\b(inc|incorporated|corp|corporation|llc|ltd|limited|co|company|group|holdings|enterprises|international|intl|the)\\b/g, '')\n    // ✏️ YOUR PRODUCT / BRAND TERMS — add terms that appear in call titles\n    // but shouldn't be used for account matching\n    .replace(/\\b(implementation|pilot|poc|renewal|expansion|upsell|demo|kickoff|review|follow up)\\b/g, '')\n    .replace(/\\s*[\\-|><\\/]+\\s*/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n};\n\nconst cleanName = stripSuffixes(accountName);\nconst nameTokens = cleanName.split(' ').filter(w => w.length > 1);\n\nconst allCalls = $input.first().json.calls || [];\n\nconst scored = allCalls.map(call => {\n  const cleanTitle = stripSuffixes(call.title || '');\n  const titleTokens = cleanTitle.split(' ').filter(w => w.length > 1);\n  const hits = nameTokens.filter(token => \n    titleTokens.some(t => t.includes(token) || token.includes(t))\n  );\n  const score = nameTokens.length > 0 ? hits.length / nameTokens.length : 0;\n  return { ...call, score, hits: hits.length };\n});\n\nconst longestToken = nameTokens.sort((a, b) => b.length - a.length)[0] || '';\n\n// Match threshold: 0.3 = at least 30% of account name tokens found in call title\nconst MATCH_THRESHOLD = 0.3;\n\nconst matched = scored\n  .filter(c => \n    c.score >= MATCH_THRESHOLD \n    || (longestToken.length >= 3 && stripSuffixes(c.title || '').includes(longestToken))\n  )\n  .sort((a, b) => b.score - a.score || new Date(b.started || 0) - new Date(a.started || 0))\n  .slice(0, 10);\n\nreturn [{\n  json: {\n    callIds: matched.map(c => c.id),\n    matchedCalls: matched.map(c => ({\n      id: c.id, title: c.title, date: c.started, \n      url: c.url, score: c.score, hits: c.hits\n    })),\n    matchCount: matched.length,\n    accountName,\n    searchTokens: nameTokens,\n    longestToken\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [288, 384],
+      "id": "filter-by-account",
+      "name": "Match Gong Calls to Account"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://us-XXXXX.api.gong.io/v2/calls/extensive",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "gongApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ \"filter\": { \"callIds\": $json.callIds }, \"contentSelector\": { \"exposedFields\": { \"content\": { \"brief\": true, \"keyPoints\": true, \"actionItems\": true, \"outline\": true } } } }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [544, 384],
+      "id": "gong-get-summaries",
+      "name": "Gong - Get Call Summaries"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== SALESFORCE DATA =====\nconst sf = $('Salesforce - Get Opportunity').first().json;\nconst accountName = sf.Account?.Name || sf.Name || 'Unknown';\n\n// ✏️ MAP YOUR SALESFORCE FIELDS HERE\n// Standard fields work out of the box. Custom fields (ending in __c) must\n// exist in your Salesforce org. Remove or rename fields as needed.\nconst sfData = {\n  accountName: accountName,\n  opportunityName: sf.Name || '',\n  status: sf.StageName || '',\n  closeDate: sf.CloseDate || '',\n  amount: sf.Amount || '',\n  seats: sf.Number_of_Seats__c || '',        // ✏️ Your seats/licenses field\n  primaryUseCase: sf.Primary_Use_Case__c || '',  // ✏️ Your use case field\n  useCaseNotes: sf.Use_Case_Notes__c || '',\n  interactionChannels: sf.Interaction_Channels__c || '',\n  currentCRM: sf.Current_CRM__c || '',\n  currentTools: sf.Current_Tools__c || '',    // ✏️ Your tech stack field\n  problemToSolve: sf.Problem_to_Solve__c || '',\n  painPoints: sf.Pain_Points__c || '',\n  metric1: sf.Metric_1__c || '',\n  metric1Baseline: sf.Metric_1_Baseline__c || '',\n  metric2: sf.Metric_2__c || '',\n  metric2Baseline: sf.Metric_2_Baseline__c || '',\n  metricNotes: sf.Metric_Notes__c || '',\n  solutionDescription: sf.Solution_Description__c || '',\n  decisionCriteria: sf.Decision_Criteria__c || '',\n  executiveSponsor: sf.Executive_Sponsor__c || '',\n  opportunityReviewLink: sf.Opportunity_Review_Link__c || '',\n  leadId: sf.LeadId || '',\n};\n\n// ===== GONG DATA =====\nconst gongRaw = $input.first().json;\nconst calls = gongRaw.calls || [];\nconst matchedMeta = $('Match Gong Calls to Account').first().json.matchedCalls || [];\n\nconst callSummaries = calls.map(call => {\n  const meta = matchedMeta.find(m => m.id === call.metaData?.id) || {};\n  const content = call.content || {};\n  return {\n    title: call.metaData?.title || meta.title || 'Untitled',\n    date: call.metaData?.started || meta.date || '',\n    url: call.metaData?.url || meta.url || '',\n    brief: content.brief || '',\n    keyPoints: (content.keyPoints || []).map(kp => kp.text || kp).join('\\n'),\n    actionItems: (content.actionItems || []).map(ai => ai.text || ai).join('\\n'),\n    outline: (content.outline || []).map(o => {\n      const section = o.section || '';\n      const items = (o.items || []).map(i => i.text || i).join('; ');\n      return section + ': ' + items;\n    }).join('\\n'),\n  };\n});\n\n// Combine all Gong text + uploaded doc for keyword scanning\nlet allGongText = callSummaries.map(c => \n  [c.brief, c.keyPoints, c.actionItems, c.outline].join(' ')\n).join(' ').toLowerCase();\n\n// ===== UPLOADED PDF / CONVERSATION HISTORY =====\nlet pdfText = '';\ntry {\n  const extracted = $('Extract PDF Text').first().json;\n  pdfText = extracted.data || extracted.text || extracted.content || '';\n  if (typeof pdfText !== 'string') pdfText = JSON.stringify(pdfText);\n} catch(e) {\n  pdfText = '';\n}\nif (pdfText && pdfText.trim().length > 0) {\n  allGongText += ' ' + pdfText.toLowerCase();\n}\n\n// ===== INTAKE FORM CHECKLIST =====\n// ✏️ CUSTOMIZE THIS to match your implementation team's intake requirements.\n// Each item: label, SF field(s) to check, Gong keywords to scan for, required flag.\nconst intakeChecklist = [\n  { section: 'Deal Overview', items: [\n    { label: 'Status', sfFields: ['status'], gongKeywords: [], required: true },\n    { label: 'Projected Close Date', sfFields: ['closeDate'], gongKeywords: [], required: true },\n    { label: 'Deal Amount', sfFields: ['amount'], gongKeywords: ['pricing', 'cost', 'budget', 'contract'], required: true },\n    { label: 'Seats / Licenses', sfFields: ['seats'], gongKeywords: ['seats', 'licenses', 'agents', 'users'], required: true },\n  ]},\n  { section: 'Use Case & Channels', items: [\n    { label: 'Primary Use Case', sfFields: ['primaryUseCase'], gongKeywords: ['use case', 'workflow', 'scenario'], required: true },\n    { label: 'Use Case Notes', sfFields: ['useCaseNotes'], gongKeywords: [], required: false },\n    { label: 'Interaction Channels', sfFields: ['interactionChannels'], gongKeywords: ['channel', 'phone', 'chat', 'email', 'voice', 'digital'], required: true },\n  ]},\n  { section: 'Current Tech Stack', items: [\n    { label: 'Current CRM', sfFields: ['currentCRM'], gongKeywords: ['salesforce', 'dynamics', 'hubspot', 'crm', 'zendesk'], required: true },\n    { label: 'Current Tools', sfFields: ['currentTools'], gongKeywords: ['tool', 'platform', 'software', 'system'], required: true },\n  ]},\n  { section: 'Problem & Pain', items: [\n    { label: 'Problem to Solve', sfFields: ['problemToSolve'], gongKeywords: ['problem', 'challenge', 'issue', 'struggle'], required: true },\n    { label: 'Pain Points', sfFields: ['painPoints'], gongKeywords: ['pain', 'frustrat', 'difficult', 'inefficien'], required: true },\n  ]},\n  { section: 'Success Metrics', items: [\n    { label: 'Metric 1', sfFields: ['metric1'], gongKeywords: ['metric', 'kpi', 'measure', 'goal', 'target'], required: true },\n    { label: 'Metric 1 Baseline', sfFields: ['metric1Baseline'], gongKeywords: ['baseline', 'current', 'today'], required: true },\n    { label: 'Metric 2', sfFields: ['metric2'], gongKeywords: [], required: false },\n    { label: 'Metric 2 Baseline', sfFields: ['metric2Baseline'], gongKeywords: [], required: false },\n    { label: 'Metric Notes', sfFields: ['metricNotes'], gongKeywords: [], required: false },\n  ]},\n  { section: 'Solution & Decision', items: [\n    { label: 'Solution Description', sfFields: ['solutionDescription'], gongKeywords: ['solution', 'proposal', 'approach'], required: true },\n    { label: 'Decision Criteria', sfFields: ['decisionCriteria'], gongKeywords: ['criteria', 'decision', 'evaluate', 'compare'], required: true },\n  ]},\n  { section: 'Stakeholders', items: [\n    { label: 'Executive Sponsor', sfFields: ['executiveSponsor'], gongKeywords: ['sponsor', 'executive', 'vp', 'director', 'cto', 'cio', 'head of'], required: true },\n  ]},\n];\n\n// Evaluate each checklist item\nlet totalItems = 0;\nlet completedItems = 0;\nlet intakeReport = '';\n\nintakeChecklist.forEach(section => {\n  intakeReport += `### ${section.section}\\n`;\n  section.items.forEach(item => {\n    totalItems++;\n    const hasSF = item.sfFields.some(f => !!sfData[f]);\n    const hasGong = item.gongKeywords.length > 0 && item.gongKeywords.some(kw => allGongText.includes(kw));\n    \n    let status;\n    if (hasSF) {\n      status = 'COMPLETE (SF)';\n      completedItems++;\n    } else if (hasGong) {\n      status = 'PARTIAL (mentioned in calls but not in Salesforce)';\n      completedItems += 0.5;\n    } else {\n      status = item.required ? 'MISSING (required)' : 'MISSING (optional)';\n    }\n    \n    const icon = hasSF ? '[OK]' : hasGong ? '[~]' : item.required ? '[X]' : '[-]';\n    intakeReport += `${icon} ${item.label}: ${status}\\n`;\n  });\n  intakeReport += '\\n';\n});\n\nconst readinessScore = Math.round((completedItems / totalItems) * 100);\nconst requiredMissing = [];\nintakeChecklist.forEach(section => {\n  section.items.forEach(item => {\n    const hasSF = item.sfFields.some(f => !!sfData[f]);\n    if (!hasSF && item.required) requiredMissing.push(item.label);\n  });\n});\n\n// ===== BUILD LLM CONTEXT =====\nlet context = '# Salesforce Opportunity Data\\n\\n';\nfor (const [key, val] of Object.entries(sfData)) {\n  if (val) context += `**${key}**: ${val}\\n`;\n}\n\ncontext += '\\n# Call Recording Summaries\\n\\n';\nif (callSummaries.length === 0) {\n  context += '_No matching calls found for this account._\\n';\n} else {\n  callSummaries.forEach((c, i) => {\n    context += `## Call ${i + 1}: ${c.title} (${c.date})\\n`;\n    context += `URL: ${c.url}\\n`;\n    if (c.brief) context += `**Brief:** ${c.brief}\\n`;\n    if (c.keyPoints) context += `**Key Points:**\\n${c.keyPoints}\\n`;\n    if (c.actionItems) context += `**Action Items:**\\n${c.actionItems}\\n`;\n    if (c.outline) context += `**Outline:**\\n${c.outline}\\n`;\n    context += '\\n';\n  });\n}\n\ncontext += '\\n# Intake Form Readiness Assessment\\n\\n';\ncontext += `**Overall Readiness: ${readinessScore}%** (${Math.round(completedItems)} of ${totalItems} items have data)\\n\\n`;\ncontext += `**Legend:** [OK] = In Salesforce | [~] = Mentioned in calls only | [X] = Missing (required) | [-] = Missing (optional)\\n\\n`;\ncontext += intakeReport;\n\nif (pdfText && pdfText.trim().length > 0) {\n  context += '\\n# Uploaded Document (Conversation History / Sales Notes)\\n\\n';\n  context += pdfText.substring(0, 30000) + '\\n\\n';\n}\n\nif (requiredMissing.length > 0) {\n  context += '### Required Items Still Missing\\n';\n  requiredMissing.forEach(item => context += `- **${item}**\\n`);\n  context += '\\n';\n}\ncontext += '\\n# Call References\\n\\n';\nmatchedMeta.forEach((c, i) => {\n  context += `${i + 1}. **${c.title}** (${c.date})\\n   ${c.url}\\n`;\n});\ncontext += '\\n';\n\n// Truncate if too large for LLM context\nif (context.length > 100000) {\n  context = context.substring(0, 100000) + '\\n\\n[Context truncated due to length]';\n}\n\n// ===== PROMPTS =====\n// ✏️ CUSTOMIZE the system prompt to match your company and role\nconst systemPrompt = `You are an Implementation Readiness Analyst. Your job is to synthesize CRM opportunity data, call recordings, and uploaded sales documents into a comprehensive pre-kickoff implementation brief.\n\nYou focus on:\n- Understanding the customer's current tech stack and pain points\n- Identifying the primary use case and success metrics\n- Extracting key stakeholders and decision criteria\n- Assessing whether all required intake form fields have been collected\n- Highlighting risks, gaps, and items needing clarification before kickoff\n- Providing actionable recommendations for the implementation team\n\nWrite in a professional, concise style. Use bullet points and clear section headers. Flag any contradictions between CRM data and call conversations.`;\n\nconst userPrompt = `Based on the following data, generate an Implementation Pre-Kickoff Brief for ${accountName}.\n\nStructure the brief with these sections:\n\n1. **Executive Summary** — 2-3 sentence overview of the deal and implementation scope\n2. **Customer Profile** — Company, deal size, seats, close date, executive sponsor\n3. **Current Tech Stack** — CRM, tools, and platforms currently in use\n4. **Use Case & Pain Points** — Primary use case, interaction channels, core problems to solve\n5. **Success Metrics** — Defined metrics with baselines, targets if available\n6. **Solution Fit** — How the proposed solution maps to their needs, decision criteria alignment\n7. **Key Insights from Sales Calls** — Synthesized themes, concerns, and commitments from call recordings. Include a reference list at the end with call titles, dates, and links.\n8. **Intake Form Readiness** — Show the readiness score (${readinessScore}%). For each section, list what we HAVE and what is MISSING. For [~] items (found in calls but not CRM), note what was mentioned and recommend getting it formally documented. For [X] items (missing required), flag them as must-collect-before-kickoff.\n9. **Data Gaps & Risks** — Missing information, contradictions, items to clarify at kickoff. Prioritize the ${requiredMissing.length} required missing fields.\n10. **Recommended Kickoff Agenda Items** — Specific topics the implementation team should cover, with priority on filling intake form gaps\n\n---\n\n${context}`;\n\nreturn [{\n  json: {\n    systemPrompt,\n    userPrompt,\n    accountName,\n    callCount: callSummaries.length,\n    gapCount: requiredMissing.length,\n    gaps: requiredMissing,\n    readinessScore,\n    totalItems,\n    completedItems: Math.round(completedItems)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [800, 384],
+      "id": "prepare-context",
+      "name": "Prepare LLM Context"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.systemPrompt }}",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.userPrompt }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 4000,
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [1072, 384],
+      "id": "llm-brief",
+      "name": "Generate Brief"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst accountName = $('Prepare LLM Context').first().json.accountName || 'Customer';\nconst callCount = $('Prepare LLM Context').first().json.callCount || 0;\nconst gapCount = $('Prepare LLM Context').first().json.gapCount || 0;\nconst readinessScore = $('Prepare LLM Context').first().json.readinessScore || 0;\n\n// Extract text from LLM response — handle multiple response formats\nlet briefText = input.message?.content \n  || input.text \n  || input.output \n  || input.content\n  || (typeof input === 'string' ? input : JSON.stringify(input));\n\n// Strip markdown code fences if present\nbriefText = briefText.replace(/^```html\\n?/i, '').replace(/\\n?```$/i, '');\nbriefText = briefText.replace(/^```markdown\\n?/i, '').replace(/\\n?```$/i, '');\nbriefText = briefText.replace(/^```\\n?/, '').replace(/\\n?```$/, '');\n\n// Convert markdown to basic HTML for email\nlet html = briefText\n  .replace(/^### (.+)$/gm, '<h3>$1</h3>')\n  .replace(/^## (.+)$/gm, '<h2>$1</h2>')\n  .replace(/^# (.+)$/gm, '<h1>$1</h1>')\n  .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')\n  .replace(/\\*(.+?)\\*/g, '<em>$1</em>')\n  .replace(/^- (.+)$/gm, '<li>$1</li>')\n  .replace(/(<li>.*<\\/li>)/gs, '<ul>$1</ul>')\n  .replace(/<\\/ul>\\s*<ul>/g, '')\n  .replace(/\\n\\n/g, '</p><p>')\n  .replace(/\\n/g, '<br>');\n\nhtml = `<div style=\"font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;\">\n  <div style=\"background: #1a1a2e; color: white; padding: 20px; border-radius: 8px 8px 0 0;\">\n    <h1 style=\"margin: 0; font-size: 22px;\">Implementation Pre-Kickoff Brief</h1>\n    <p style=\"margin: 5px 0 0; opacity: 0.8; font-size: 14px;\">${accountName} | Generated ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>\n  </div>\n  <div style=\"background: #f0f4ff; padding: 12px 20px; border-left: 4px solid #3b82f6; margin: 16px 0;\">\n    <strong>Data Sources:</strong> Salesforce Opportunity + ${callCount} Call Recording${callCount !== 1 ? 's' : ''} | <strong>Intake Readiness:</strong> ${readinessScore}% | <strong>Required Gaps:</strong> ${gapCount}\n  </div>\n  <div style=\"padding: 0 0 20px;\">\n    <p>${html}</p>\n  </div>\n  <div style=\"border-top: 1px solid #e5e7eb; padding-top: 12px; font-size: 12px; color: #6b7280;\">\n    Auto-generated by Implementation Handoff Analyzer | ${new Date().toISOString()}\n  </div>\n</div>`;\n\nreturn [{\n  json: {\n    html,\n    plainText: briefText,\n    subject: `Implementation Brief: ${accountName}`,\n    accountName\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1328, 384],
+      "id": "format-output",
+      "name": "Format Email"
+    },
+    {
+      "parameters": {
+        "sendTo": "implementation-team@yourcompany.com",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [1536, 384],
+      "id": "send-brief",
+      "name": "Send Brief"
+    }
+  ],
+  "connections": {
+    "On Form Submission": { "main": [[{ "node": "Extract PDF Text", "type": "main", "index": 0 }]] },
+    "Extract PDF Text": { "main": [[{ "node": "Salesforce - Get Opportunity", "type": "main", "index": 0 }]] },
+    "Salesforce - Get Opportunity": { "main": [[{ "node": "Gong - First Page", "type": "main", "index": 0 }]] },
+    "Gong - First Page": { "main": [[{ "node": "Collect Page", "type": "main", "index": 0 }]] },
+    "Collect Page": { "main": [[{ "node": "More Pages?", "type": "main", "index": 0 }]] },
+    "More Pages?": {
+      "main": [
+        [{ "node": "Gong - Next Page", "type": "main", "index": 0 }],
+        [{ "node": "Output All Calls", "type": "main", "index": 0 }]
+      ]
+    },
+    "Gong - Next Page": { "main": [[{ "node": "Collect Page", "type": "main", "index": 0 }]] },
+    "Output All Calls": { "main": [[{ "node": "Match Gong Calls to Account", "type": "main", "index": 0 }]] },
+    "Match Gong Calls to Account": { "main": [[{ "node": "Gong - Get Call Summaries", "type": "main", "index": 0 }]] },
+    "Gong - Get Call Summaries": { "main": [[{ "node": "Prepare LLM Context", "type": "main", "index": 0 }]] },
+    "Prepare LLM Context": { "main": [[{ "node": "Generate Brief", "type": "main", "index": 0 }]] },
+    "Generate Brief": { "main": [[{ "node": "Format Email", "type": "main", "index": 0 }]] },
+    "Format Email": { "main": [[{ "node": "Send Brief", "type": "main", "index": 0 }]] }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "tags": [{ "name": "customer-success" }, { "name": "implementation" }, { "name": "handoff" }]
+}

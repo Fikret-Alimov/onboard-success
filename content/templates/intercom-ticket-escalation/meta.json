@@ -1,0 +1,15 @@
+{
+  "id": "intercom-ticket-escalation",
+  "name": "Intercom Ticket Escalation to Slack",
+  "description": "Webhook-triggered escalation: routes high-priority Intercom conversations to Slack with an AI-generated summary.",
+  "longDescription": "Listens for new Intercom conversations or tag events via webhook. Evaluates each conversation for VIP customer flag, priority tags, and SLA breach risk. Escalated conversations get an OpenAI-generated 2–3 sentence summary and are posted to #cs-escalations with full context. Includes an optional non-AI fallback branch for teams that prefer raw excerpts.",
+  "category": "Support Escalation",
+  "platform": "n8n",
+  "difficulty": "Advanced",
+  "setupTime": "30 minutes",
+  "integrations": ["Intercom", "Slack", "OpenAI"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-14",
+  "downloads": 0
+}

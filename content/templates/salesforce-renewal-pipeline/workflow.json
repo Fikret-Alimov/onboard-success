@@ -1,0 +1,116 @@
+{
+  "name": "Salesforce Renewal Pipeline Digest",
+  "nodes": [
+    {
+      "id": "node-setup-note",
+      "name": "Setup Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, -220],
+      "parameters": {
+        "content": "## Setup Required\n1. Configure **Salesforce OAuth2** credential in both Salesforce nodes\n2. Configure **Slack** credential in the Slack node\n3. Change `#cs-renewals` in the Slack node to your channel\n4. Update `StageName IN (...)` in SOQL to match your renewal stage names exactly\n5. Optionally add `Health_Score__c` or your custom field to SOQL if it exists",
+        "height": 210,
+        "width": 380
+      }
+    },
+    {
+      "id": "node-schedule",
+      "name": "Weekly Monday 8AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [100, 100],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node-sf-renewals",
+      "name": "Query Renewal Opportunities",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [320, 100],
+      "parameters": {
+        "resource": "query",
+        "operation": "executeQuery",
+        "query": "SELECT Id, Name, Amount, CloseDate, StageName, Account.Name, Account.OwnerId, Account.Owner.Name, Account.LastActivityDate, (SELECT Id FROM Cases WHERE Status != 'Closed') FROM Opportunity WHERE StageName IN ('Renewal Due', 'Renewal Negotiation', 'Renewal At Risk') AND CloseDate <= NEXT_N_DAYS:90 ORDER BY CloseDate ASC"
+      },
+      "credentials": {
+        "salesforceOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_SALESFORCE_CREDENTIAL_ID",
+          "name": "Salesforce account"
+        }
+      }
+    },
+    {
+      "id": "node-enrich",
+      "name": "Enrich With Risk Signals",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [540, 100],
+      "parameters": {
+        "jsCode": "// Enrich each renewal opportunity with risk signals from the account\nconst today = new Date();\n\nconst enriched = $input.all().map(item => {\n  const opp = item.json;\n\n  // --- Days until close ---\n  const closeDate = new Date(opp.CloseDate);\n  const daysUntilClose = Math.floor((closeDate - today) / (1000 * 60 * 60 * 24));\n\n  // --- Days since last CSM activity on Account ---\n  let daysSinceActivity = 999;\n  const lastActivity = opp['Account.LastActivityDate'] || opp.Account?.LastActivityDate;\n  if (lastActivity) {\n    daysSinceActivity = Math.floor((today - new Date(lastActivity)) / (1000 * 60 * 60 * 24));\n  }\n\n  // --- Open case count ---\n  const openCases = opp.Cases?.records || [];\n  const openCaseCount = openCases.length;\n\n  // --- Urgency classification ---\n  let urgency = 'Healthy';\n  const riskReasons = [];\n\n  if (daysUntilClose <= 30) {\n    urgency = 'Critical';\n    riskReasons.push(`Closing in ${daysUntilClose} days`);\n  } else if (daysUntilClose <= 60) {\n    urgency = 'Watch';\n    riskReasons.push(`Closing in ${daysUntilClose} days`);\n  }\n\n  if (daysSinceActivity > 30) {\n    if (urgency !== 'Critical') urgency = 'Watch';\n    riskReasons.push(`No CSM activity in ${daysSinceActivity} days`);\n  }\n\n  if (openCaseCount >= 3) {\n    if (urgency !== 'Critical') urgency = 'Watch';\n    riskReasons.push(`${openCaseCount} open cases`);\n  }\n\n  if (opp.StageName === 'Renewal At Risk') {\n    urgency = 'Critical';\n    riskReasons.push('Stage: Renewal At Risk');\n  }\n\n  return {\n    json: {\n      oppId: opp.Id,\n      oppName: opp.Name,\n      amount: opp.Amount ? `$${Number(opp.Amount).toLocaleString()}` : 'N/A',\n      closeDate: opp.CloseDate,\n      daysUntilClose,\n      stageName: opp.StageName,\n      accountName: opp['Account.Name'] || opp.Account?.Name || 'Unknown',\n      csmName: opp['Account.Owner.Name'] || opp.Account?.Owner?.Name || 'Unknown CSM',\n      daysSinceActivity,\n      openCaseCount,\n      urgency,\n      riskReasons,\n      sfLink: `https://login.salesforce.com/${opp.Id}`\n    }\n  };\n});\n\nreturn enriched;"
+      }
+    },
+    {
+      "id": "node-digest",
+      "name": "Build Slack Digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [760, 100],
+      "parameters": {
+        "jsCode": "// Group all renewal opps into Critical / Watch / Healthy buckets\n// and generate a single Slack digest message\n\nconst allOpps = $input.all().map(i => i.json);\n\nconst groups = {\n  Critical: allOpps.filter(o => o.urgency === 'Critical'),\n  Watch:    allOpps.filter(o => o.urgency === 'Watch'),\n  Healthy:  allOpps.filter(o => o.urgency === 'Healthy')\n};\n\nconst today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });\n\nlet message = `📊 *Weekly Renewal Pipeline — ${today}*\\n`;\nmessage += `${allOpps.length} renewals closing within 90 days\\n\\n`;\n\nconst formatOpp = (o) => {\n  let line = `• *${o.accountName}* — ${o.amount} — closes ${o.closeDate} (${o.daysUntilClose}d)`;\n  if (o.riskReasons.length > 0) {\n    line += `\\n  _${o.riskReasons.join(' · ')}_`;\n  }\n  line += `\\n  CSM: ${o.csmName} | <${o.sfLink}|View in Salesforce>`;\n  return line;\n};\n\nif (groups.Critical.length > 0) {\n  message += `🔴 *CRITICAL (${groups.Critical.length})*\\n`;\n  message += groups.Critical.map(formatOpp).join('\\n') + '\\n\\n';\n}\n\nif (groups.Watch.length > 0) {\n  message += `🟡 *WATCH (${groups.Watch.length})*\\n`;\n  message += groups.Watch.map(formatOpp).join('\\n') + '\\n\\n';\n}\n\nif (groups.Healthy.length > 0) {\n  message += `🟢 *HEALTHY (${groups.Healthy.length})*\\n`;\n  message += groups.Healthy.map(o => `• *${o.accountName}* — ${o.amount} — closes ${o.closeDate}`).join('\\n');\n}\n\nreturn [{ json: { digestMessage: message, totalCount: allOpps.length } }];"
+      }
+    },
+    {
+      "id": "node-slack",
+      "name": "Post Digest to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [980, 100],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#cs-renewals",
+        "text": "={{ $json.digestMessage }}"
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "REPLACE_WITH_YOUR_SLACK_CREDENTIAL_ID",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Weekly Monday 8AM": {
+      "main": [
+        [{ "node": "Query Renewal Opportunities", "type": "main", "index": 0 }]
+      ]
+    },
+    "Query Renewal Opportunities": {
+      "main": [
+        [{ "node": "Enrich With Risk Signals", "type": "main", "index": 0 }]
+      ]
+    },
+    "Enrich With Risk Signals": {
+      "main": [
+        [{ "node": "Build Slack Digest", "type": "main", "index": 0 }]
+      ]
+    },
+    "Build Slack Digest": {
+      "main": [
+        [{ "node": "Post Digest to Slack", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

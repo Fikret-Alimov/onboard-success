@@ -1,0 +1,15 @@
+{
+  "id": "wau-wow-comparison",
+  "name": "Weekly Active Users: Week-over-Week Alert",
+  "description": "Pulls WAU data from Mixpanel, compares week-over-week, logs to Google Sheets, and emails your team when any account swings more than 10%.",
+  "longDescription": "Runs every Monday at 11 AM. Queries Mixpanel for weekly active user counts by account, calculates the week-over-week percentage change, logs all results to a Google Sheet, filters for accounts with >10% change (up or down), and sends a formatted HTML alert email to your CS team. After sending, it waits 24 hours and cleans up temporary columns from the sheet.",
+  "category": "Usage Monitoring",
+  "platform": "n8n",
+  "difficulty": "Beginner",
+  "setupTime": "15 minutes",
+  "integrations": ["Mixpanel", "Google Sheets", "Gmail"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-14",
+  "downloads": 0
+}

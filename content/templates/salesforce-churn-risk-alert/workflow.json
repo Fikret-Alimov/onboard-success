@@ -1,0 +1,150 @@
+{
+  "name": "Salesforce Churn Risk Alert",
+  "nodes": [
+    {
+      "id": "node-setup-note",
+      "name": "Setup Instructions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, -200],
+      "parameters": {
+        "content": "## Setup Required\n1. **Salesforce credential**: Go to Credentials → New → Salesforce OAuth2\n2. **Slack credential**: Go to Credentials → New → Slack OAuth2\n3. Update the **Slack node** channel from `#cs-alerts` to your channel\n4. Tune the **risk score threshold** in the IF node (default: 60)\n5. Adjust **LAST_N_DAYS:30** in SOQL if you want a different inactivity window",
+        "height": 220,
+        "width": 380
+      }
+    },
+    {
+      "id": "node-schedule",
+      "name": "Daily 8AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [100, 100],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1-5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node-sf-query",
+      "name": "Query Salesforce Accounts",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [320, 100],
+      "parameters": {
+        "resource": "query",
+        "operation": "executeQuery",
+        "query": "SELECT Id, Name, OwnerId, Owner.Name, LastActivityDate, (SELECT Id, Status, CreatedDate FROM Cases WHERE Status != 'Closed' AND CreatedDate >= LAST_N_DAYS:30), (SELECT Id, StageName, CloseDate, Amount FROM Opportunities WHERE IsClosed = false) FROM Account WHERE Type = 'Customer'"
+      },
+      "credentials": {
+        "salesforceOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_SALESFORCE_CREDENTIAL_ID",
+          "name": "Salesforce account"
+        }
+      }
+    },
+    {
+      "id": "node-score",
+      "name": "Calculate Risk Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [540, 100],
+      "parameters": {
+        "jsCode": "// Risk scoring: 0-100 (higher = more at risk)\n// Weights: days_since_activity 40%, open_cases_30d 30%, no_open_opp 15%, no_recent_meeting 15%\n\nconst results = [];\nconst today = new Date();\n\nfor (const item of $input.all()) {\n  const account = item.json;\n\n  // --- Days since last activity (weight: 40%) ---\n  let daysSinceActivity = 999; // assume max risk if null\n  if (account.LastActivityDate) {\n    const lastActivity = new Date(account.LastActivityDate);\n    daysSinceActivity = Math.floor((today - lastActivity) / (1000 * 60 * 60 * 24));\n  }\n  // Score 0-40: 0 days = 0 pts, 60+ days = 40 pts\n  const activityScore = Math.min(40, (daysSinceActivity / 60) * 40);\n\n  // --- Open cases in last 30 days (weight: 30%) ---\n  const openCases = account.Cases ? account.Cases.records || [] : [];\n  const openCaseCount = openCases.length;\n  // Score 0-30: 0 cases = 0 pts, 5+ cases = 30 pts\n  const caseScore = Math.min(30, openCaseCount * 6);\n\n  // --- No open opportunity (weight: 15%) ---\n  const openOpps = account.Opportunities ? account.Opportunities.records || [] : [];\n  const hasOpenOpp = openOpps.length > 0;\n  const oppScore = hasOpenOpp ? 0 : 15;\n\n  // --- No recent meeting/activity logged in 14 days (weight: 15%) ---\n  const noRecentMeeting = daysSinceActivity > 14;\n  const meetingScore = noRecentMeeting ? 15 : 0;\n\n  // --- Total risk score ---\n  const riskScore = Math.round(activityScore + caseScore + oppScore + meetingScore);\n\n  // --- Risk factors for Slack message ---\n  const riskFactors = [];\n  if (daysSinceActivity >= 30) riskFactors.push(`No activity in ${daysSinceActivity} days`);\n  if (openCaseCount > 0) riskFactors.push(`${openCaseCount} open case(s) in last 30 days`);\n  if (!hasOpenOpp) riskFactors.push('No open renewal or expansion opportunity');\n  if (noRecentMeeting) riskFactors.push('No logged meeting in 14+ days');\n\n  // --- Risk label ---\n  let riskLabel = '🟢 Low';\n  if (riskScore >= 75) riskLabel = '🔴 Critical';\n  else if (riskScore >= 60) riskLabel = '🟠 High';\n  else if (riskScore >= 40) riskLabel = '🟡 Medium';\n\n  results.push({\n    json: {\n      accountId: account.Id,\n      accountName: account.Name,\n      ownerId: account.OwnerId,\n      ownerName: account['Owner.Name'] || account.Owner?.Name || 'Unknown CSM',\n      daysSinceActivity,\n      openCaseCount,\n      hasOpenOpp,\n      riskScore,\n      riskLabel,\n      riskFactors,\n      sfLink: `https://login.salesforce.com/${account.Id}`\n    }\n  });\n}\n\n// Sort by risk score descending\nresults.sort((a, b) => b.json.riskScore - a.json.riskScore);\n\nreturn results;"
+      }
+    },
+    {
+      "id": "node-if",
+      "name": "Risk Score Above 60?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [760, 100],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-1",
+              "leftValue": "={{ $json.riskScore }}",
+              "rightValue": 60,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "node-slack",
+      "name": "Post Risk Alert to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [980, 60],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#cs-alerts",
+        "text": "={{ '🚨 *Churn Risk Alert: ' + $json.accountName + '*\\n\\nRisk Score: *' + $json.riskScore + '/100* — ' + $json.riskLabel + '\\n\\n*Top Risk Factors:*\\n' + $json.riskFactors.map(f => '• ' + f).join('\\n') + '\\n\\n*CSM:* ' + $json.ownerName + '\\n*Salesforce:* ' + $json.sfLink }}",
+        "blocksUi": {
+          "blocksValues": []
+        }
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "REPLACE_WITH_YOUR_SLACK_CREDENTIAL_ID",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "id": "node-threshold-note",
+      "name": "Threshold Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [760, -120],
+      "parameters": {
+        "content": "## Tune Risk Threshold\nDefault: alert when score ≥ **60**\n\n- 75+ = Critical (immediate action)\n- 60–74 = High (review today)\n- 40–59 = Medium (monitor)\n\nChange the `60` in the IF node conditions to match your team's tolerance.",
+        "height": 180,
+        "width": 300
+      }
+    }
+  ],
+  "connections": {
+    "Daily 8AM Trigger": {
+      "main": [
+        [{ "node": "Query Salesforce Accounts", "type": "main", "index": 0 }]
+      ]
+    },
+    "Query Salesforce Accounts": {
+      "main": [
+        [{ "node": "Calculate Risk Score", "type": "main", "index": 0 }]
+      ]
+    },
+    "Calculate Risk Score": {
+      "main": [
+        [{ "node": "Risk Score Above 60?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Risk Score Above 60?": {
+      "main": [
+        [{ "node": "Post Risk Alert to Slack", "type": "main", "index": 0 }],
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "name": "HubSpot Onboarding Tracker",
+  "nodes": [
+    {
+      "id": "node-pipeline-note",
+      "name": "Pipeline Setup Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, -220],
+      "parameters": {
+        "content": "## Replace Pipeline ID\nOpen the **\"Search HubSpot Deals\"** node.\nChange `YOUR_ONBOARDING_PIPELINE_ID` to your actual pipeline ID.\n\n**Find your pipeline ID:**\nHubSpot → Settings → CRM → Deals → Pipelines → click your pipeline → the ID is in the URL.",
+        "height": 200,
+        "width": 340
+      }
+    },
+    {
+      "id": "node-milestone-note",
+      "name": "Milestone Targets Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [540, -220],
+      "parameters": {
+        "content": "## Customize Milestone Day Targets\nIn the **\"Check Milestone Progress\"** Code node, edit `MILESTONE_TARGETS`:\n\n```\nKickoff Scheduled: 3 days\nTechnical Setup: 7 days\nIntegration Complete: 14 days\nTraining Done: 21 days\nGo-Live: 30 days\n```\n\nChange stage names to match your HubSpot stage labels exactly.",
+        "height": 220,
+        "width": 340
+      }
+    },
+    {
+      "id": "node-smtp-note",
+      "name": "SMTP Credentials Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [980, -220],
+      "parameters": {
+        "content": "## Update SMTP Credentials\nOpen the **\"Send Nudge Email\"** node.\n\n- Set **From Email** to your CS team email\n- Configure SMTP credential (host, port, user, password)\n- Gmail users: use App Password, not account password\n- The **To Email** is pulled from the deal's contact `email` property",
+        "height": 200,
+        "width": 320
+      }
+    },
+    {
+      "id": "node-schedule",
+      "name": "Daily 9AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [100, 100],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1-5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node-hs-search",
+      "name": "Search HubSpot Deals",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2,
+      "position": [320, 100],
+      "parameters": {
+        "resource": "deal",
+        "operation": "getAll",
+        "returnAll": true,
+        "filters": {
+          "filtersGroups": [
+            {
+              "filters": [
+                {
+                  "propertyName": "pipeline",
+                  "operator": "EQ",
+                  "value": "YOUR_ONBOARDING_PIPELINE_ID"
+                },
+                {
+                  "propertyName": "dealstage",
+                  "operator": "NOT_IN",
+                  "value": "closedwon;closedlost"
+                }
+              ]
+            }
+          ]
+        },
+        "additionalFields": {
+          "properties": [
+            "dealname",
+            "dealstage",
+            "pipeline",
+            "hubspot_owner_id",
+            "hs_lastmodifieddate",
+            "hs_date_entered_kickoff_scheduled",
+            "hs_date_entered_technical_setup",
+            "hs_date_entered_integration_complete",
+            "hs_date_entered_training_done",
+            "hs_date_entered_go_live",
+            "num_associated_contacts",
+            "contact_email",
+            "contact_firstname"
+          ]
+        }
+      },
+      "credentials": {
+        "hubspotApi": {
+          "id": "REPLACE_WITH_YOUR_HUBSPOT_CREDENTIAL_ID",
+          "name": "HubSpot account"
+        }
+      }
+    },
+    {
+      "id": "node-check-milestone",
+      "name": "Check Milestone Progress",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [540, 100],
+      "parameters": {
+        "jsCode": "// Milestone target durations (days) per stage\n// Edit these to match your onboarding schedule\nconst MILESTONE_TARGETS = {\n  'Kickoff Scheduled':    3,\n  'Technical Setup':      7,\n  'Integration Complete': 14,\n  'Training Done':        21,\n  'Go-Live':              30\n};\n\n// Map from HubSpot stage internal names to your display names\n// Update these to match your HubSpot stage IDs\nconst STAGE_FIELD_MAP = {\n  'Kickoff Scheduled':    'hs_date_entered_kickoff_scheduled',\n  'Technical Setup':      'hs_date_entered_technical_setup',\n  'Integration Complete': 'hs_date_entered_integration_complete',\n  'Training Done':        'hs_date_entered_training_done',\n  'Go-Live':              'hs_date_entered_go_live'\n};\n\nconst results = [];\nconst today = new Date();\n\nfor (const item of $input.all()) {\n  const deal = item.json;\n  const props = deal.properties || deal; // handle both formats\n\n  const stageName = props.dealstage || 'Unknown Stage';\n  const dealName = props.dealname || 'Unnamed Deal';\n  const ownerId = props.hubspot_owner_id || '';\n\n  // Find how long they've been in current stage\n  let daysInStage = null;\n  const stageEnteredField = STAGE_FIELD_MAP[stageName];\n  if (stageEnteredField && props[stageEnteredField]) {\n    const enteredDate = new Date(props[stageEnteredField]);\n    daysInStage = Math.floor((today - enteredDate) / (1000 * 60 * 60 * 24));\n  } else if (props.hs_lastmodifieddate) {\n    // Fallback: use last modified date\n    const modified = new Date(props.hs_lastmodifieddate);\n    daysInStage = Math.floor((today - modified) / (1000 * 60 * 60 * 24));\n  }\n\n  const targetDays = MILESTONE_TARGETS[stageName] || 7;\n  const isBehind = daysInStage !== null && daysInStage > targetDays;\n  const daysOverdue = isBehind ? daysInStage - targetDays : 0;\n\n  // Determine next step nudge based on current stage\n  const nudgeMessages = {\n    'Kickoff Scheduled':    'We noticed your kickoff hasn\\'t been scheduled yet. Please book a 30-min call with your CSM using this link: [CALENDAR_LINK]',\n    'Technical Setup':      'Your technical setup is taking a bit longer than expected. Please review the setup guide and ensure your API credentials are configured.',\n    'Integration Complete':  'Your integration step is overdue. Please connect to our integration wizard or reach out to support@yourcompany.com.',\n    'Training Done':         'Your training milestone is pending. Join our next live onboarding session: [TRAINING_LINK]',\n    'Go-Live':               'You\\'re almost there! Please review your go-live checklist and confirm with your CSM when you\\'re ready.'\n  };\n  const nudge = nudgeMessages[stageName] || 'Please connect with your CSM to unblock your onboarding.';\n\n  results.push({\n    json: {\n      dealId: deal.id || props.hs_object_id,\n      dealName,\n      stageName,\n      daysInStage,\n      targetDays,\n      isBehind,\n      daysOverdue,\n      ownerId,\n      contactEmail: props.contact_email || '',\n      contactFirstName: props.contact_firstname || 'there',\n      nudgeMessage: nudge,\n      hsLink: `https://app.hubspot.com/contacts/YOUR_PORTAL_ID/deal/${deal.id}`\n    }\n  });\n}\n\n// Only return behind-schedule deals\nreturn results.filter(r => r.json.isBehind);"
+      }
+    },
+    {
+      "id": "node-if-behind",
+      "name": "Is Behind Schedule?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [760, 100],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-behind",
+              "leftValue": "={{ $json.isBehind }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "node-slack-csm",
+      "name": "Alert CSM on Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [980, 20],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#cs-onboarding",
+        "text": "={{ '⚠️ *Onboarding Behind Schedule*\\n\\nDeal: *' + $json.dealName + '*\\nStage: ' + $json.stageName + '\\nDays in stage: *' + $json.daysInStage + 'd* (target: ' + $json.targetDays + 'd, *' + $json.daysOverdue + 'd overdue*)\\n\\nHubSpot: ' + $json.hsLink }}"
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "REPLACE_WITH_YOUR_SLACK_CREDENTIAL_ID",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "id": "node-email-customer",
+      "name": "Send Nudge Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [980, 180],
+      "parameters": {
+        "fromEmail": "cs@yourcompany.com",
+        "toEmail": "={{ $json.contactEmail }}",
+        "subject": "={{ 'Your onboarding: ' + $json.stageName + ' needs attention' }}",
+        "emailType": "text",
+        "message": "={{ 'Hi ' + $json.contactFirstName + ',\\n\\nWe\\'re checking in on your onboarding progress. It looks like your ' + $json.stageName + ' step is a few days overdue — no worries, we\\'re here to help!\\n\\n' + $json.nudgeMessage + '\\n\\nIf you have any questions, reply to this email and your CSM will get back to you within 1 business day.\\n\\nBest,\\nThe Customer Success Team' }}"
+      },
+      "credentials": {
+        "smtp": {
+          "id": "REPLACE_WITH_YOUR_SMTP_CREDENTIAL_ID",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily 9AM Trigger": {
+      "main": [
+        [{ "node": "Search HubSpot Deals", "type": "main", "index": 0 }]
+      ]
+    },
+    "Search HubSpot Deals": {
+      "main": [
+        [{ "node": "Check Milestone Progress", "type": "main", "index": 0 }]
+      ]
+    },
+    "Check Milestone Progress": {
+      "main": [
+        [{ "node": "Is Behind Schedule?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Is Behind Schedule?": {
+      "main": [
+        [
+          { "node": "Alert CSM on Slack", "type": "main", "index": 0 },
+          { "node": "Send Nudge Email", "type": "main", "index": 0 }
+        ],
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

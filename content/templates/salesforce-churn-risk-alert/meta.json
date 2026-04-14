@@ -1,0 +1,15 @@
+{
+  "id": "salesforce-churn-risk-alert",
+  "name": "Salesforce Churn Risk Alert",
+  "description": "Daily automated scan of Salesforce accounts to detect churn signals and post risk alerts to Slack.",
+  "longDescription": "Runs every morning at 8 AM, queries all Customer accounts in Salesforce for inactivity, open cases, and missing renewal opportunities, scores each account 0–100, and posts a prioritized risk briefing to #cs-alerts for any account scoring above 60. CSMs see exactly which accounts need attention before the day starts.",
+  "category": "Risk Detection",
+  "platform": "n8n",
+  "difficulty": "Intermediate",
+  "setupTime": "20 minutes",
+  "integrations": ["Salesforce", "Slack"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-14",
+  "downloads": 0
+}

@@ -1,125 +1,207 @@
 {
-  "name": "Weekly CS Digest Generator",
+  "name": "Weekly CS Team Digest",
   "nodes": [
     {
+      "id": "node-setup-note",
+      "name": "SOQL Customization Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, -220],
+      "parameters": {
+        "content": "## Customize SOQL Queries\nIf you have a custom health score field (e.g., `Health_Score__c`), add it to the **\"Query Stale Accounts\"** SOQL and reference it in the Code node.\n\nDefault queries assume:\n- Churned = Opportunity Stage 'Closed Lost' in last 7 days\n- Renewals = CloseDate in NEXT_N_DAYS:7\n- Escalations = Cases with Priority = 'High' created this week\n- Stale = No Account activity in 21 days",
+        "height": 230,
+        "width": 360
+      }
+    },
+    {
+      "id": "node-slack-note",
+      "name": "Slack Channel Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1100, -180],
+      "parameters": {
+        "content": "## Change Slack Channel\nOpen the **\"Post Weekly Digest\"** node.\nChange `#cs-team` to your channel name.\nMake sure the Slack bot is invited to that channel.",
+        "height": 160,
+        "width": 280
+      }
+    },
+    {
+      "id": "node-schedule",
+      "name": "Monday 8AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [100, 200],
       "parameters": {
         "rule": {
-          "interval": [{ "field": "cronExpression", "expression": "0 9 * * 1" }]
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1"
+            }
+          ]
         }
-      },
-      "id": "monday-trigger",
-      "name": "Monday 9 AM Schedule",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [0, 0]
+      }
     },
     {
+      "id": "node-sf-churns",
+      "name": "Query New Churns",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [320, 60],
       "parameters": {
-        "method": "GET",
-        "url": "=https://your-crm.example.com/api/risk-alerts?created_after={{ $now.minus(7, 'days').format('yyyy-MM-dd') }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "salesforceOAuth2Api",
-        "options": {
-          "response": { "response": { "responseFormat": "json" } }
+        "resource": "query",
+        "operation": "executeQuery",
+        "query": "SELECT Id, Name, Amount, Account.Name, Owner.Name, CloseDate FROM Opportunity WHERE StageName = 'Closed Lost' AND CloseDate = LAST_N_DAYS:7 ORDER BY CloseDate DESC"
+      },
+      "credentials": {
+        "salesforceOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_SALESFORCE_CREDENTIAL_ID",
+          "name": "Salesforce account"
         }
-      },
-      "id": "fetch-risks",
-      "name": "Fetch New Risk Alerts",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [220, -200]
+      }
     },
     {
+      "id": "node-sf-renewals",
+      "name": "Query Upcoming Renewals",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [320, 200],
       "parameters": {
-        "method": "GET",
-        "url": "=https://your-crm.example.com/api/activities?type=issue_resolved&since={{ $now.minus(7, 'days').format('yyyy-MM-dd') }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "salesforceOAuth2Api",
-        "options": {}
+        "resource": "query",
+        "operation": "executeQuery",
+        "query": "SELECT Id, Name, Amount, Account.Name, Owner.Name, CloseDate, StageName FROM Opportunity WHERE StageName IN ('Renewal Due', 'Renewal Negotiation', 'Renewal At Risk') AND CloseDate <= NEXT_N_DAYS:7 ORDER BY CloseDate ASC"
       },
-      "id": "fetch-resolved",
-      "name": "Fetch Resolved Issues",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [220, 0]
+      "credentials": {
+        "salesforceOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_SALESFORCE_CREDENTIAL_ID",
+          "name": "Salesforce account"
+        }
+      }
     },
     {
+      "id": "node-sf-escalations",
+      "name": "Query Escalated Cases",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [320, 340],
       "parameters": {
-        "method": "GET",
-        "url": "=https://your-crm.example.com/api/opportunities?type=expansion&stage=closed_won&close_date_after={{ $now.minus(7, 'days').format('yyyy-MM-dd') }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "salesforceOAuth2Api",
-        "options": {}
+        "resource": "query",
+        "operation": "executeQuery",
+        "query": "SELECT Id, Subject, Priority, Status, Account.Name, Owner.Name, CreatedDate FROM Case WHERE Priority = 'High' AND Status != 'Closed' AND CreatedDate >= LAST_N_DAYS:7 ORDER BY CreatedDate DESC"
       },
-      "id": "fetch-expansions",
-      "name": "Fetch Expansion Wins",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [220, 200]
+      "credentials": {
+        "salesforceOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_SALESFORCE_CREDENTIAL_ID",
+          "name": "Salesforce account"
+        }
+      }
     },
     {
+      "id": "node-sf-stale",
+      "name": "Query Stale Accounts",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [320, 480],
       "parameters": {
-        "method": "GET",
-        "url": "=https://your-crm.example.com/api/accounts?renewal_before={{ $now.plus(30, 'days').format('yyyy-MM-dd') }}&renewal_after={{ $now.format('yyyy-MM-dd') }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "salesforceOAuth2Api",
-        "options": {}
+        "resource": "query",
+        "operation": "executeQuery",
+        "query": "SELECT Id, Name, Owner.Name, LastActivityDate FROM Account WHERE Type = 'Customer' AND LastActivityDate <= LAST_N_DAYS:21 ORDER BY LastActivityDate ASC LIMIT 10"
       },
-      "id": "fetch-renewals",
-      "name": "Fetch Upcoming Renewals",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [220, 400]
+      "credentials": {
+        "salesforceOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_SALESFORCE_CREDENTIAL_ID",
+          "name": "Salesforce account"
+        }
+      }
     },
     {
+      "id": "node-merge",
+      "name": "Merge All Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [560, 260],
       "parameters": {
-        "jsCode": "const risks = $('Fetch New Risk Alerts').all().map(i => i.json);\nconst resolved = $('Fetch Resolved Issues').all().map(i => i.json);\nconst expansions = $('Fetch Expansion Wins').all().map(i => i.json);\nconst renewals = $('Fetch Upcoming Renewals').all().map(i => i.json);\n\nconst period = `${$now.minus(7, 'days').format('MMM dd')} - ${$now.format('MMM dd, yyyy')}`;\n\n// Risk summary\nconst riskSummary = risks.length > 0\n  ? risks.map(r => `• ${r.account_name} — ${r.risk_level} risk (${r.reason})`).join('\\n')\n  : '• No new risk alerts this week 🎉';\n\nconst highRiskCount = risks.filter(r => r.risk_level === 'High').length;\n\n// Resolved summary\nconst resolvedSummary = resolved.length > 0\n  ? resolved.map(r => `• ${r.account_name} — ${r.issue_type} resolved`).join('\\n')\n  : '• No issues resolved this week';\n\n// Expansion summary\nconst totalExpansionArr = expansions.reduce((sum, e) => sum + (e.amount || 0), 0);\nconst expansionSummary = expansions.length > 0\n  ? expansions.map(e => `• ${e.account_name} — +$${e.amount} ARR`).join('\\n')\n  : '• No expansion wins this week';\n\n// Renewal summary\nconst renewalSummary = renewals.length > 0\n  ? renewals.map(r => `• ${r.account_name} ($${r.arr}) — renews ${r.renewal_date}`).join('\\n')\n  : '• No renewals in the next 30 days';\n\n// Build digest\nconst slackDigest = `📊 *Weekly CS Digest* (${period})\\n\\n` +\n  `*📈 Key Metrics*\\n` +\n  `• New risk alerts: ${risks.length} (${highRiskCount} high)\\n` +\n  `• Issues resolved: ${resolved.length}\\n` +\n  `• Expansion wins: ${expansions.length} (+$${totalExpansionArr} ARR)\\n` +\n  `• Upcoming renewals (30d): ${renewals.length}\\n\\n` +\n  `*🚨 New Risk Alerts*\\n${riskSummary}\\n\\n` +\n  `*✅ Issues Resolved*\\n${resolvedSummary}\\n\\n` +\n  `*💰 Expansion Wins*\\n${expansionSummary}\\n\\n` +\n  `*🔄 Upcoming Renewals (30 days)*\\n${renewalSummary}`;\n\nconst htmlDigest = `<h2>Weekly CS Digest (${period})</h2>` +\n  `<h3>Key Metrics</h3><ul>` +\n  `<li>New risk alerts: ${risks.length} (${highRiskCount} high)</li>` +\n  `<li>Issues resolved: ${resolved.length}</li>` +\n  `<li>Expansion wins: ${expansions.length} (+$${totalExpansionArr} ARR)</li>` +\n  `<li>Upcoming renewals (30d): ${renewals.length}</li></ul>` +\n  `<h3>🚨 New Risk Alerts</h3><p>${riskSummary.replace(/\\n/g, '<br>')}</p>` +\n  `<h3>✅ Issues Resolved</h3><p>${resolvedSummary.replace(/\\n/g, '<br>')}</p>` +\n  `<h3>💰 Expansion Wins</h3><p>${expansionSummary.replace(/\\n/g, '<br>')}</p>` +\n  `<h3>🔄 Upcoming Renewals</h3><p>${renewalSummary.replace(/\\n/g, '<br>')}</p>`;\n\nreturn [{ json: { period, slackDigest, htmlDigest, riskCount: risks.length, resolvedCount: resolved.length, expansionCount: expansions.length, renewalCount: renewals.length, totalExpansionArr } }];"
-      },
-      "id": "compile-digest",
+        "mode": "combine",
+        "combinationMode": "multiplex"
+      }
+    },
+    {
+      "id": "node-compile",
       "name": "Compile Digest",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 100]
+      "position": [780, 260],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Compile all Salesforce results into a weekly CS digest\n// The merge node combines all 4 query results into a flat array\n// We need to identify which items came from which query\n\nconst allItems = $input.all().map(i => i.json);\n\n// Separate data by presence of distinguishing fields\nconst churns = allItems.filter(i => i.StageName === 'Closed Lost');\nconst renewals = allItems.filter(i => i.StageName && i.StageName !== 'Closed Lost' && i.CloseDate);\nconst cases = allItems.filter(i => i.Subject !== undefined && i.Priority !== undefined);\nconst stale = allItems.filter(i => i.LastActivityDate !== undefined && !i.Subject && !i.StageName);\n\nconst today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });\n\n// Build Slack Block Kit message\nconst blocks = [\n  {\n    type: 'header',\n    text: { type: 'plain_text', text: `📊 CS Weekly Digest — ${today}`, emoji: true }\n  },\n  { type: 'divider' }\n];\n\n// Section 1: Churns\nblocks.push({\n  type: 'section',\n  text: {\n    type: 'mrkdwn',\n    text: churns.length > 0\n      ? `*💔 New Churns This Week (${churns.length})*\\n` +\n        churns.map(c => `• ${c['Account.Name'] || c.Account?.Name} — $${Number(c.Amount || 0).toLocaleString()} (CSM: ${c['Owner.Name'] || c.Owner?.Name})`).join('\\n')\n      : '*💚 No New Churns This Week*'\n  }\n});\nblocks.push({ type: 'divider' });\n\n// Section 2: Renewals Due Soon\nblocks.push({\n  type: 'section',\n  text: {\n    type: 'mrkdwn',\n    text: renewals.length > 0\n      ? `*🔄 Renewals Closing This Week (${renewals.length})*\\n` +\n        renewals.map(r => `• ${r['Account.Name'] || r.Account?.Name} — $${Number(r.Amount || 0).toLocaleString()} — ${r.CloseDate} (${r.StageName})`).join('\\n')\n      : '*🔄 No Renewals Due This Week*'\n  }\n});\nblocks.push({ type: 'divider' });\n\n// Section 3: Escalated Cases\nblocks.push({\n  type: 'section',\n  text: {\n    type: 'mrkdwn',\n    text: cases.length > 0\n      ? `*🚨 High-Priority Open Cases (${cases.length})*\\n` +\n        cases.map(c => `• ${c['Account.Name'] || c.Account?.Name}: ${c.Subject} (${c.Status})`).join('\\n')\n      : '*✅ No High-Priority Open Cases*'\n  }\n});\nblocks.push({ type: 'divider' });\n\n// Section 4: Stale Accounts\nblocks.push({\n  type: 'section',\n  text: {\n    type: 'mrkdwn',\n    text: stale.length > 0\n      ? `*⚠️ Accounts With No Activity (21+ days, top ${stale.length})*\\n` +\n        stale.map(a => {\n          const days = a.LastActivityDate\n            ? Math.floor((Date.now() - new Date(a.LastActivityDate).getTime()) / 86400000)\n            : 'N/A';\n          return `• ${a.Name} — last activity: ${days}d ago (CSM: ${a['Owner.Name'] || a.Owner?.Name})`;\n        }).join('\\n')\n      : '*✅ All Accounts Have Recent Activity*'\n  }\n});\n\nblocks.push({ type: 'divider' });\nblocks.push({\n  type: 'context',\n  elements: [{\n    type: 'mrkdwn',\n    text: `_Generated by n8n Weekly CS Digest | ${new Date().toISOString()}_`\n  }]\n});\n\nreturn [{ json: { blocks, text: `CS Weekly Digest — ${today}` } }];"
+      }
     },
     {
-      "parameters": {
-        "channel": "#cs-leadership",
-        "text": "={{ $json.slackDigest }}",
-        "otherOptions": {}
-      },
-      "id": "slack-digest",
-      "name": "Post to Slack",
+      "id": "node-slack",
+      "name": "Post Weekly Digest",
       "type": "n8n-nodes-base.slack",
-      "typeVersion": 2.2,
-      "position": [720, 0],
-      "credentials": { "slackApi": { "id": "1", "name": "Slack API" } }
-    },
-    {
-      "parameters": {
-        "fromEmail": "cs-digest@yourcompany.com",
-        "toEmail": "cs-leadership@yourcompany.com",
-        "subject": "=Weekly CS Digest — {{ $json.period }}",
-        "emailType": "html",
-        "html": "={{ $json.htmlDigest }}",
-        "options": {}
-      },
-      "id": "email-digest",
-      "name": "Email Digest",
-      "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [720, 200],
-      "credentials": { "smtp": { "id": "2", "name": "SMTP" } }
+      "position": [1000, 260],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#cs-team",
+        "text": "={{ $json.text }}",
+        "blocksUi": {
+          "blocksValues": "={{ JSON.stringify($json.blocks) }}"
+        }
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "REPLACE_WITH_YOUR_SLACK_CREDENTIAL_ID",
+          "name": "Slack account"
+        }
+      }
     }
   ],
   "connections": {
-    "Monday 9 AM Schedule": { "main": [[{ "node": "Fetch New Risk Alerts", "type": "main", "index": 0 }, { "node": "Fetch Resolved Issues", "type": "main", "index": 0 }, { "node": "Fetch Expansion Wins", "type": "main", "index": 0 }, { "node": "Fetch Upcoming Renewals", "type": "main", "index": 0 }]] },
-    "Fetch New Risk Alerts": { "main": [[{ "node": "Compile Digest", "type": "main", "index": 0 }]] },
-    "Fetch Resolved Issues": { "main": [[{ "node": "Compile Digest", "type": "main", "index": 0 }]] },
-    "Fetch Expansion Wins": { "main": [[{ "node": "Compile Digest", "type": "main", "index": 0 }]] },
-    "Fetch Upcoming Renewals": { "main": [[{ "node": "Compile Digest", "type": "main", "index": 0 }]] },
-    "Compile Digest": { "main": [[{ "node": "Post to Slack", "type": "main", "index": 0 }, { "node": "Email Digest", "type": "main", "index": 0 }]] }
+    "Monday 8AM Trigger": {
+      "main": [
+        [
+          { "node": "Query New Churns", "type": "main", "index": 0 },
+          { "node": "Query Upcoming Renewals", "type": "main", "index": 0 },
+          { "node": "Query Escalated Cases", "type": "main", "index": 0 },
+          { "node": "Query Stale Accounts", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Query New Churns": {
+      "main": [
+        [{ "node": "Merge All Results", "type": "main", "index": 0 }]
+      ]
+    },
+    "Query Upcoming Renewals": {
+      "main": [
+        [{ "node": "Merge All Results", "type": "main", "index": 1 }]
+      ]
+    },
+    "Query Escalated Cases": {
+      "main": [
+        [{ "node": "Merge All Results", "type": "main", "index": 2 }]
+      ]
+    },
+    "Query Stale Accounts": {
+      "main": [
+        [{ "node": "Merge All Results", "type": "main", "index": 3 }]
+      ]
+    },
+    "Merge All Results": {
+      "main": [
+        [{ "node": "Compile Digest", "type": "main", "index": 0 }]
+      ]
+    },
+    "Compile Digest": {
+      "main": [
+        [{ "node": "Post Weekly Digest", "type": "main", "index": 0 }]
+      ]
+    }
   },
-  "settings": { "executionOrder": "v1" },
-  "staticData": null,
-  "tags": [{ "name": "customer-success" }, { "name": "reporting" }, { "name": "digest" }]
+  "settings": {
+    "executionOrder": "v1"
+  }
 }

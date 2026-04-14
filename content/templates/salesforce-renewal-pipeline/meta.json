@@ -1,0 +1,15 @@
+{
+  "id": "salesforce-renewal-pipeline",
+  "name": "Salesforce Renewal Pipeline Digest",
+  "description": "Weekly Slack digest of all renewals closing in 90 days, grouped by urgency with CSM risk signals.",
+  "longDescription": "Every Monday at 8 AM, queries Salesforce for all renewal opportunities closing in the next 90 days, enriches each with account health signals (days since CSM activity, open case count), and posts a structured Slack digest to #cs-renewals grouped into Critical, Watch, and Healthy buckets. Gives your CS team a 5-second view of the renewal pipeline every week.",
+  "category": "Renewals",
+  "platform": "n8n",
+  "difficulty": "Intermediate",
+  "setupTime": "20 minutes",
+  "integrations": ["Salesforce", "Slack"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-14",
+  "downloads": 0
+}

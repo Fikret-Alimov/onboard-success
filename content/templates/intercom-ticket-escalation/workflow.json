@@ -1,0 +1,185 @@
+{
+  "name": "Intercom Ticket Escalation to Slack",
+  "nodes": [
+    {
+      "id": "node-webhook-note",
+      "name": "Webhook Setup Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, -240],
+      "parameters": {
+        "content": "## Configure Intercom Webhook\n1. Copy the webhook URL from the **Intercom Trigger** node\n2. Go to Intercom → Settings → Integrations → Webhooks\n3. Paste the URL and subscribe to topics:\n   - `conversation.created`\n   - `conversation.tag.created`\n4. Save. Intercom will send a verification request automatically.",
+        "height": 230,
+        "width": 340
+      }
+    },
+    {
+      "id": "node-openai-note",
+      "name": "OpenAI Optional Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [800, -200],
+      "parameters": {
+        "content": "## OpenAI is Optional\nIf you don't want AI summaries:\n1. Delete the **\"Summarize with OpenAI\"** node\n2. Connect the **\"Is Escalation?\"** IF node (true branch) directly to **\"Post to Slack (with AI)\"**\n3. Change the Slack message to use `$json.lastMessageExcerpt` instead of `$json.aiSummary`\n\nThe false branch of the IF node already goes to a fallback Slack node with raw excerpt.",
+        "height": 220,
+        "width": 340
+      }
+    },
+    {
+      "id": "node-intercom-trigger",
+      "name": "Intercom Webhook",
+      "type": "n8n-nodes-base.intercomTrigger",
+      "typeVersion": 1,
+      "position": [100, 100],
+      "parameters": {
+        "events": ["conversation.created", "conversation.tag.created"]
+      },
+      "credentials": {
+        "intercomApi": {
+          "id": "REPLACE_WITH_YOUR_INTERCOM_CREDENTIAL_ID",
+          "name": "Intercom account"
+        }
+      }
+    },
+    {
+      "id": "node-extract",
+      "name": "Extract and Evaluate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [320, 100],
+      "parameters": {
+        "jsCode": "// Extract conversation data from the Intercom webhook payload\n// and determine if this conversation should be escalated\n\nconst payload = $input.first().json;\nconst data = payload.data?.item || payload;\n\n// --- Extract conversation metadata ---\nconst conversationId = data.id || 'unknown';\nconst createdAt = data.created_at ? new Date(data.created_at * 1000) : new Date();\nconst source = data.source || {};\nconst contact = data.contacts?.contacts?.[0] || {};\nconst tags = data.tags?.tags?.map(t => t.name.toLowerCase()) || [];\n\n// --- Customer info ---\nconst customerName = contact.name || source.author?.name || 'Unknown Customer';\nconst customerEmail = contact.email || source.author?.email || '';\nconst companyName = contact.companies?.companies?.[0]?.name || 'Unknown Company';\n\n// --- Conversation content ---\nconst conversationParts = data.conversation_parts?.conversation_parts || [];\nconst allMessages = [source.body || '', ...conversationParts.map(p => p.body || '')]\n  .filter(Boolean);\nconst lastMessageExcerpt = allMessages[allMessages.length - 1]?.substring(0, 500) || 'No message content';\nconst fullConversationText = allMessages.join('\\n\\n').substring(0, 3000);\n\n// --- Priority tags (customize these to match your Intercom tags) ---\nconst ESCALATION_TAGS = ['urgent', 'vip', 'escalation', 'p1', 'critical', 'at-risk', 'churn-risk'];\nconst VIP_TAGS = ['vip', 'enterprise', 'key-account'];\n\nconst hasPriorityTag = tags.some(t => ESCALATION_TAGS.includes(t));\nconst isVip = tags.some(t => VIP_TAGS.includes(t));\n\n// --- SLA check: flag if conversation is > 2 hours old with no assignee ---\nconst ageMinutes = (Date.now() - createdAt.getTime()) / (1000 * 60);\nconst isUnassigned = !data.assignee || !data.assignee.id;\nconst isSlaBreaching = ageMinutes > 120 && isUnassigned;\n\n// --- Escalation decision ---\nconst isEscalation = hasPriorityTag || isVip || isSlaBreaching;\n\n// --- Priority label ---\nlet priorityLabel = '🟡 Normal';\nif (isVip && hasPriorityTag) priorityLabel = '🔴 P1 — VIP + Priority Tag';\nelse if (isVip) priorityLabel = '🟠 VIP Customer';\nelse if (hasPriorityTag) priorityLabel = '🔴 Priority Tag Detected';\nelse if (isSlaBreaching) priorityLabel = '🟠 SLA Risk (2h unassigned)';\n\nconst conversationLink = `https://app.intercom.com/a/apps/YOUR_APP_ID/conversations/${conversationId}`;\n\nreturn [{\n  json: {\n    conversationId,\n    customerName,\n    customerEmail,\n    companyName,\n    tags,\n    hasPriorityTag,\n    isVip,\n    isSlaBreaching,\n    isEscalation,\n    priorityLabel,\n    ageMinutes: Math.round(ageMinutes),\n    lastMessageExcerpt,\n    fullConversationText,\n    conversationLink\n  }\n}];"
+      }
+    },
+    {
+      "id": "node-if-escalation",
+      "name": "Is Escalation?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [540, 100],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-esc",
+              "leftValue": "={{ $json.isEscalation }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "node-openai",
+      "name": "Summarize with OpenAI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [760, 20],
+      "parameters": {
+        "resource": "text",
+        "operation": "complete",
+        "model": "gpt-4o-mini",
+        "prompt": "={{ 'You are a Customer Success assistant. Summarize this support conversation in 2-3 sentences for a CSM who needs to understand the situation quickly. Focus on: the core issue, customer sentiment, and urgency.\\n\\nConversation:\\n' + $json.fullConversationText }}",
+        "options": {
+          "maxTokens": 200,
+          "temperature": 0.3
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "REPLACE_WITH_YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "id": "node-merge-summary",
+      "name": "Add Summary to Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [980, 20],
+      "parameters": {
+        "jsCode": "// Merge OpenAI summary back with the original conversation data\nconst openAiResponse = $input.first().json;\nconst summary = openAiResponse.text || openAiResponse.choices?.[0]?.text || 'Summary unavailable';\n\n// Get the original data from two steps back\nconst originalData = $('Is Escalation?').first().json;\n\nreturn [{\n  json: {\n    ...originalData,\n    aiSummary: summary.trim()\n  }\n}];"
+      }
+    },
+    {
+      "id": "node-slack-ai",
+      "name": "Post to Slack (with AI)",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [1200, 20],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#cs-escalations",
+        "text": "={{ '🚨 *Escalation Alert*\\n\\n*Customer:* ' + $json.customerName + ' (' + $json.companyName + ')\\n*Priority:* ' + $json.priorityLabel + '\\n*SLA:* ' + ($json.ageMinutes > 120 ? '⚠️ ' + $json.ageMinutes + ' min (breaching)' : '✅ ' + $json.ageMinutes + ' min') + '\\n\\n*AI Summary:*\\n' + $json.aiSummary + '\\n\\n*Tags:* ' + ($json.tags.join(', ') || 'none') + '\\n*Conversation:* ' + $json.conversationLink }}"
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "REPLACE_WITH_YOUR_SLACK_CREDENTIAL_ID",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "id": "node-slack-fallback",
+      "name": "Post to Slack (no AI)",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [760, 200],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#cs-escalations",
+        "text": "={{ '⚠️ *Escalation Alert (No AI)*\\n\\n*Customer:* ' + $json.customerName + ' (' + $json.companyName + ')\\n*Priority:* ' + $json.priorityLabel + '\\n\\n*Last message excerpt:*\\n_' + $json.lastMessageExcerpt + '_\\n\\n*Conversation:* ' + $json.conversationLink }}"
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "REPLACE_WITH_YOUR_SLACK_CREDENTIAL_ID",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Intercom Webhook": {
+      "main": [
+        [{ "node": "Extract and Evaluate", "type": "main", "index": 0 }]
+      ]
+    },
+    "Extract and Evaluate": {
+      "main": [
+        [{ "node": "Is Escalation?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Is Escalation?": {
+      "main": [
+        [{ "node": "Summarize with OpenAI", "type": "main", "index": 0 }],
+        [{ "node": "Post to Slack (no AI)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Summarize with OpenAI": {
+      "main": [
+        [{ "node": "Add Summary to Data", "type": "main", "index": 0 }]
+      ]
+    },
+    "Add Summary to Data": {
+      "main": [
+        [{ "node": "Post to Slack (with AI)", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -62,3 +62,10 @@ export function getTemplateWorkflow(slug: string): string | null {
   if (!fs.existsSync(workflowPath)) return null;
   return fs.readFileSync(workflowPath, "utf-8");
 }
+
+export function getTemplateWorkflowData(slug: string): { nodes: any[]; connections: any } | null {
+  const workflowPath = path.join(TEMPLATES_DIR, slug, "workflow.json");
+  if (!fs.existsSync(workflowPath)) return null;
+  const data = JSON.parse(fs.readFileSync(workflowPath, "utf-8"));
+  return { nodes: data.nodes || [], connections: data.connections || {} };
+}

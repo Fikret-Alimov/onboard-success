@@ -1,0 +1,15 @@
+{
+  "id": "sales-handoff-analyzer",
+  "name": "Sales-to-Implementation Handoff Analyzer",
+  "description": "Pulls Salesforce opportunity data and Gong call recordings, scores intake readiness, and generates an AI-powered implementation brief via email.",
+  "longDescription": "Triggered by an n8n form where you enter a Salesforce Opportunity ID and optionally upload a PDF (conversation history, sales notes). The workflow fetches the full opportunity from Salesforce, paginates through all matching Gong calls, extracts summaries and action items, evaluates your implementation intake checklist for completeness, then uses an LLM to generate a structured pre-kickoff brief. The brief highlights data gaps, risk areas, and recommended kickoff agenda items — delivered as a formatted email to your implementation team.",
+  "category": "Handoff & Onboarding",
+  "platform": "n8n",
+  "difficulty": "Advanced",
+  "setupTime": "45 minutes",
+  "integrations": ["Salesforce", "Gong", "OpenAI", "Gmail"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-14",
+  "downloads": 0
+}

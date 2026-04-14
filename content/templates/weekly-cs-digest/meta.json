@@ -1,15 +1,15 @@
 {
   "id": "weekly-cs-digest",
-  "name": "Weekly CS Digest Generator",
-  "description": "Compiles a weekly digest of account activity, risk alerts, wins, and action items for CS leadership.",
-  "longDescription": "Runs every Monday morning and aggregates the past week's customer success activity into a formatted digest. Includes new risk flags raised, issues resolved, expansion wins, upcoming renewals, and key action items. Sends the digest via Slack and email to CS leadership, providing a comprehensive snapshot of portfolio health without manual report-building.",
+  "name": "Weekly CS Team Digest",
+  "description": "Monday morning Slack digest with churns, renewals, escalations, and health drops pulled from Salesforce.",
+  "longDescription": "Every Monday at 8 AM, runs four Salesforce queries in parallel — new churns this week, renewals closing in 7 days, accounts with recent case escalations, and accounts with no activity in 21+ days — then compiles everything into a single Block Kit Slack message for your CS team. The full weekly picture in one message.",
   "category": "Reporting",
   "platform": "n8n",
   "difficulty": "Beginner",
   "setupTime": "15 minutes",
-  "integrations": ["Salesforce", "Slack", "Email"],
+  "integrations": ["Salesforce", "Slack"],
   "tier": "free",
   "version": "1.0.0",
-  "lastUpdated": "2026-03-31",
+  "lastUpdated": "2026-04-14",
   "downloads": 0
 }

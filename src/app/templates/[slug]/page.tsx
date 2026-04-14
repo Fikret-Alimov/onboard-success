@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAllTemplates, getTemplateBySlug, type TemplateMeta } from "@/lib/templates";
+import { getAllTemplates, getTemplateBySlug, getTemplateWorkflowData, type TemplateMeta } from "@/lib/templates";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import WorkflowVisual from "@/components/WorkflowVisual";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -103,6 +104,7 @@ export default async function TemplateDetailPage({ params }: PageProps) {
   if (!template) notFound();
 
   const isFree = template.tier === "free";
+  const workflowData = getTemplateWorkflowData(slug);
 
   // Get related templates (same category first, then others, exclude current)
   const allTemplates = getAllTemplates();
@@ -162,6 +164,16 @@ export default async function TemplateDetailPage({ params }: PageProps) {
               </span>
             ))}
           </div>
+
+          {/* Workflow Visual */}
+          {workflowData && (
+            <div className="mb-10">
+              <h2 className="text-xl font-semibold text-white mb-4">Workflow Overview</h2>
+              <div className="overflow-x-auto">
+                <WorkflowVisual nodes={workflowData.nodes} connections={workflowData.connections} />
+              </div>
+            </div>
+          )}
 
           {/* Download / Pro CTA */}
           <div className="mb-10">

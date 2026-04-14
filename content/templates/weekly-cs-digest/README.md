@@ -1,97 +1,109 @@
-# Weekly CS Digest Generator
+# Weekly CS Team Digest
 
-## Overview
+Every Monday at 8 AM, runs four parallel Salesforce queries — new churns, renewals closing this week, high-priority open cases, and accounts with no activity in 21+ days — then posts a single structured Block Kit message to your Slack CS channel.
 
-This n8n workflow runs every Monday at 9 AM and compiles a comprehensive weekly digest of customer success activity. It aggregates new risk flags, resolved issues, expansion wins, and upcoming renewals from your CRM, then delivers a formatted summary to CS leadership via Slack and email. No more manual report-building.
+---
 
 ## Prerequisites
 
-Before setting up this template, you'll need:
+- n8n instance (self-hosted or n8n Cloud)
+- Salesforce account with API access
+- Slack workspace with bot token
+- n8n Salesforce credential (OAuth2) — [setup guide](https://docs.n8n.io/integrations/builtin/credentials/salesforce/)
+- n8n Slack credential — [setup guide](https://docs.n8n.io/integrations/builtin/credentials/slack/)
 
-- **n8n instance** (self-hosted or n8n Cloud)
-- **Salesforce** — OAuth2 API credentials with read access to accounts, activities, and opportunities
-- **Slack workspace** — Bot token with permission to post to channels
-- **SMTP credentials** — For sending the email digest
+---
 
-## Setup Guide
+## Setup Steps
 
-### Step 1: Import the Workflow
+### 1. Import the workflow
+In n8n, go to **Workflows → Import from File** and select `workflow.json`.
 
-1. Open your n8n instance
-2. Go to **Workflows → Import from File**
-3. Upload the `workflow.json` file
+### 2. Configure Salesforce credentials
+All four Salesforce nodes use the same credential. Configure one, then apply it to all:
+- **"Query New Churns"** — reads Opportunities (StageName = 'Closed Lost')
+- **"Query Upcoming Renewals"** — reads Opportunities with renewal stages
+- **"Query Escalated Cases"** — reads Cases with Priority = 'High'
+- **"Query Stale Accounts"** — reads Accounts with LastActivityDate
 
-### Step 2: Configure Credentials
+Required Salesforce permissions: `Read` on Opportunity, Case, Account objects.
 
-1. **Salesforce:** Add Salesforce OAuth2 credentials in n8n Settings → Credentials
-2. **Slack:** Configure Slack bot credentials
-3. **SMTP:** Add your email server credentials
+### 3. Verify your Salesforce stage names
+The workflow queries `StageName = 'Closed Lost'` for churns and `StageName IN ('Renewal Due', 'Renewal Negotiation', 'Renewal At Risk')` for renewals.
 
-### Step 3: Update API Endpoints
+Check your actual stage names: Salesforce → Setup → Object Manager → Opportunity → Fields → StageName → Picklist Values. Update both nodes to match exactly (case-sensitive).
 
-Open each HTTP Request node and replace placeholder URLs:
+### 4. Configure Slack
+- In the **"Post Weekly Digest"** node, change `#cs-team` to your channel
+- Configure your Slack credential (bot token `xoxb-...`)
+- Invite the bot to the channel: `/invite @your-bot-name`
 
-- `Fetch New Risk Alerts` — Your CRM endpoint for risk alerts created in the last 7 days
-- `Fetch Resolved Issues` — Your CRM endpoint for resolved activities
-- `Fetch Expansion Wins` — Your CRM closed-won expansion opportunities
-- `Fetch Upcoming Renewals` — Your CRM accounts with renewals in the next 30 days
+### 5. Add custom health score field (optional)
+If your Salesforce org has a custom health score on Account (e.g., `Health_Score__c`):
 
-### Step 4: Configure Recipients
+In the **"Query Stale Accounts"** node, add it to the SOQL:
+```sql
+SELECT Id, Name, Owner.Name, LastActivityDate, Health_Score__c FROM Account ...
+```
 
-- Update Slack channel (default: `#cs-leadership`)
-- Update the email to address (default: `cs-leadership@yourcompany.com`)
-- Update the from address (default: `cs-digest@yourcompany.com`)
+Then in the **"Compile Digest"** Code node, add a health score line to the stale accounts section:
+```javascript
+return `• ${a.Name} — score: ${a.Health_Score__c} — last activity: ${days}d ago`;
+```
 
-### Step 5: Adjust Schedule
+### 6. Adjust inactivity threshold
+The stale accounts query uses `LAST_N_DAYS:21`. To change this:
+- In the **"Query Stale Accounts"** node, change `21` to your preferred number of days
+- The `LIMIT 10` cap prevents the digest from getting too long — increase if needed
 
-Default: Monday at 9 AM UTC. Edit the **Monday 9 AM Schedule** node's cron expression to adjust timing or timezone.
+### 7. Activate the workflow
+Toggle to **Active**. It will run every Monday at 8:00 AM server time.
 
-### Step 6: Activate
+---
 
-Toggle the workflow to **Active**.
+## Sample Slack Output
 
-## Configuration Options
+```
+📊 CS Weekly Digest — Monday, April 14
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| Schedule | Monday 9 AM UTC | When the digest runs |
-| Lookback period | 7 days | How far back to aggregate data |
-| Renewal window | 30 days | How far ahead to show renewals |
-| Slack channel | #cs-leadership | Where the digest is posted |
-| Email recipient | cs-leadership@yourcompany.com | Who gets the email digest |
+💔 New Churns This Week (1)
+• Acme Corp — $24,000 (CSM: Jane Smith)
 
-## How to Customize
+──────────────────────────────
 
-### Add more sections
+🔄 Renewals Closing This Week (2)
+• TechCo Ltd — $45,000 — 2026-04-16 (Renewal Due)
+• StartupXYZ — $12,000 — 2026-04-18 (Renewal Negotiation)
 
-Edit the **Compile Digest** code node to include additional sections:
-- **New customers onboarded** — Pull from your onboarding pipeline
-- **NPS/CSAT trends** — Include weekly sentiment changes
-- **CSM leaderboard** — Top-performing CSMs by accounts saved/expanded
+──────────────────────────────
 
-### Change the schedule
+🚨 High-Priority Open Cases (1)
+• BigCorp: API outage — critical (Open)
 
-Update the cron expression in the trigger node:
-- Daily: `0 9 * * *`
-- Bi-weekly: `0 9 * * 1,4`
-- First Monday of month: `0 9 1-7 * 1`
+──────────────────────────────
 
-### Add per-CSM digests
+⚠️ Accounts With No Activity (21+ days, top 3)
+• OldCustomer Inc — last activity: 45d ago (CSM: Bob Jones)
+• InactiveCo — last activity: 38d ago (CSM: Sara Lee)
+• DormantLtd — last activity: 29d ago (CSM: Mike Chen)
+```
 
-Add a loop that generates individual digests for each CSM, filtered to their accounts only.
-
-### Include charts
-
-Use an HTTP Request to a chart service (QuickChart.io) to generate visual charts for the email version.
-
-### Archive digests
-
-Add a Google Sheets or database node to store each week's metrics for quarterly/annual trend analysis.
+---
 
 ## Troubleshooting
 
-- **Empty digest** — Verify your CRM API endpoints return data for the specified date ranges
-- **Wrong timezone** — The cron `0 9 * * 1` runs at 9 AM UTC; adjust for your team's timezone
-- **Email formatting broken** — Check that the HTML digest doesn't contain unescaped special characters
-- **Slack not posting** — Ensure the bot is added to the `#cs-leadership` channel
-- **Missing expansion data** — Verify your CRM has a separate opportunity type or stage for expansions
+**Slack message shows raw blocks JSON instead of formatted message**
+- n8n's Slack node Block Kit rendering requires the blocks to be passed correctly
+- In the Slack node, make sure `blocksUi` is set and the text field has fallback content
+- Test by sending to a DM first before posting to the team channel
+
+**Merge node combining results incorrectly**
+- The Merge node in `multiplex` mode outputs all combinations of inputs
+- If items are getting duplicated, switch to `mode: append` in the Merge node parameters and update the Code node filtering logic
+
+**SOQL query errors**
+- Run queries first in Salesforce's Workbench (workbench.developerforce.com) to verify syntax
+- Date literals like `LAST_N_DAYS:7` and `NEXT_N_DAYS:7` are UTC-based
+
+**"Query Escalated Cases" returns too many results**
+- Add `LIMIT 5` to the SOQL to cap it, or change `Priority = 'High'` to `Priority = 'High' AND IsEscalated = true` if you use Salesforce's escalation feature
