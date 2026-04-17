@@ -29,21 +29,37 @@ export async function GET(
     );
   }
 
-  // Optional email capture
-  const email = request.nextUrl.searchParams.get("email") || null;
+  // Email is required for free templates
+  const email = request.nextUrl.searchParams.get("email")?.trim() || null;
+  if (!email) {
+    return NextResponse.json(
+      { error: "Email is required to download templates." },
+      { status: 400 }
+    );
+  }
 
-  // Log download to Supabase
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip") ||
     "unknown";
 
   try {
+    // Log download
     await supabase.from("template_downloads").insert({
       template_id: slug,
       email,
       ip_address: ip,
     });
+
+    // Upsert to subscribers table (don't overwrite existing records)
+    await supabase.from("subscribers").upsert(
+      {
+        email,
+        source: "template-download",
+        active: true,
+      },
+      { onConflict: "email", ignoreDuplicates: true }
+    );
   } catch {
     // Don't block download if logging fails
   }

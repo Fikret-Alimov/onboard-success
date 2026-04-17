@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getAllTemplates, getTemplateBySlug, getTemplateWorkflowData, type TemplateMeta } from "@/lib/templates";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import WorkflowVisual from "@/components/WorkflowVisual";
+import TemplateDownloadGate from "@/components/TemplateDownloadGate";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -178,12 +179,7 @@ export default async function TemplateDetailPage({ params }: PageProps) {
           {/* Download / Pro CTA */}
           <div className="mb-10">
             {isFree ? (
-              <a
-                href={`/api/templates/${template.id}/download`}
-                className="inline-flex items-center px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-lg font-medium transition-colors text-lg"
-              >
-                ⬇ Download Workflow
-              </a>
+              <TemplateDownloadGate slug={slug} templateName={template.name} />
             ) : (
               <div className="inline-flex flex-col items-start gap-2">
                 <span className="inline-flex items-center px-6 py-3 bg-amber-500/15 text-amber-400 border border-amber-500/20 rounded-lg font-medium text-lg cursor-default">
@@ -275,12 +271,7 @@ export default async function TemplateDetailPage({ params }: PageProps) {
             <hr className="border-white/5" />
 
             {isFree ? (
-              <a
-                href={`/api/templates/${template.id}/download`}
-                className="block w-full text-center px-4 py-2.5 bg-accent hover:bg-accent-hover text-white rounded-lg font-medium transition-colors"
-              >
-                ⬇ Download
-              </a>
+              <TemplateDownloadGate slug={slug} templateName={template.name} />
             ) : (
               <div className="text-center">
                 <span className="block w-full px-4 py-2.5 bg-amber-500/15 text-amber-400 border border-amber-500/20 rounded-lg font-medium cursor-default">
