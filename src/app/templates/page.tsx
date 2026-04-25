@@ -14,12 +14,21 @@ export const metadata: Metadata = {
       "Pre-built n8n workflow templates for Customer Success automation. Churn detection, QBR prep, onboarding tracking, and more.",
     url: "https://www.onboard-success.com/templates",
     type: "website",
+    images: [
+      {
+        url: "https://www.onboard-success.com/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "OnboardSuccess — AI Resource Hub for Customer Success",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Agent Workflow Templates for Customer Success | Onboard Success",
     description:
       "Pre-built n8n workflow templates for Customer Success automation. Churn detection, QBR prep, onboarding tracking, and more.",
+    images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {
     canonical: "/templates",

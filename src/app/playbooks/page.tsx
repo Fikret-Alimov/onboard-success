@@ -13,12 +13,21 @@ export const metadata: Metadata = {
       "Strategic guides on AI-powered Customer Success for mid-market B2B SaaS. Agentic workflows, health scoring, churn prevention, onboarding automation, and platform comparisons.",
     url: "https://www.onboard-success.com/playbooks",
     type: "website",
+    images: [
+      {
+        url: "https://www.onboard-success.com/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "OnboardSuccess — AI Resource Hub for Customer Success",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Customer Success Playbooks for B2B SaaS | Onboard Success",
     description:
       "Strategic guides on AI-powered Customer Success for mid-market B2B SaaS. Agentic workflows, health scoring, churn prevention, and platform comparisons.",
+    images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {
     canonical: "/playbooks",

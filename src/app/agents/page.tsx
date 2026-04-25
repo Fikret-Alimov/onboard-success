@@ -14,12 +14,21 @@ export const metadata: Metadata = {
       "Compare the best AI agents for Customer Success teams in 2026. Features, integrations, G2 ratings, and pricing.",
     url: "https://www.onboard-success.com/agents",
     type: "website",
+    images: [
+      {
+        url: "https://www.onboard-success.com/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "OnboardSuccess — AI Resource Hub for Customer Success",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Agents for Customer Success — Directory & Reviews | Onboard Success",
     description:
       "Compare the best AI agents for Customer Success teams in 2026. Features, integrations, G2 ratings, and pricing.",
+    images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {
     canonical: "/agents",

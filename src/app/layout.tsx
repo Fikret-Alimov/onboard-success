@@ -8,23 +8,32 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.onboard-success.com"),
-  title: "Customer Success AI Resources for B2B SaaS | Onboard Success",
+  title: "CS AI Resources for B2B SaaS | OnboardSuccess",
   description:
-    "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, integrator listings, and workflow templates for mid-market B2B SaaS.",
+    "The AI resource hub for Customer Success teams. Playbooks, AI agent directories, integrator listings, and workflow templates for mid-market B2B SaaS.",
   openGraph: {
-    title: "Customer Success AI Resources for B2B SaaS | Onboard Success",
+    title: "CS AI Resources for B2B SaaS | OnboardSuccess",
     description:
-      "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, integrator listings, and workflow templates for mid-market B2B SaaS.",
+      "The AI resource hub for Customer Success teams. Playbooks, agent directories, integrator listings, and workflow templates for mid-market B2B SaaS.",
     url: "https://www.onboard-success.com",
     siteName: "OnboardSuccess",
     type: "website",
     locale: "en_US",
+    images: [
+      {
+        url: "https://www.onboard-success.com/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "OnboardSuccess — AI Resource Hub for Customer Success",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Customer Success AI Resources for B2B SaaS | Onboard Success",
+    title: "CS AI Resources for B2B SaaS | OnboardSuccess",
     description:
-      "The authoritative resource hub for Customer Success teams embracing AI. Playbooks, agent directories, integrator listings, and workflow templates for mid-market B2B SaaS.",
+      "The AI resource hub for Customer Success teams. Playbooks, agent directories, and workflow templates for mid-market B2B SaaS.",
+    images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {
     canonical: "/",
@@ -137,6 +146,7 @@ export default function RootLayout({
             name: "Onboard Success",
             legalName: "Onboard Success OÜ",
             url: "https://www.onboard-success.com",
+            logo: "https://www.onboard-success.com/og-default.png",
             description:
               "The AI resource hub for Customer Success teams in mid-market B2B SaaS",
             foundingDate: "2026",

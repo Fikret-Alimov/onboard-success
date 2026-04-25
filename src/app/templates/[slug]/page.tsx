@@ -27,11 +27,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: template.description,
       url: `https://www.onboard-success.com/templates/${slug}`,
       type: "website",
+      images: [
+        {
+          url: "https://www.onboard-success.com/og-default.png",
+          width: 1200,
+          height: 630,
+          alt: `${template.name} — OnboardSuccess Template`,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: template.name,
       description: template.description,
+      images: ["https://www.onboard-success.com/og-default.png"],
     },
     alternates: {
       canonical: `/templates/${slug}`,

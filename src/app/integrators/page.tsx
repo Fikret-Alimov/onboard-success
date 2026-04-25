@@ -14,12 +14,21 @@ export const metadata: Metadata = {
       "Find certified consultants and agencies specializing in CS platform implementation, migration, and AI optimization for mid-market SaaS.",
     url: "https://www.onboard-success.com/integrators",
     type: "website",
+    images: [
+      {
+        url: "https://www.onboard-success.com/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "OnboardSuccess — AI Resource Hub for Customer Success",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "CS Platform Integrators & Agencies Directory | Onboard Success",
     description:
       "Find certified consultants and agencies specializing in CS platform implementation for mid-market SaaS.",
+    images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {
     canonical: "/integrators",

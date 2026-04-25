@@ -17,20 +17,31 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const { meta } = getPostBySlug(slug);
+  const seoTitle = meta.seoTitle || meta.title;
+  const seoDesc = meta.seoDescription || meta.description;
   return {
-    title: `${meta.title} | Onboard Success`,
-    description: meta.description,
+    title: seoTitle,
+    description: seoDesc,
     openGraph: {
-      title: meta.title,
-      description: meta.description,
+      title: seoTitle,
+      description: seoDesc,
       url: `https://www.onboard-success.com/playbooks/${slug}`,
       type: "article",
       publishedTime: meta.date,
+      images: [
+        {
+          url: `https://www.onboard-success.com/og-default.png`,
+          width: 1200,
+          height: 630,
+          alt: seoTitle,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
-      title: meta.title,
-      description: meta.description,
+      title: seoTitle,
+      description: seoDesc,
+      images: [`https://www.onboard-success.com/og-default.png`],
     },
     alternates: {
       canonical: `/playbooks/${slug}`,
@@ -66,9 +77,10 @@ export default async function PlaybookArticle({ params }: { params: Params }) {
         data={{
           "@context": "https://schema.org",
           "@type": "Article",
-          headline: meta.title,
+          headline: meta.seoTitle || meta.title,
           datePublished: meta.date,
-          description: meta.description,
+          description: meta.seoDescription || meta.description,
+          image: "https://www.onboard-success.com/og-default.png",
           author: {
             "@type": "Organization",
             name: "Onboard Success",
@@ -77,6 +89,10 @@ export default async function PlaybookArticle({ params }: { params: Params }) {
             "@type": "Organization",
             name: "Onboard Success",
             url: "https://www.onboard-success.com",
+            logo: {
+              "@type": "ImageObject",
+              url: "https://www.onboard-success.com/og-default.png",
+            },
           },
           mainEntityOfPage: `https://www.onboard-success.com/playbooks/${slug}`,
         }}

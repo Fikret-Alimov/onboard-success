@@ -10,11 +10,20 @@ export const metadata: Metadata = {
       "Terms of Service for OnboardSuccess.com. Usage rights, intellectual property, and liability.",
     url: "https://www.onboard-success.com/terms",
     type: "website",
+    images: [
+      {
+        url: "https://www.onboard-success.com/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "OnboardSuccess — AI Resource Hub for Customer Success",
+      },
+    ],
   },
   twitter: {
     card: "summary",
     title: "Terms of Service | Onboard Success",
     description: "Terms of Service for OnboardSuccess.com.",
+    images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {
     canonical: "/terms",

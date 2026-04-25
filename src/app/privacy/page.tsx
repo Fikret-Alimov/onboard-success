@@ -10,12 +10,21 @@ export const metadata: Metadata = {
       "Learn how Onboard Success OÜ handles your data. GDPR-compliant privacy policy covering data collection, analytics, cookies, and your rights.",
     url: "https://www.onboard-success.com/privacy",
     type: "website",
+    images: [
+      {
+        url: "https://www.onboard-success.com/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "OnboardSuccess — AI Resource Hub for Customer Success",
+      },
+    ],
   },
   twitter: {
     card: "summary",
     title: "Privacy Policy | Onboard Success",
     description:
       "Learn how Onboard Success OÜ handles your data. GDPR-compliant privacy policy.",
+    images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {
     canonical: "/privacy",

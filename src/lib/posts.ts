@@ -7,7 +7,9 @@ const postsDirectory = path.join(process.cwd(), "content/posts");
 export interface PostMeta {
   slug: string;
   title: string;
+  seoTitle: string;
   description: string;
+  seoDescription: string;
   date: string;
   tags: string[];
   readingTime: string;
@@ -31,7 +33,9 @@ export function getAllPosts(): PostMeta[] {
     return {
       slug,
       title: data.title || slug,
+      seoTitle: data.seoTitle || data.title || slug,
       description: data.description || "",
+      seoDescription: data.seoDescription || data.description || "",
       date: data.date || "",
       tags: data.tags || [],
       readingTime: estimateReadingTime(content),
@@ -52,7 +56,9 @@ export function getPostBySlug(slug: string) {
     meta: {
       slug,
       title: data.title || slug,
+      seoTitle: data.seoTitle || data.title || slug,
       description: data.description || "",
+      seoDescription: data.seoDescription || data.description || "",
       date: data.date || "",
       tags: data.tags || [],
       readingTime: estimateReadingTime(content),
