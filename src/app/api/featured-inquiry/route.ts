@@ -1,5 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { createTransport } from "nodemailer";
+
+const transporter = createTransport({
+  host: "smtpout.secureserver.net",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+async function sendNotification(listingName: string, email: string, message: string | null) {
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to: process.env.NOTIFICATION_EMAIL || process.env.SMTP_USER,
+      subject: `🌟 New Featured Listing Inquiry: ${listingName}`,
+      text: [
+        `New featured listing inquiry on OnboardSuccess:`,
+        ``,
+        `Company: ${listingName}`,
+        `Email: ${email}`,
+        `Message: ${message || "(none)"}`,
+        ``,
+        `Time: ${new Date().toISOString()}`,
+        ``,
+        `Reply to ${email} with pricing details and Stripe payment link.`,
+      ].join("\n"),
+    });
+  } catch (err) {
+    console.error("Failed to send notification email:", err);
+    // Don't block the response — notification is best-effort
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,6 +68,9 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Send notification email (non-blocking)
+    sendNotification(listingName, email, message || null);
 
     return NextResponse.json({ success: true });
   } catch {
