@@ -9,7 +9,7 @@
     "g2Rating": "4.7/5",
     "g2Reviews": "680+",
     "pricing": "Credit-based, self-serve AI Marketplace",
-    "website": "https://churnzero.com",
+    "website": "https://churnzero.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -34,7 +34,7 @@
     "g2Rating": "4.4/5",
     "g2Reviews": "1,100+",
     "pricing": "Enterprise (est. $24k-$168k+/year)",
-    "website": "https://gainsight.com",
+    "website": "https://gainsight.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -58,7 +58,7 @@
     "g2Rating": "4.8/5",
     "g2Reviews": "N/A (New platform)",
     "pricing": "Modular per-agent pricing, free data migration",
-    "website": "https://oliv.ai",
+    "website": "https://oliv.ai?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -82,7 +82,7 @@
     "g2Rating": "4.7/5",
     "g2Reviews": "70+",
     "pricing": "Mid-market to enterprise, custom quote",
-    "website": "https://everafter.ai",
+    "website": "https://everafter.ai?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Gainsight",
@@ -105,7 +105,7 @@
     "g2Rating": "4.4/5",
     "g2Reviews": "See Gainsight reviews",
     "pricing": "Included in Gainsight Atlas tier",
-    "website": "https://staircaseai.com",
+    "website": "https://staircaseai.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Gainsight",
@@ -129,7 +129,7 @@
     "g2Rating": "4.5/5",
     "g2Reviews": "350+",
     "pricing": "Starts ~$500/month, scales with team",
-    "website": "https://vitally.io",
+    "website": "https://vitally.io?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -153,7 +153,7 @@
     "g2Rating": "4.5/5",
     "g2Reviews": "N/A",
     "pricing": "Enterprise, contact sales",
-    "website": "https://forethought.ai",
+    "website": "https://forethought.ai?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Zendesk",
@@ -176,7 +176,7 @@
     "g2Rating": "4.8/5",
     "g2Reviews": "N/A (growing base)",
     "pricing": "Mid-market pricing, contact for quote",
-    "website": "https://velaris.io",
+    "website": "https://velaris.io?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -200,7 +200,7 @@
     "g2Rating": "N/A",
     "g2Reviews": "Early stage",
     "pricing": "Contact for pricing (startup stage)",
-    "website": "https://agency.inc",
+    "website": "https://agency.inc?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -223,7 +223,7 @@
     "g2Rating": "4.4/5",
     "g2Reviews": "N/A",
     "pricing": "Enterprise, contact for pricing",
-    "website": "https://theloops.ai",
+    "website": "https://theloops.ai?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Gainsight",
@@ -246,7 +246,7 @@
     "g2Rating": "4.7/5",
     "g2Reviews": "1000+",
     "pricing": "Free plan available; paid plans start at $5/user/month",
-    "website": "https://www.taskade.com",
+    "website": "https://www.taskade.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Slack",
@@ -273,7 +273,7 @@
     "g2Rating": "4.5/5",
     "g2Reviews": "50+",
     "pricing": "Custom pricing",
-    "website": "https://www.playbasis.com",
+    "website": "https://www.playbasis.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -299,7 +299,7 @@
     "g2Rating": "4.4/5",
     "g2Reviews": "60+",
     "pricing": "Starts at $299/month",
-    "website": "https://customerlabs.com",
+    "website": "https://customerlabs.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Segment",
@@ -325,7 +325,7 @@
     "g2Rating": "4.6/5",
     "g2Reviews": "700+",
     "pricing": "Free trial; paid plans from $20/user/month",
-    "website": "https://www.avoma.com",
+    "website": "https://www.avoma.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Zoom",
@@ -351,7 +351,7 @@
     "g2Rating": "4.5/5",
     "g2Reviews": "120+",
     "pricing": "Custom pricing",
-    "website": "https://www.observe.ai",
+    "website": "https://www.observe.ai?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Five9",
@@ -377,7 +377,7 @@
     "g2Rating": "4.6/5",
     "g2Reviews": "100+",
     "pricing": "Custom pricing",
-    "website": "https://www.intellimize.com",
+    "website": "https://www.intellimize.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Google Analytics",
@@ -403,7 +403,7 @@
     "g2Rating": "4.3/5",
     "g2Reviews": "200+",
     "pricing": "Custom pricing",
-    "website": "https://www.conversica.com",
+    "website": "https://www.conversica.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -429,7 +429,7 @@
     "g2Rating": "4.1/5",
     "g2Reviews": "300+",
     "pricing": "Custom pricing",
-    "website": "https://khoros.com",
+    "website": "https://khoros.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -455,7 +455,7 @@
     "g2Rating": "4.7/5",
     "g2Reviews": "800+",
     "pricing": "Custom pricing",
-    "website": "https://www.whatfix.com",
+    "website": "https://www.whatfix.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -481,7 +481,7 @@
     "g2Rating": "4.3/5",
     "g2Reviews": "150+",
     "pricing": "Custom pricing",
-    "website": "https://www.strikedeck.com",
+    "website": "https://www.strikedeck.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -507,7 +507,7 @@
     "g2Rating": "4.4/5",
     "g2Reviews": "800+",
     "pricing": "Custom pricing based on company size and features.",
-    "website": "https://www.totango.com",
+    "website": "https://www.totango.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -537,7 +537,7 @@
     "g2Rating": "4.3/5",
     "g2Reviews": "200+",
     "pricing": "Contact vendor for pricing.",
-    "website": "https://planhat.com",
+    "website": "https://planhat.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -567,7 +567,7 @@
     "g2Rating": "4.5/5",
     "g2Reviews": "50+",
     "pricing": "Contact for custom pricing.",
-    "website": "https://customeros.com",
+    "website": "https://customeros.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -597,7 +597,7 @@
     "g2Rating": "4.2/5",
     "g2Reviews": "80+",
     "pricing": "Custom pricing available.",
-    "website": "https://www.catalyst.co",
+    "website": "https://www.catalyst.co?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -626,7 +626,7 @@
     "g2Rating": "4.5/5",
     "g2Reviews": "120+",
     "pricing": "Starts at $29/user/month.",
-    "website": "https://freshsuccess.freshworks.com",
+    "website": "https://freshsuccess.freshworks.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -656,7 +656,7 @@
     "g2Rating": "4.1/5",
     "g2Reviews": "40+",
     "pricing": "Custom pricing.",
-    "website": "https://www.akita.so",
+    "website": "https://www.akita.so?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -685,7 +685,7 @@
     "g2Rating": "4.0/5",
     "g2Reviews": "30+",
     "pricing": "Available on request.",
-    "website": "https://churn360.io",
+    "website": "https://churn360.io?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -712,7 +712,7 @@
     "g2Rating": "4.6/5",
     "g2Reviews": "180+",
     "pricing": "Starts at $79/month.",
-    "website": "https://custify.com",
+    "website": "https://custify.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -742,7 +742,7 @@
     "g2Rating": "4.2/5",
     "g2Reviews": "90+",
     "pricing": "Contact vendor for pricing details.",
-    "website": "https://www.smartkarrot.com",
+    "website": "https://www.smartkarrot.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -771,7 +771,7 @@
     "g2Rating": "4.1/5",
     "g2Reviews": "70+",
     "pricing": "Custom pricing.",
-    "website": "https://www.useriq.com",
+    "website": "https://www.useriq.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [
       "Salesforce",
@@ -800,7 +800,7 @@
     "g2Rating": "",
     "g2Reviews": "",
     "pricing": "Custom (Advisory / Consulting / Fractional tiers)",
-    "website": "https://www.successscaled.com",
+    "website": "https://www.successscaled.com?utm_source=onboardsuccess&utm_medium=directory&utm_campaign=agents",
     "affiliateUrl": "",
     "integrations": [],
     "features": [
