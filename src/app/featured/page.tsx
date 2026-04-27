@@ -3,33 +3,34 @@
 import { useState } from "react";
 
 export default function FeaturedPage() {
-  const [loading, setLoading] = useState<string | null>(null);
-  const [form, setForm] = useState({ listingName: "", email: "" });
-  const [selectedType, setSelectedType] = useState<"integrator" | "agent" | null>(null);
+  const [form, setForm] = useState({ listingName: "", email: "", message: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  async function handleCheckout(type: "integrator" | "agent") {
-    if (!form.listingName || !form.email) {
-      setSelectedType(type);
-      return;
-    }
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.listingName || !form.email) return;
 
-    setLoading(type);
+    setSubmitting(true);
+    setError("");
+
     try {
-      const res = await fetch("/api/checkout", {
+      const res = await fetch("/api/featured-inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, listingName: form.listingName, email: form.email }),
+        body: JSON.stringify(form),
       });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
+      if (res.ok) {
+        setSubmitted(true);
       } else {
-        alert(data.error || "Something went wrong");
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "Something went wrong. Please try again.");
       }
     } catch {
-      alert("Something went wrong. Please try again.");
+      setError("Something went wrong. Please try again.");
     } finally {
-      setLoading(null);
+      setSubmitting(false);
     }
   }
 
@@ -44,7 +45,7 @@ export default function FeaturedPage() {
         </h1>
         <p className="text-muted text-lg max-w-2xl mx-auto">
           Stand out from the crowd with priority placement, a gold featured badge,
-          and increased visibility to Customer Success teams actively looking for tools.
+          and increased visibility to Customer Success teams actively looking for tools and partners.
         </p>
       </div>
 
@@ -78,66 +79,86 @@ export default function FeaturedPage() {
         ))}
       </div>
 
-      {/* Pricing */}
-      <div className="text-center mb-8">
-        <p className="text-3xl font-bold">
-          $49<span className="text-lg font-normal text-muted">/month</span>
-        </p>
-        <p className="text-muted text-sm mt-1">Cancel anytime. No long-term commitment.</p>
-      </div>
-
-      {/* Form */}
-      {selectedType && (
-        <div className="max-w-md mx-auto mb-8 space-y-4">
-          <div className="text-center text-sm text-muted mb-2">
-            Enter your details to get your{" "}
-            <span className="text-white font-medium">{selectedType}</span> listing featured
+      {/* Inquiry Form */}
+      {submitted ? (
+        <div className="max-w-md mx-auto text-center py-12">
+          <div className="text-4xl mb-4">✅</div>
+          <h2 className="text-2xl font-bold mb-2">We&apos;ll be in touch!</h2>
+          <p className="text-muted">
+            Thanks for your interest. We&apos;ll send you all the details and pricing
+            information to <span className="text-white font-medium">{form.email}</span> shortly.
+          </p>
+        </div>
+      ) : (
+        <div className="max-w-md mx-auto">
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-semibold mb-2">Interested? Get in touch.</h2>
+            <p className="text-muted text-sm">
+              Tell us about your listing and we&apos;ll send you all the details, including pricing and a payment link.
+            </p>
           </div>
-          <input
-            type="text"
-            placeholder="Your listing / company name"
-            value={form.listingName}
-            onChange={(e) => setForm({ ...form, listingName: e.target.value })}
-            className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-muted/50 focus:outline-none focus:border-accent"
-          />
-          <input
-            type="email"
-            placeholder="your@email.com"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-muted/50 focus:outline-none focus:border-accent"
-          />
-          <button
-            onClick={() => handleCheckout(selectedType)}
-            disabled={!!loading || !form.listingName || !form.email}
-            className="w-full bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-medium py-3 rounded-lg transition-colors"
-          >
-            {loading ? "Redirecting to checkout…" : "Continue to Payment"}
-          </button>
-          <button
-            onClick={() => setSelectedType(null)}
-            className="w-full text-muted text-sm hover:text-white transition-colors"
-          >
-            ← Back
-          </button>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="listingName" className="block text-sm font-medium text-muted mb-1">
+                Company / Listing Name *
+              </label>
+              <input
+                id="listingName"
+                type="text"
+                required
+                placeholder="e.g. Acme CS Consulting"
+                value={form.listingName}
+                onChange={(e) => setForm({ ...form, listingName: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-muted/50 focus:outline-none focus:border-accent"
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-muted mb-1">
+                Email Address *
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                placeholder="you@company.com"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-muted/50 focus:outline-none focus:border-accent"
+              />
+            </div>
+            <div>
+              <label htmlFor="message" className="block text-sm font-medium text-muted mb-1">
+                Anything else? (optional)
+              </label>
+              <textarea
+                id="message"
+                rows={3}
+                placeholder="Tell us about your company or any questions you have..."
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-muted/50 focus:outline-none focus:border-accent resize-none"
+              />
+            </div>
+
+            {error && (
+              <p className="text-red-400 text-sm">{error}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={submitting || !form.listingName || !form.email}
+              className="w-full bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-medium py-3 rounded-lg transition-colors"
+            >
+              {submitting ? "Sending…" : "Get Featured Listing Details"}
+            </button>
+          </form>
+
+          <p className="text-center text-muted/60 text-xs mt-6">
+            We&apos;ll respond within 24 hours with pricing details and next steps. No commitment required.
+          </p>
         </div>
       )}
-
-      {!selectedType && (
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={() => handleCheckout("integrator")}
-            className="px-8 py-3 rounded-lg bg-accent hover:bg-accent-hover text-white font-medium transition-colors"
-          >
-            Feature Your Agency
-          </button>
-        </div>
-      )}
-
-      <p className="text-center text-muted/60 text-xs mt-8">
-        After payment, your featured listing will be activated within 24 hours.
-        Subscriptions renew monthly until cancelled.
-      </p>
     </section>
   );
 }
