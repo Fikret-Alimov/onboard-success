@@ -444,5 +444,29 @@
     "featured": false,
     "featuredUntil": "",
     "featuredBadge": ""
+  },
+  {
+    "id": "success-scaled",
+    "name": "Success Scaled",
+    "type": "Fractional CS Leadership & Consulting",
+    "location": "USA (remote-first)",
+    "description": "Success Scaled transforms Customer Success from a reactive cost center into a proactive, revenue-generating function. Founded by Rob Zambito, they specialize in early-stage SaaS companies (seed to Series B), helping teams scale from 0 to $25M ARR through fractional CS leadership, strategic consulting, and hands-on advisory. Their three-tier model (Advisory, Consulting, Fractional Leadership) covers everything from playbook design to full deliverable ownership with KPI accountability.",
+    "specialties": [
+      "Fractional CS leadership",
+      "NRR optimization",
+      "Churn reduction",
+      "CS team scaling",
+      "Onboarding design",
+      "Revenue expansion",
+      "Digital customer success",
+      "AI tooling for CS",
+      "Health score architecture",
+      "Customer advocacy programs"
+    ],
+    "website": "https://www.successscaled.com",
+    "contactUrl": "https://www.successscaled.com/get-started",
+    "featured": true,
+    "featuredUntil": "",
+    "featuredBadge": "Featured"
   }
 ]

@@ -100,7 +100,7 @@
     "name": "Staircase AI (by Gainsight)",
     "category": "Relationship Intelligence",
     "description": "Relationship intelligence agent scanning communications for health & stakeholder insights.",
-    "longDescription": "Staircase AI, now integrated into Gainsight, uses AI to analyze all customer communications—emails, meetings, Slack, and support tickets—identifying signals related to relationship health, stakeholder changes, and advocacy opportunities. It requires no manual data entry and has been shown to dramatically improve retention and expansion outcomes.",
+    "longDescription": "Staircase AI, now integrated into Gainsight, uses AI to analyze all customer communications\u2014emails, meetings, Slack, and support tickets\u2014identifying signals related to relationship health, stakeholder changes, and advocacy opportunities. It requires no manual data entry and has been shown to dramatically improve retention and expansion outcomes.",
     "bestFor": "Gainsight enterprise customers needing automated relationship intelligence beyond product usage.",
     "g2Rating": "4.4/5",
     "g2Reviews": "See Gainsight reviews",
@@ -195,7 +195,7 @@
     "name": "Agency.inc (Kai)",
     "category": "Autonomous Agent",
     "description": "Autonomous CS agent that manages onboarding, renewals, and customer plans end-to-end.",
-    "longDescription": "Kai by Agency.inc offers a fully autonomous CS agent managing the entire customer lifecycle—from mapping a client’s stack day one, to implementation planning, configuration, and ongoing account management. This early-stage solution aims for rapid time-to-value and removes the need for prolonged onboarding or committee approvals.",
+    "longDescription": "Kai by Agency.inc offers a fully autonomous CS agent managing the entire customer lifecycle\u2014from mapping a client\u2019s stack day one, to implementation planning, configuration, and ongoing account management. This early-stage solution aims for rapid time-to-value and removes the need for prolonged onboarding or committee approvals.",
     "bestFor": "Tech-forward CS leaders seeking the cutting edge of autonomous account management.",
     "g2Rating": "N/A",
     "g2Reviews": "Early stage",
@@ -789,5 +789,34 @@
     "featured": false,
     "featuredUntil": "",
     "featuredBadge": ""
+  },
+  {
+    "id": "success-scaled-cs",
+    "name": "Success Scaled",
+    "category": "CS Consulting",
+    "description": "Fractional CS leadership and consulting for early-stage SaaS, turning customer success into a revenue-generating function.",
+    "longDescription": "Success Scaled is a specialized CS consulting firm that helps early-stage SaaS companies (seed to Series B) build and scale customer success operations. Founded by Rob Zambito, a three-time CS leader with over a decade of startup experience, they offer three service tiers: Advisory (strategy reviews, playbooks, email support), Consulting (workshops, custom success plans, roadmap co-design), and Fractional Leadership (deliverable ownership, KPI accountability, full execution). Their approach spans Customer Ops (health scores, playbooks, journey mapping), People Ops (training, coaching, KPI development), and Revenue Ops (AI tooling, digital CS, dashboard creation, systems integration). Notable clients include AppSumo, Greenspark, Kojo, and Qualia.",
+    "bestFor": "Seed to Series B SaaS companies needing to build or scale their CS function from scratch.",
+    "g2Rating": "",
+    "g2Reviews": "",
+    "pricing": "Custom (Advisory / Consulting / Fractional tiers)",
+    "website": "https://www.successscaled.com",
+    "affiliateUrl": "",
+    "integrations": [],
+    "features": [
+      "Fractional CS Leadership",
+      "NRR Optimization",
+      "Churn Reduction Strategy",
+      "Onboarding Design",
+      "Health Score Architecture",
+      "AI Tooling Advisory",
+      "Digital Customer Success",
+      "Team Training & Coaching",
+      "Revenue Expansion Playbooks",
+      "Customer Advocacy Programs"
+    ],
+    "featured": true,
+    "featuredUntil": "",
+    "featuredBadge": "Featured"
   }
 ]
