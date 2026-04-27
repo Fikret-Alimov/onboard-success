@@ -2,7 +2,6 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
 
 export default function EmailCapture() {
   const [email, setEmail] = useState("");
@@ -15,21 +14,30 @@ export default function EmailCapture() {
     setError(null);
     setLoading(true);
 
-    const { error: insertError } = await supabase
-      .from("subscribers")
-      .insert({ email, source: "website" });
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "website" }),
+      });
+      const data = await res.json();
 
-    setLoading(false);
-
-    if (insertError) {
-      if (insertError.code === "23505") {
-        setError("You're already subscribed!");
-      } else {
-        setError("Something went wrong. Please try again.");
+      if (!res.ok) {
+        if (data.error === "already_subscribed") {
+          setError("You're already subscribed!");
+        } else {
+          setError("Something went wrong. Please try again.");
+        }
+        setLoading(false);
+        return;
       }
+    } catch {
+      setError("Something went wrong. Please try again.");
+      setLoading(false);
       return;
     }
 
+    setLoading(false);
     setSubmitted(true);
     setEmail("");
   }

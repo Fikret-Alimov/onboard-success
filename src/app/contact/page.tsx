@@ -4,7 +4,6 @@ import { useState, useEffect, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
-import { supabase } from "@/lib/supabase";
 
 const categories = [
   "General",
@@ -47,46 +46,31 @@ function ContactForm() {
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries()) as Record<string, string>;
 
-    // Insert into contact_submissions
-    const { error: contactError } = await supabase
-      .from("contact_submissions")
-      .insert({
-        name: data.name,
-        email: data.email,
-        category: data.category,
-        message: data.message,
-        company: data.company || null,
-        role: data.role || null,
-        integrator: data.integrator || null,
-        listing: data.listing || null,
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          category: data.category,
+          message: data.message,
+          company: data.company || null,
+          role: data.role || null,
+          integrator: data.integrator || null,
+          listing: data.listing || null,
+        }),
       });
 
-    if (contactError) {
+      if (!res.ok) {
+        setLoading(false);
+        setError("Something went wrong. Please try again.");
+        return;
+      }
+    } catch {
       setLoading(false);
       setError("Something went wrong. Please try again.");
       return;
-    }
-
-    // For "Request a Quote", also insert into quote_requests
-    if (data.category === "Request a Quote") {
-      await supabase.from("quote_requests").insert({
-        name: data.name,
-        email: data.email,
-        company: data.company || null,
-        integrator: data.integrator || null,
-        message: data.message,
-      });
-    }
-
-    // For "Claim a Listing", also insert into listing_claims
-    if (data.category === "Claim a Listing") {
-      await supabase.from("listing_claims").insert({
-        name: data.name,
-        email: data.email,
-        role: data.role || null,
-        listing: data.listing || null,
-        message: data.message,
-      });
     }
 
     setLoading(false);

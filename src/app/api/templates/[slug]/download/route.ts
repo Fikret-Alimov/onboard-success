@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTemplateBySlug, getTemplateWorkflow } from "@/lib/templates";
 import { supabase } from "@/lib/supabase";
+import { notify } from "@/lib/notify";
 
 export async function GET(
   request: NextRequest,
@@ -59,6 +60,10 @@ export async function GET(
         active: true,
       },
       { onConflict: "email", ignoreDuplicates: true }
+    );
+    notify(
+      `📥 Template Download: ${template.name}`,
+      `Template downloaded on OnboardSuccess:\n\nTemplate: ${template.name} (${slug})\nEmail: ${email}\nIP: ${ip}`
     );
   } catch {
     // Don't block download if logging fails
