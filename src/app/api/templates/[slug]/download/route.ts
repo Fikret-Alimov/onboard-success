@@ -61,7 +61,7 @@ export async function GET(
       },
       { onConflict: "email", ignoreDuplicates: true }
     );
-    notify(
+    await notify(
       `📥 Template Download: ${template.name}`,
       `Template downloaded on OnboardSuccess:\n\nTemplate: ${template.name} (${slug})\nEmail: ${email}\nIP: ${ip}`
     );

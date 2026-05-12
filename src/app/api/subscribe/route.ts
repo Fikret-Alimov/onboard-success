@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to subscribe." }, { status: 500 });
     }
 
-    notify(
+    await notify(
       `📬 New Subscriber: ${email}`,
       `New newsletter signup on OnboardSuccess:\n\nEmail: ${email}\nSource: ${source || "website"}`
     );

@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    notify(
+    await notify(
       `🌟 New Featured Listing Inquiry: ${listingName}`,
       `New featured listing inquiry on OnboardSuccess:\n\nCompany: ${listingName}\nEmail: ${email}\nMessage: ${message || "(none)"}\n\nReply to ${email} with pricing details and Stripe payment link.`
     );

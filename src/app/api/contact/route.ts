@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     const extra = integrator ? `\nIntegrator: ${integrator}` :
                   listing ? `\nListing: ${listing}` : "";
 
-    notify(
+    await notify(
       `${emoji} Contact Form: ${category} — ${name}`,
       `New contact submission on OnboardSuccess:\n\nName: ${name}\nEmail: ${email}\nCategory: ${category}\nCompany: ${company || "-"}\nRole: ${role || "-"}${extra}\n\nMessage:\n${message}`
     );
