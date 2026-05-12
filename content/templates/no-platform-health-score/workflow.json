@@ -1,0 +1,248 @@
+{
+  "name": "Customer Health Score (No CS Platform)",
+  "nodes": [
+    {
+      "id": "setup-note",
+      "name": "Setup Instructions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, -240],
+      "parameters": {
+        "content": "## No-Platform Health Score — Setup\n\n1. Create a Google Sheet with columns:\n   account_id, account_name, mrr, usage_score, support_score, nps_score, retention_score, health_score, health_level, last_updated, score_delta_7d\n\n2. Configure credentials:\n   - **Mixpanel** — HTTP Header Auth (service account)\n   - **Zendesk** — API token\n   - **Stripe** — Restricted API key\n   - **Google Sheets** — OAuth2\n   - **Slack** — Bot Token\n\n3. Set `documentId` in 'Append/Update Health Row' node\n4. Set `#cs-alerts` to your Slack channel\n5. Tune weights in 'Calculate Health Score' Code node",
+        "height": 360,
+        "width": 440
+      }
+    },
+    {
+      "id": "schedule",
+      "name": "Daily 5AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [100, 100],
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "cronExpression", "expression": "0 5 * * *" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fetch-customers",
+      "name": "Fetch Customers",
+      "type": "n8n-nodes-base.stripe",
+      "typeVersion": 1,
+      "position": [320, 100],
+      "parameters": {
+        "resource": "customer",
+        "operation": "getAll",
+        "returnAll": true,
+        "additionalFields": {
+          "limit": 100
+        }
+      }
+    },
+    {
+      "id": "loop-customers",
+      "name": "Loop per Customer",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [540, 100],
+      "parameters": { "batchSize": 1 }
+    },
+    {
+      "id": "fetch-subscription",
+      "name": "Fetch MRR",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [760, -80],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.stripe.com/v1/subscriptions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "stripeApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "customer", "value": "={{ $json.id }}" },
+            { "name": "status", "value": "active" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fetch-usage",
+      "name": "Fetch Usage (Mixpanel)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [760, 60],
+      "parameters": {
+        "method": "POST",
+        "url": "https://mixpanel.com/api/2.0/jql",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "script",
+              "value": "function main(){return Events({from_date:'30d',to_date:'today',event_selectors:[{selector:`properties[\"account_id\"] == \"{{ $json.id }}\"`}]}).groupBy([mixpanel.daily_event_buckets],mixpanel.reducer.count())}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fetch-tickets",
+      "name": "Fetch Tickets (Zendesk)",
+      "type": "n8n-nodes-base.zendesk",
+      "typeVersion": 1,
+      "position": [760, 200],
+      "parameters": {
+        "resource": "ticket",
+        "operation": "search",
+        "query": "=external_id:{{ $json.id }} created>30days_ago"
+      }
+    },
+    {
+      "id": "fetch-nps",
+      "name": "Fetch NPS (optional)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [760, 340],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.delighted.com/v1/people/{{ $json.email }}/survey_responses?per_page=1",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBasicAuth",
+        "options": {
+          "ignoreResponseCode": true
+        }
+      }
+    },
+    {
+      "id": "merge-signals",
+      "name": "Merge Signals",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1000, 120],
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex"
+      }
+    },
+    {
+      "id": "calc-score",
+      "name": "Calculate Health Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1240, 120],
+      "parameters": {
+        "jsCode": "// Inputs from the 4 fetches\nconst customer = $('Loop per Customer').item.json;\nconst subData = $('Fetch MRR').item.json?.data || [];\nconst usageRaw = $('Fetch Usage (Mixpanel)').item.json;\nconst ticketsRaw = $('Fetch Tickets (Zendesk)').item.json;\nconst npsRaw = $('Fetch NPS (optional)').item.json;\n\n// --- MRR ---\nconst mrr = subData.reduce((sum, s) => sum + (s.items?.data?.reduce((a, i) => a + (i.price?.unit_amount * (i.quantity || 1)), 0) || 0), 0) / 100;\n\n// --- USAGE SCORE (0-100) ---\nconst usageBuckets = Array.isArray(usageRaw) ? usageRaw : (usageRaw?.data || []);\nconst activeDays = usageBuckets.filter(b => (b.value || b[1] || 0) > 0).length;\nlet usageScore;\nif (activeDays >= 20) usageScore = 90;\nelse if (activeDays >= 12) usageScore = 70;\nelse if (activeDays >= 5) usageScore = 50;\nelse if (activeDays >= 1) usageScore = 30;\nelse usageScore = 10;\n\n// --- SUPPORT SCORE ---\nconst tickets = Array.isArray(ticketsRaw) ? ticketsRaw : (ticketsRaw?.results || []);\nconst escalations = tickets.filter(t => t.priority === 'urgent' || t.priority === 'high' || t.tags?.includes('escalation')).length;\nlet supportScore;\nif (tickets.length === 0) supportScore = 90;\nelse if (tickets.length <= 3 && escalations === 0) supportScore = 70;\nelse if (escalations === 0) supportScore = 50;\nelse if (escalations === 1) supportScore = 30;\nelse supportScore = 10;\n\n// --- NPS SCORE ---\nconst npsResp = (npsRaw?.[0] || npsRaw?.responses?.[0]);\nlet npsScore = 60; // neutral default if no recent response\nif (npsResp?.score !== undefined) {\n  const s = npsResp.score;\n  if (s >= 9) npsScore = 90;\n  else if (s >= 7) npsScore = 70;\n  else if (s >= 5) npsScore = 35;\n  else npsScore = 10;\n}\n\n// --- RETENTION/MRR SCORE ---\nconst createdMs = (customer.created || 0) * 1000;\nconst tenureMonths = (Date.now() - createdMs) / (1000 * 60 * 60 * 24 * 30);\nlet retentionScore;\nif (mrr === 0) retentionScore = 0;\nelse if (tenureMonths >= 12) retentionScore = 90;\nelse if (tenureMonths >= 6) retentionScore = 70;\nelse if (tenureMonths >= 3) retentionScore = 55;\nelse retentionScore = 40;\n\n// --- WEIGHTED HEALTH SCORE ---\nconst weights = { usage: 0.30, support: 0.25, nps: 0.20, retention: 0.25 };\nconst healthScore = Math.round(\n  usageScore * weights.usage +\n  supportScore * weights.support +\n  npsScore * weights.nps +\n  retentionScore * weights.retention\n);\n\nlet healthLevel;\nif (healthScore >= 80) healthLevel = '🟢 Healthy';\nelse if (healthScore >= 60) healthLevel = '🟡 Watch';\nelse if (healthScore >= 40) healthLevel = '🟠 At Risk';\nelse healthLevel = '🔴 Critical';\n\nreturn {\n  json: {\n    account_id: customer.id,\n    account_name: customer.name || customer.email,\n    mrr,\n    usage_score: usageScore,\n    support_score: supportScore,\n    nps_score: npsScore,\n    retention_score: retentionScore,\n    health_score: healthScore,\n    health_level: healthLevel,\n    last_updated: new Date().toISOString(),\n    score_delta_7d: 0 // populated by next node from sheet history\n  }\n};"
+      }
+    },
+    {
+      "id": "lookup-previous",
+      "name": "Lookup Previous Score",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1480, 120],
+      "parameters": {
+        "operation": "lookup",
+        "documentId": "REPLACE_WITH_YOUR_SHEET_ID",
+        "sheetName": "Sheet1",
+        "lookupColumn": "account_id",
+        "lookupValue": "={{ $json.account_id }}",
+        "options": {
+          "returnAllMatches": false
+        }
+      }
+    },
+    {
+      "id": "calc-delta",
+      "name": "Calculate 7d Delta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1720, 120],
+      "parameters": {
+        "jsCode": "const current = $('Calculate Health Score').item.json;\nconst previous = $('Lookup Previous Score').item.json;\nconst prevScore = previous?.health_score || current.health_score;\nconst delta = current.health_score - prevScore;\n\nreturn {\n  json: {\n    ...current,\n    score_delta_7d: delta\n  }\n};"
+      }
+    },
+    {
+      "id": "append-row",
+      "name": "Append/Update Health Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1960, 120],
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "REPLACE_WITH_YOUR_SHEET_ID",
+        "sheetName": "Sheet1",
+        "columnToMatchOn": "account_id",
+        "valueToMatchOn": "={{ $json.account_id }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "drop-check",
+      "name": "Score Dropped >15 Points?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2200, 120],
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "leftValue": "={{ $json.score_delta_7d }}",
+              "rightValue": -15,
+              "operator": { "type": "number", "operation": "lte" }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "slack-alert",
+      "name": "Post Health Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [2440, 60],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#cs-alerts",
+        "text": "=🚨 *Health Score Drop:* {{ $json.account_name }}\nDelta: {{ $json.score_delta_7d }} points\nCurrent: {{ $json.health_score }} ({{ $json.health_level }})\n\n*Breakdown:*\n• Usage: {{ $json.usage_score }}/100\n• Support: {{ $json.support_score }}/100\n• NPS: {{ $json.nps_score }}/100\n• Retention/MRR: {{ $json.retention_score }}/100\n\nMRR at risk: ${{ $json.mrr }}",
+        "otherOptions": {}
+      }
+    }
+  ],
+  "connections": {
+    "Daily 5AM Trigger": { "main": [[{ "node": "Fetch Customers", "type": "main", "index": 0 }]] },
+    "Fetch Customers": { "main": [[{ "node": "Loop per Customer", "type": "main", "index": 0 }]] },
+    "Loop per Customer": {
+      "main": [
+        [
+          { "node": "Fetch MRR", "type": "main", "index": 0 },
+          { "node": "Fetch Usage (Mixpanel)", "type": "main", "index": 0 },
+          { "node": "Fetch Tickets (Zendesk)", "type": "main", "index": 0 },
+          { "node": "Fetch NPS (optional)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Fetch MRR": { "main": [[{ "node": "Merge Signals", "type": "main", "index": 0 }]] },
+    "Fetch Usage (Mixpanel)": { "main": [[{ "node": "Merge Signals", "type": "main", "index": 1 }]] },
+    "Fetch Tickets (Zendesk)": { "main": [[{ "node": "Merge Signals", "type": "main", "index": 2 }]] },
+    "Fetch NPS (optional)": { "main": [[{ "node": "Merge Signals", "type": "main", "index": 3 }]] },
+    "Merge Signals": { "main": [[{ "node": "Calculate Health Score", "type": "main", "index": 0 }]] },
+    "Calculate Health Score": { "main": [[{ "node": "Lookup Previous Score", "type": "main", "index": 0 }]] },
+    "Lookup Previous Score": { "main": [[{ "node": "Calculate 7d Delta", "type": "main", "index": 0 }]] },
+    "Calculate 7d Delta": { "main": [[{ "node": "Append/Update Health Row", "type": "main", "index": 0 }]] },
+    "Append/Update Health Row": { "main": [[{ "node": "Score Dropped >15 Points?", "type": "main", "index": 0 }]] },
+    "Score Dropped >15 Points?": { "main": [[{ "node": "Post Health Alert", "type": "main", "index": 0 }], [{ "node": "Loop per Customer", "type": "main", "index": 0 }]] },
+    "Post Health Alert": { "main": [[{ "node": "Loop per Customer", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1.0.0"
+}

@@ -5,13 +5,13 @@ import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "CS & AI Services Directory — Integrators, Consultants, AI Agencies | Onboard Success",
+  title: "CS & AI Services: Who's Actually Worth Hiring in 2026",
   description:
-    "Vetted CS and AI services: platform implementation, AI integration, agent deployment, CS operations, and consulting for mid-market B2B SaaS.",
+    "Vetted CS implementation partners and AI integration agencies. Gainsight, ChurnZero, Vitally, AI agent deployment. The shortlist for mid-market B2B SaaS.",
   openGraph: {
-    title: "CS & AI Services Directory — Integrators, Consultants, AI Agencies | Onboard Success",
+    title: "CS & AI Services: Who's Actually Worth Hiring in 2026",
     description:
-      "Vetted CS and AI services: platform implementation, AI integration, agent deployment, CS operations, and consulting for mid-market B2B SaaS.",
+      "Vetted CS implementation partners and AI integration agencies. Gainsight, ChurnZero, Vitally, AI agent deployment. The shortlist for mid-market B2B SaaS.",
     url: "https://www.onboard-success.com/integrators",
     type: "website",
     images: [

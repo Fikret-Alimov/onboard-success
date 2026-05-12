@@ -1,0 +1,15 @@
+{
+  "id": "no-platform-health-score",
+  "name": "Customer Health Score (No CS Platform)",
+  "description": "Gainsight-style health scores without paying $50k/yr. Pull from Mixpanel + Zendesk + NPS tool, weight them, store in Google Sheets, Slack-alert on drops.",
+  "longDescription": "For mid-market CS teams who want a real health score but can't justify Gainsight or ChurnZero pricing. Runs daily: pulls product usage from Mixpanel, support ticket volume + escalation rate from Zendesk, latest NPS score per account, and current MRR from Stripe. Computes a weighted 0-100 health score per account, writes the row to a Google Sheets dashboard, and posts a Slack alert when any account's score drops more than 15 points week-over-week. The full health monitoring system, built for $0/month beyond the API costs you already have.",
+  "category": "Health Scoring",
+  "platform": "n8n",
+  "difficulty": "Intermediate",
+  "setupTime": "50 minutes",
+  "integrations": ["Mixpanel", "Zendesk", "Stripe", "Google Sheets", "Slack"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-05-12",
+  "downloads": 0
+}

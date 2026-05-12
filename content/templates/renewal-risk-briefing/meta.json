@@ -1,0 +1,15 @@
+{
+  "id": "renewal-risk-briefing",
+  "name": "Renewal Risk Briefing Generator",
+  "description": "Daily AI-generated risk briefings for every account with a renewal in the next 30/60/90 days. Pulls usage, sentiment, engagement — flags risks before they're a fire.",
+  "longDescription": "Runs every weekday at 6 AM. Finds every contract renewing in the next 30, 60, or 90 days. For each, scans the last 90 days of product usage trend (Mixpanel), support ticket sentiment (Zendesk + OpenAI), exec sponsor engagement (calendar + email), and recent call sentiment (Gong). GPT-4 generates a 1-page renewal risk briefing — risk rating, top 3 signals, recommended save play, and a draft email to the champion. Emailed to the CSM in their inbox before they start their day.",
+  "category": "Renewals",
+  "platform": "n8n",
+  "difficulty": "Intermediate",
+  "setupTime": "40 minutes",
+  "integrations": ["Salesforce", "Gong", "Zendesk", "Mixpanel", "OpenAI", "Gmail"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-05-12",
+  "downloads": 0
+}

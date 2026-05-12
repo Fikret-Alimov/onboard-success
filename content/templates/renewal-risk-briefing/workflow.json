@@ -1,0 +1,217 @@
+{
+  "name": "Renewal Risk Briefing Generator",
+  "nodes": [
+    {
+      "id": "setup-note",
+      "name": "Setup Instructions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, -240],
+      "parameters": {
+        "content": "## Renewal Risk Briefing — Setup\n\n1. **Salesforce OAuth2** — read Opportunity, Account, Contract\n2. **Gong HTTP Header Auth** — base64(ACCESS_KEY:SECRET)\n3. **Zendesk API** — subdomain + email + API token\n4. **Mixpanel HTTP Header Auth** — service account\n5. **OpenAI** — GPT-4 access\n6. **Gmail OAuth2** — sender authorized\n\nTune the risk weights in the 'Calculate Risk Score' Code node.\nLOW risk briefings are skipped by default — toggle in the 'Risk Threshold' IF node.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "schedule",
+      "name": "Daily 6AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [100, 100],
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "cronExpression", "expression": "0 6 * * 1-5" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "find-renewals",
+      "name": "Find Upcoming Renewals",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [320, 100],
+      "parameters": {
+        "operation": "search",
+        "query": "SELECT Id, Name, AccountId, Account.Name, Amount, CloseDate, OwnerId, Owner.Email, StageName FROM Opportunity WHERE Type = 'Renewal' AND IsClosed = false AND CloseDate <= NEXT_N_DAYS:90"
+      }
+    },
+    {
+      "id": "split-renewals",
+      "name": "Loop per Renewal",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [540, 100],
+      "parameters": { "batchSize": 1 }
+    },
+    {
+      "id": "fetch-usage",
+      "name": "Fetch Mixpanel Usage Trend",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [760, -100],
+      "parameters": {
+        "method": "POST",
+        "url": "https://mixpanel.com/api/2.0/jql",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "script",
+              "value": "function main(){return Events({from_date:'90d',to_date:'today',event_selectors:[{selector:`properties[\"account_id\"] == \"{{ $json.AccountId }}\"`}]}).groupBy([mixpanel.daily_event_buckets],mixpanel.reducer.count())}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fetch-tickets",
+      "name": "Fetch Zendesk Tickets",
+      "type": "n8n-nodes-base.zendesk",
+      "typeVersion": 1,
+      "position": [760, 40],
+      "parameters": {
+        "resource": "ticket",
+        "operation": "search",
+        "query": "=organization:\"{{ $json.Account.Name }}\" created>60days_ago"
+      }
+    },
+    {
+      "id": "fetch-calls",
+      "name": "Fetch Gong Calls (90d)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [760, 180],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.gong.io/v2/calls/extensive",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={\n  \"filter\": {\n    \"fromDateTime\": \"{{ $now.minus({days:90}).toISO() }}\",\n    \"primaryUserIds\": [\"{{ $json.Owner.Email }}\"]\n  },\n  \"contentSelector\": {\n    \"context\": \"Extended\",\n    \"exposedFields\": {\n      \"content\": {\"topics\": true, \"trackers\": true},\n      \"interaction\": {\"speakers\": true}\n    }\n  }\n}"
+      }
+    },
+    {
+      "id": "fetch-engagement",
+      "name": "Fetch Champion Engagement",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [760, 320],
+      "parameters": {
+        "operation": "search",
+        "query": "=SELECT Id, Subject, ActivityDate, WhoId, Who.Name, Who.Email FROM ActivityHistory WHERE AccountId = '{{ $json.AccountId }}' AND ActivityDate >= LAST_N_DAYS:90 ORDER BY ActivityDate DESC LIMIT 20"
+      }
+    },
+    {
+      "id": "merge",
+      "name": "Merge Signals",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1000, 110],
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex"
+      }
+    },
+    {
+      "id": "risk-score",
+      "name": "Calculate Risk Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1240, 110],
+      "parameters": {
+        "jsCode": "// Inputs: usage trend, ticket count + sentiment proxy, gong calls, engagement\n// Output: { riskScore, riskLevel, signals[], renewal }\n\nconst renewal = $('Loop per Renewal').item.json;\nconst usage = $('Fetch Mixpanel Usage Trend').item.json;\nconst tickets = $('Fetch Zendesk Tickets').item.json;\nconst calls = $('Fetch Gong Calls (90d)').item.json;\nconst engagement = $('Fetch Champion Engagement').item.json;\n\n// --- USAGE TREND (35%) ---\nconst usageBuckets = Array.isArray(usage) ? usage : (usage?.data || []);\nlet usageScore = 0;\nif (usageBuckets.length >= 60) {\n  const recent = usageBuckets.slice(-30).reduce((s, b) => s + (b.value || b[1] || 0), 0);\n  const prior = usageBuckets.slice(-60, -30).reduce((s, b) => s + (b.value || b[1] || 0), 0);\n  const change = prior === 0 ? 0 : ((recent - prior) / prior) * 100;\n  if (change < -50) usageScore = 35;\n  else if (change < -30) usageScore = 25;\n  else if (change < -15) usageScore = 15;\n  else if (change < 0) usageScore = 5;\n}\n\n// --- SUPPORT TICKETS (25%) ---\nconst ticketArr = Array.isArray(tickets) ? tickets : (tickets?.results || []);\nconst escalated = ticketArr.filter(t => (t.priority === 'urgent' || t.priority === 'high') || t.tags?.includes('escalation')).length;\nlet ticketScore = 0;\nif (escalated >= 5) ticketScore = 25;\nelse if (escalated >= 3) ticketScore = 18;\nelse if (escalated >= 1) ticketScore = 10;\n\n// --- CHAMPION ENGAGEMENT (20%) ---\nconst engagementArr = Array.isArray(engagement) ? engagement : (engagement?.records || []);\nlet engagementScore = 0;\nif (engagementArr.length === 0) {\n  engagementScore = 20;\n} else {\n  const lastTouch = new Date(engagementArr[0].ActivityDate);\n  const daysSince = (Date.now() - lastTouch.getTime()) / (1000 * 60 * 60 * 24);\n  if (daysSince > 45) engagementScore = 20;\n  else if (daysSince > 30) engagementScore = 14;\n  else if (daysSince > 14) engagementScore = 7;\n}\n\n// --- CALL SENTIMENT (20%) ---\nconst callArr = calls?.calls || [];\nconst recentCalls = callArr.slice(0, 3);\nlet callScore = 0;\nif (recentCalls.length === 0) {\n  callScore = 12; // no recent calls is itself a risk\n} else {\n  // Use Gong tracker hits as proxy for sentiment\n  const negativeTrackers = recentCalls.flatMap(c => c.content?.trackers?.filter(t => /churn|cancel|frustrated|concern|issue/i.test(t.name)) || []);\n  if (negativeTrackers.length >= 5) callScore = 20;\n  else if (negativeTrackers.length >= 2) callScore = 12;\n}\n\nconst riskScore = usageScore + ticketScore + engagementScore + callScore;\nconst riskLevel = riskScore >= 65 ? 'HIGH' : riskScore >= 40 ? 'MEDIUM' : 'LOW';\nconst daysToRenewal = Math.ceil((new Date(renewal.CloseDate) - Date.now()) / (1000 * 60 * 60 * 24));\n\nreturn {\n  json: {\n    renewal,\n    riskScore,\n    riskLevel,\n    daysToRenewal,\n    signals: { usageScore, ticketScore, engagementScore, callScore },\n    rawData: { usage, tickets, calls, engagement }\n  }\n};"
+      }
+    },
+    {
+      "id": "risk-threshold",
+      "name": "Risk Threshold Filter",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1480, 110],
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "leftValue": "={{ $json.riskScore }}",
+              "rightValue": 40,
+              "operator": { "type": "number", "operation": "gte" }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "generate-brief",
+      "name": "Generate Briefing",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [1720, 50],
+      "parameters": {
+        "modelId": "gpt-4-turbo",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a senior Customer Success leader writing a renewal risk briefing for a CSM. Be direct, specific, action-oriented. Reference the data — don't make things up.\n\nFormat:\n\n🚨 RENEWAL RISK BRIEFING\nAccount: [name]\nRenewal Date: [date] ([N] days out)\nRisk Level: [LEVEL] ([score]/100)\nARR at risk: $[amount]\n\nTOP 3 RISK SIGNALS\n1. [specific signal with data]\n2. [specific signal with data]\n3. [specific signal with data]\n\nRECOMMENDED SAVE PLAY\n[2-3 sentences, concrete actions]\n\nDRAFT EMAIL TO CHAMPION\nSubject: [line]\n[full email body, casual professional tone]\n\nDATA SUMMARY\n- Last call: [date or 'none in 90d']\n- Open opps: [list or 'none']\n- Recent tickets: [count + summary]"
+            },
+            {
+              "role": "user",
+              "content": "=Renewal context:\nAccount: {{ $json.renewal.Account.Name }}\nRenewal date: {{ $json.renewal.CloseDate }} ({{ $json.daysToRenewal }} days out)\nARR: ${{ $json.renewal.Amount }}\nRisk score: {{ $json.riskScore }}/100 ({{ $json.riskLevel }})\nSignals: usage={{ $json.signals.usageScore }}/35, tickets={{ $json.signals.ticketScore }}/25, engagement={{ $json.signals.engagementScore }}/20, calls={{ $json.signals.callScore }}/20\n\nUsage data: {{ JSON.stringify($json.rawData.usage).slice(0, 1500) }}\nTickets: {{ JSON.stringify($json.rawData.tickets).slice(0, 1500) }}\nCalls: {{ JSON.stringify($json.rawData.calls).slice(0, 1500) }}\nEngagement: {{ JSON.stringify($json.rawData.engagement).slice(0, 1500) }}\n\nWrite the renewal risk briefing."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 1500
+        }
+      }
+    },
+    {
+      "id": "email-brief",
+      "name": "Email Brief to CSM",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1960, 50],
+      "parameters": {
+        "operation": "send",
+        "sendTo": "={{ $('Loop per Renewal').item.json.Owner.Email }}",
+        "subject": "=🚨 Renewal Risk: {{ $('Loop per Renewal').item.json.Account.Name }} — {{ $('Calculate Risk Score').item.json.daysToRenewal }} days — {{ $('Calculate Risk Score').item.json.riskLevel }}",
+        "message": "={{ $('Generate Briefing').item.json.message.content }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Daily 6AM Trigger": { "main": [[{ "node": "Find Upcoming Renewals", "type": "main", "index": 0 }]] },
+    "Find Upcoming Renewals": { "main": [[{ "node": "Loop per Renewal", "type": "main", "index": 0 }]] },
+    "Loop per Renewal": {
+      "main": [
+        [
+          { "node": "Fetch Mixpanel Usage Trend", "type": "main", "index": 0 },
+          { "node": "Fetch Zendesk Tickets", "type": "main", "index": 0 },
+          { "node": "Fetch Gong Calls (90d)", "type": "main", "index": 0 },
+          { "node": "Fetch Champion Engagement", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Fetch Mixpanel Usage Trend": { "main": [[{ "node": "Merge Signals", "type": "main", "index": 0 }]] },
+    "Fetch Zendesk Tickets": { "main": [[{ "node": "Merge Signals", "type": "main", "index": 1 }]] },
+    "Fetch Gong Calls (90d)": { "main": [[{ "node": "Merge Signals", "type": "main", "index": 2 }]] },
+    "Fetch Champion Engagement": { "main": [[{ "node": "Merge Signals", "type": "main", "index": 3 }]] },
+    "Merge Signals": { "main": [[{ "node": "Calculate Risk Score", "type": "main", "index": 0 }]] },
+    "Calculate Risk Score": { "main": [[{ "node": "Risk Threshold Filter", "type": "main", "index": 0 }]] },
+    "Risk Threshold Filter": { "main": [[{ "node": "Generate Briefing", "type": "main", "index": 0 }], []] },
+    "Generate Briefing": { "main": [[{ "node": "Email Brief to CSM", "type": "main", "index": 0 }]] },
+    "Email Brief to CSM": { "main": [[{ "node": "Loop per Renewal", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1.0.0"
+}

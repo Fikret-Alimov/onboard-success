@@ -8,13 +8,13 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.onboard-success.com"),
-  title: "CS AI Resources for B2B SaaS | OnboardSuccess",
+  title: "OnboardSuccess: AI for Customer Success, Without the Vendor Spin",
   description:
-    "The AI resource hub for Customer Success teams. Playbooks, vetted CS & AI services directories, and workflow templates for mid-market B2B SaaS.",
+    "Playbooks, vetted CS & AI services, and workflow templates for mid-market B2B SaaS. Written by a Head of CS, not a vendor marketing team.",
   openGraph: {
-    title: "CS AI Resources for B2B SaaS | OnboardSuccess",
+    title: "OnboardSuccess: AI for Customer Success, Without the Vendor Spin",
     description:
-      "The AI resource hub for Customer Success teams. Playbooks, vetted CS & AI services directories, and workflow templates for mid-market B2B SaaS.",
+      "Playbooks, vetted CS & AI services, and workflow templates for mid-market B2B SaaS. Written by a Head of CS, not a vendor marketing team.",
     url: "https://www.onboard-success.com",
     siteName: "OnboardSuccess",
     type: "website",
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "CS AI Resources for B2B SaaS | OnboardSuccess",
+    title: "OnboardSuccess: AI for CS, Without the Vendor Spin",
     description:
-      "The AI resource hub for Customer Success teams. Playbooks, vetted CS & AI services directories, and workflow templates for mid-market B2B SaaS.",
+      "Playbooks, vetted CS & AI services, and workflow templates for mid-market B2B SaaS. Written by a Head of CS, not a vendor marketing team.",
     images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {

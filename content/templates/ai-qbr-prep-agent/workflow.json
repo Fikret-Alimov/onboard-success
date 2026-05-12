@@ -1,0 +1,209 @@
+{
+  "name": "AI QBR Prep Agent",
+  "nodes": [
+    {
+      "id": "setup-note",
+      "name": "Setup Instructions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, -240],
+      "parameters": {
+        "content": "## AI QBR Prep Agent — Setup\n\n1. **Salesforce OAuth2** — connected app with api + refresh_token scopes\n2. **Gong HTTP Header Auth** — base64(ACCESS_KEY:SECRET)\n3. **Zendesk API** — subdomain + email + API token\n4. **Mixpanel HTTP Header Auth** — base64(SERVICE_ACCOUNT:SECRET)\n5. **OpenAI** — API key with GPT-4 access\n6. **Google Docs OAuth2** — scope: documents\n\nSet `googleDriveFolderId` in the 'Create QBR Doc' node to your target folder.",
+        "height": 280,
+        "width": 420
+      }
+    },
+    {
+      "id": "schedule",
+      "name": "Monday 7AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [100, 100],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * 1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "find-qbrs",
+      "name": "Find Upcoming QBRs",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [320, 100],
+      "parameters": {
+        "operation": "search",
+        "query": "SELECT Id, Subject, ActivityDate, AccountId, Account.Name, Account.OwnerId, Account.Owner.Email, OwnerId FROM Event WHERE Subject LIKE '%QBR%' AND ActivityDate >= TODAY AND ActivityDate <= NEXT_N_DAYS:7"
+      }
+    },
+    {
+      "id": "split-accounts",
+      "name": "Loop per Account",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [540, 100],
+      "parameters": {
+        "batchSize": 1
+      }
+    },
+    {
+      "id": "fetch-usage",
+      "name": "Fetch Mixpanel Usage (90d)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [760, -60],
+      "parameters": {
+        "method": "POST",
+        "url": "https://mixpanel.com/api/2.0/jql",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "script",
+              "value": "function main(){return Events({from_date:'90d',to_date:'today',event_selectors:[{selector:`properties[\"account_id\"] == \"{{ $json.AccountId }}\"`}]}).groupBy(['name'], mixpanel.reducer.count())}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fetch-tickets",
+      "name": "Fetch Zendesk Tickets",
+      "type": "n8n-nodes-base.zendesk",
+      "typeVersion": 1,
+      "position": [760, 100],
+      "parameters": {
+        "resource": "ticket",
+        "operation": "search",
+        "query": "=organization:\"{{ $json.Account.Name }}\" status<solved created>30days_ago"
+      }
+    },
+    {
+      "id": "fetch-calls",
+      "name": "Fetch Gong Calls (90d)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [760, 260],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.gong.io/v2/calls/extensive",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={\n  \"filter\": {\n    \"fromDateTime\": \"{{ $now.minus({days:90}).toISO() }}\",\n    \"primaryUserIds\": [\"{{ $json.Account.Owner.Email }}\"]\n  },\n  \"contentSelector\": {\n    \"context\": \"Extended\",\n    \"exposedFields\": {\n      \"content\": {\"topics\": true, \"highlights\": true, \"trackers\": true},\n      \"interaction\": {\"speakers\": true, \"questions\": true}\n    }\n  }\n}"
+      }
+    },
+    {
+      "id": "fetch-opps",
+      "name": "Fetch Salesforce Opps",
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "position": [760, 420],
+      "parameters": {
+        "operation": "search",
+        "query": "=SELECT Id, Name, StageName, Amount, CloseDate, Type FROM Opportunity WHERE AccountId = '{{ $json.AccountId }}' AND IsClosed = false"
+      }
+    },
+    {
+      "id": "merge-context",
+      "name": "Merge Account Context",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1000, 180],
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex"
+      }
+    },
+    {
+      "id": "generate-brief",
+      "name": "Generate QBR Brief",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [1240, 180],
+      "parameters": {
+        "modelId": "gpt-4-turbo",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a senior Customer Success leader writing a QBR brief for the CSM. Be direct, specific, and prioritize what matters for retention and expansion.\n\nFormat the output as a structured QBR brief with these sections:\n\n## Executive Summary\n2-3 sentences on overall account health and trajectory.\n\n## Wins to Celebrate\nTop 3 adoption or expansion wins from the last quarter. Be specific with numbers.\n\n## Risks to Address\nTop 3 risk signals. Mark each as HIGH/MEDIUM/LOW. Reference the data source.\n\n## Expansion Signals\nDetected opportunities. Include $ estimate where possible.\n\n## Recent Conversations\nSummary of last 3 customer calls. List open action items.\n\n## Recommended Agenda\n5-point QBR agenda, prioritized by what moves the renewal decision.\n\n## Talking Points\n5-7 ready-to-say lines for the CSM, in their voice."
+            },
+            {
+              "role": "user",
+              "content": "=Account: {{ $json.Account.Name }}\nQBR Date: {{ $json.ActivityDate }}\nCSM: {{ $json.Account.Owner.Email }}\n\n---\nUSAGE DATA (last 90 days, Mixpanel):\n{{ JSON.stringify($('Fetch Mixpanel Usage (90d)').item.json) }}\n\n---\nSUPPORT TICKETS (last 30 days, Zendesk):\n{{ JSON.stringify($('Fetch Zendesk Tickets').item.json) }}\n\n---\nCUSTOMER CALLS (last 90 days, Gong):\n{{ JSON.stringify($('Fetch Gong Calls (90d)').item.json) }}\n\n---\nOPEN OPPORTUNITIES (Salesforce):\n{{ JSON.stringify($('Fetch Salesforce Opps').item.json) }}\n\nWrite the QBR brief."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 2500
+        }
+      }
+    },
+    {
+      "id": "create-doc",
+      "name": "Create QBR Doc",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [1480, 180],
+      "parameters": {
+        "operation": "create",
+        "title": "=QBR Brief - {{ $('Loop per Account').item.json.Account.Name }} - {{ $('Loop per Account').item.json.ActivityDate }}",
+        "folderId": "REPLACE_WITH_YOUR_FOLDER_ID",
+        "content": "={{ $('Generate QBR Brief').item.json.message.content }}"
+      }
+    }
+  ],
+  "connections": {
+    "Monday 7AM Trigger": {
+      "main": [[{ "node": "Find Upcoming QBRs", "type": "main", "index": 0 }]]
+    },
+    "Find Upcoming QBRs": {
+      "main": [[{ "node": "Loop per Account", "type": "main", "index": 0 }]]
+    },
+    "Loop per Account": {
+      "main": [
+        [
+          { "node": "Fetch Mixpanel Usage (90d)", "type": "main", "index": 0 },
+          { "node": "Fetch Zendesk Tickets", "type": "main", "index": 0 },
+          { "node": "Fetch Gong Calls (90d)", "type": "main", "index": 0 },
+          { "node": "Fetch Salesforce Opps", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Fetch Mixpanel Usage (90d)": {
+      "main": [[{ "node": "Merge Account Context", "type": "main", "index": 0 }]]
+    },
+    "Fetch Zendesk Tickets": {
+      "main": [[{ "node": "Merge Account Context", "type": "main", "index": 1 }]]
+    },
+    "Fetch Gong Calls (90d)": {
+      "main": [[{ "node": "Merge Account Context", "type": "main", "index": 2 }]]
+    },
+    "Fetch Salesforce Opps": {
+      "main": [[{ "node": "Merge Account Context", "type": "main", "index": 3 }]]
+    },
+    "Merge Account Context": {
+      "main": [[{ "node": "Generate QBR Brief", "type": "main", "index": 0 }]]
+    },
+    "Generate QBR Brief": {
+      "main": [[{ "node": "Create QBR Doc", "type": "main", "index": 0 }]]
+    },
+    "Create QBR Doc": {
+      "main": [[{ "node": "Loop per Account", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1.0.0"
+}
