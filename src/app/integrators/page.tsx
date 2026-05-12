@@ -5,13 +5,13 @@ import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "CS Platform Integrators & Agencies Directory | Onboard Success",
+  title: "CS & AI Services Directory — Integrators, Consultants, AI Agencies | Onboard Success",
   description:
-    "Find certified consultants and agencies specializing in Customer Success platform implementation, migration, and AI optimization for mid-market B2B SaaS teams.",
+    "Vetted CS and AI services: platform implementation, AI integration, agent deployment, CS operations, and consulting for mid-market B2B SaaS.",
   openGraph: {
-    title: "CS Platform Integrators & Agencies Directory | Onboard Success",
+    title: "CS & AI Services Directory — Integrators, Consultants, AI Agencies | Onboard Success",
     description:
-      "Find certified consultants and agencies specializing in CS platform implementation, migration, and AI optimization for mid-market SaaS.",
+      "Vetted CS and AI services: platform implementation, AI integration, agent deployment, CS operations, and consulting for mid-market B2B SaaS.",
     url: "https://www.onboard-success.com/integrators",
     type: "website",
     images: [
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "CS Platform Integrators & Agencies Directory | Onboard Success",
+    title: "CS & AI Services Directory | Onboard Success",
     description:
-      "Find certified consultants and agencies specializing in CS platform implementation for mid-market SaaS.",
+      "Vetted CS and AI services: implementation, AI integration, agent deployment, and consulting for mid-market B2B SaaS.",
     images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {
@@ -79,9 +79,9 @@ export default async function IntegratorsPage() {
         data={{
           "@context": "https://schema.org",
           "@type": "ItemList",
-          name: "CS Platform Integrators & Agencies",
+          name: "CS & AI Services Directory",
           description:
-            "Certified consultants and agencies specializing in CS platform implementation for mid-market SaaS.",
+            "Vetted CS and AI services: platform implementation, AI integration, agent deployment, and CS operations consulting for mid-market B2B SaaS.",
           url: "https://www.onboard-success.com/integrators",
           itemListElement: integrators.map((integrator, index) => ({
             "@type": "ListItem",
@@ -99,15 +99,16 @@ export default async function IntegratorsPage() {
           })),
         }}
       />
-      <h1 className="text-4xl font-bold tracking-tight mb-3">Integrators</h1>
-      <p className="text-muted text-lg mb-8 max-w-2xl">
-        Certified consultants and agencies who specialize in CS platform
-        implementation, migration, and optimization. Not sure what you need?
-        Read our{" "}
+      <h1 className="text-4xl font-bold tracking-tight mb-3">CS & AI Services</h1>
+      <p className="text-muted text-lg mb-2 max-w-3xl">
+        Vetted consultants, agencies, and implementation partners for mid-market B2B SaaS Customer Success teams.
+      </p>
+      <p className="text-muted text-base mb-6 max-w-3xl">
+        Find specialists in CS platform implementation (Gainsight, ChurnZero, Vitally, Totango), AI agent deployment, AI integration, CS operations, health score architecture, and end-to-end customer success transformation. Not sure where to start? Read our{" "}
         <Link href="/playbooks/building-custom-cs-agents" className="text-accent hover:text-accent-hover transition-colors">
           guide to building custom CS agents
         </Link>{" "}
-        or explore our{" "}
+        or explore the{" "}
         <Link href="/playbooks/autonomous-onboarding" className="text-accent hover:text-accent-hover transition-colors">
           autonomous onboarding playbook
         </Link>.

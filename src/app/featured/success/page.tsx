@@ -21,10 +21,10 @@ export default function FeaturedSuccessPage() {
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link
-          href="/agents"
+          href="/integrators"
           className="px-6 py-3 rounded-lg bg-accent hover:bg-accent-hover text-white font-medium transition-colors"
         >
-          View Agents Directory
+          View Services Directory
         </Link>
         <Link
           href="/integrators"

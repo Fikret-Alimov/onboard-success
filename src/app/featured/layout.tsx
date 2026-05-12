@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Get Featured — OnboardSuccess",
   description:
-    "Get priority placement for your AI agent or agency in the OnboardSuccess directory.",
+    "Get priority placement for your CS or AI services agency in the OnboardSuccess directory.",
   openGraph: {
     title: "Get Featured — OnboardSuccess",
     description:
-      "Get priority placement for your AI agent or agency in the OnboardSuccess directory.",
+      "Get priority placement for your CS or AI services agency in the OnboardSuccess directory.",
     url: "https://www.onboard-success.com/featured",
     type: "website",
     images: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Get Featured — OnboardSuccess",
     description:
-      "Get priority placement for your AI agent or agency in the OnboardSuccess directory.",
+      "Get priority placement for your CS or AI services agency in the OnboardSuccess directory.",
     images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {

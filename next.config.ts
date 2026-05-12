@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
       { source: "/about-fikret", destination: "/", permanent: true },
       // Old post-slug URLs → playbooks index (no 1:1 match)
       { source: "/post/:slug*", destination: "/playbooks", permanent: true },
+      // Hidden: /agents directory deprecated, now folded into /integrators (Services)
+      { source: "/agents", destination: "/integrators", permanent: true },
+      { source: "/agents/:slug*", destination: "/integrators", permanent: true },
     ];
   },
 };

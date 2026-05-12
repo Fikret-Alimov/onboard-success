@@ -12,16 +12,16 @@ const sections = [
     href: "/playbooks",
   },
   {
-    title: "AI Agents",
+    title: "Services & Integrators",
     description:
-      "A curated directory of AI agents built for Customer Success. Compare features, integrations, and real user ratings to find the right fit for your stack.",
-    href: "/agents",
+      "Vetted consultants and agencies for CS platform implementation, AI integration, and operational optimization. Find the right partner for your CS stack.",
+    href: "/integrators",
   },
   {
-    title: "Integrators",
+    title: "Templates",
     description:
-      "Find certified consultants and agencies who specialize in CS platform implementation, migration, and optimization for mid-market SaaS teams.",
-    href: "/integrators",
+      "Production-ready workflow templates for CS teams. Health scoring, onboarding automation, churn signals, and AI agent prompts — download and ship.",
+    href: "/templates",
   },
 ];
 

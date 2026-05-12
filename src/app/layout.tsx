@@ -10,11 +10,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.onboard-success.com"),
   title: "CS AI Resources for B2B SaaS | OnboardSuccess",
   description:
-    "The AI resource hub for Customer Success teams. Playbooks, AI agent directories, integrator listings, and workflow templates for mid-market B2B SaaS.",
+    "The AI resource hub for Customer Success teams. Playbooks, vetted CS & AI services directories, and workflow templates for mid-market B2B SaaS.",
   openGraph: {
     title: "CS AI Resources for B2B SaaS | OnboardSuccess",
     description:
-      "The AI resource hub for Customer Success teams. Playbooks, agent directories, integrator listings, and workflow templates for mid-market B2B SaaS.",
+      "The AI resource hub for Customer Success teams. Playbooks, vetted CS & AI services directories, and workflow templates for mid-market B2B SaaS.",
     url: "https://www.onboard-success.com",
     siteName: "OnboardSuccess",
     type: "website",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CS AI Resources for B2B SaaS | OnboardSuccess",
     description:
-      "The AI resource hub for Customer Success teams. Playbooks, agent directories, and workflow templates for mid-market B2B SaaS.",
+      "The AI resource hub for Customer Success teams. Playbooks, vetted CS & AI services directories, and workflow templates for mid-market B2B SaaS.",
     images: ["https://www.onboard-success.com/og-default.png"],
   },
   alternates: {
@@ -55,16 +55,10 @@ function Navbar() {
             Playbooks
           </Link>
           <Link
-            href="/agents"
-            className="text-sm text-muted hover:text-white transition-colors"
-          >
-            Agents
-          </Link>
-          <Link
             href="/integrators"
             className="text-sm text-muted hover:text-white transition-colors"
           >
-            Integrators
+            Services
           </Link>
           <Link
             href="/templates"
@@ -98,11 +92,8 @@ function Footer() {
             <Link href="/playbooks" className="hover:text-white transition-colors">
               Playbooks
             </Link>
-            <Link href="/agents" className="hover:text-white transition-colors">
-              Agents
-            </Link>
             <Link href="/integrators" className="hover:text-white transition-colors">
-              Integrators
+              Services
             </Link>
             <Link href="/templates" className="hover:text-white transition-colors">
               Templates
