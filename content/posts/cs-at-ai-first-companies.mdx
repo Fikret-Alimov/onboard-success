@@ -1,0 +1,152 @@
+---
+title: "What Customer Success Means at AI-First Companies — Notes from May 2026"
+seoTitle: "Customer Success at AI-First Companies (May 2026)"
+date: "2026-05-26"
+description: "Working notes from inside the shift. The CS function at AI-first companies doesn't look like Gainsight — it looks like Palantir. Why Forward Deployed Engineers replaced CSMs, why outcome-based pricing changed the post-sales math, and why a16z's 48% NRR number quietly explains everything."
+seoDescription: "Anthropic and OpenAI announced $5.5B in enterprise AI deployment ventures on the same day. Neither hired a single CSM. Here's what's actually replacing Customer Success at AI-first companies — and what's not."
+tags: [
+  "customer success",
+  "AI-first",
+  "forward deployed engineer",
+  "deployment strategist",
+  "outcome-based pricing",
+  "net revenue retention",
+  "post-sales",
+  "Anthropic",
+  "OpenAI",
+  "Palantir",
+  "Sierra",
+  "Decagon"
+]
+author: "Fikret Alimov"
+---
+
+*Working notes, May 2026. None of this is settled — I'm writing it down to think more clearly, and because the people I'd most want to talk to about it (founders and deployment teams at AI-first companies) are figuring it out at the same time I am.*
+
+---
+
+On May 4, 2026, Anthropic and OpenAI announced enterprise AI deployment ventures on the same day. Anthropic, with Goldman Sachs, Blackstone, and Hellman & Friedman: $1.5B. OpenAI, with TPG, Brookfield, and Bain Capital: $4B at a $10B valuation. Both ventures had the same core idea — embed engineers inside customer organizations and build the AI implementations directly into their operations.
+
+Notice what's not in either announcement. Not "we're scaling our Customer Success team." Not "we're hiring CSMs to manage the deployments." The roles being staffed are **Forward Deployed Engineers** and **Deployment Strategists**.
+
+This is the part I want to write about — not because the word "Customer Success" matters, but because the structural change underneath the title change matters a lot, and I haven't seen anyone write about it from the operator's seat yet.
+
+## The core thesis I'm working from
+
+The core mission of Customer Success hasn't changed. It still exists to do what it has always existed to do: **ensure the customer actually realizes value from the product**.
+
+But at AI-first companies, almost everything about *how* that mission is delivered has changed. The organization, the role, the contract, the measurement, the comp band, the career path — none of it looks like the CS function that B2B SaaS spent the last fifteen years building.
+
+I'm going to be specific about what I mean, because abstract claims about "the future of CS" deserve to be ignored.
+
+## What's actually different
+
+### 1. The org structure looks like Palantir, not Gainsight
+
+Palantir invented the model AI-first companies are now copying: **Forward Deployed Engineer + Deployment Strategist**, both embedded with the customer, often working on one account at a time. The FDE writes the code that makes the platform work in the customer's environment. The DS owns the operational change, the stakeholders, the adoption. Together they cover what a traditional B2B SaaS company splits across Solutions Engineering, Implementation, CSM, and AM.
+
+The data on what AI-first companies are actually hiring backs this up:
+
+- Anthropic's **Applied AI** team has FDE openings explicitly described as "embedding directly with strategic customers."
+- OpenAI's new DeployCo subsidiary will, in their own words, "use embedded engineers specialized in AI deployment into organizations."
+- Dust has a job posting for [**"Founding AI Deployment Strategist, Post-Sales."**](https://jobs.ashbyhq.com/dust/c97de2e4-93e8-4c24-b237-61ff3b16ce3c)
+- Mistral has **"AI Deployment Strategist, Cybersecurity."**
+- EY (consulting, not a vendor) launched a UK & Ireland FDE practice in April 2026 — the first major consultancy to formally adopt the model.
+
+FDE job postings rose more than 800% from January to September 2025. Average US compensation: $238k. Staff-level: $630k+.
+
+There is no equivalent CSM hiring boom at these companies. The word "CSM" appears almost nowhere on their job boards. That's not an accident.
+
+### 2. The contract is outcome-based, not subscription
+
+[Sierra](https://sierra.ai/blog/outcome-based-pricing-for-ai-agents) — one of the fastest-growing AI agent companies — prices on resolved outcomes. The customer pays only when the AI successfully resolves an interaction, completes an upsell, or saves a cancellation. Sierra went from zero to over $150M ARR by February 2026 on this pricing model.
+
+Adobe announced outcome-based pricing for Adobe CX Enterprise. Decagon charges per resolution. Fewer than 10% of AI companies use outcome-based pricing today, but it's widely expected to become the dominant model for agentic AI products. ([Bessemer](https://www.bvp.com/atlas/the-ai-pricing-and-monetization-playbook), [Monetizely](https://www.getmonetizely.com/blogs/the-2026-guide-to-saas-ai-and-agentic-pricing-models))
+
+The implication for the post-sales function is enormous. The CSM's traditional job — *"drive adoption so the customer renews their seats"* — doesn't translate. There are no seats. The revenue scales directly with how often the AI succeeds. The post-sales function exists to grow *outcome volume*, which is closer to a Revenue Operations job than a relationship management job.
+
+### 3. The retention numbers are catastrophically worse
+
+This is the part nobody wants to talk about publicly, but the data is in the open.
+
+a16z published their *"Retention Is All You Need"* analysis of hundreds of AI-native companies. The numbers:
+
+- AI-native overall: **40% gross revenue retention. 48% net revenue retention.**
+- For comparison: B2B SaaS median is ~82% NRR.
+
+At the high end (above $250/month price points), AI-native NRR climbs to 85% — close to SaaS territory but still below. At low price points (under $50/month), GRR sits at 23%. The analyst Cassie Young at Primary Venture Partners has been calling this the **"gross retention apocalypse"** — and her argument is structural, not cyclical. Switching costs in AI are lower than in any software category that came before. Prompts are portable. ([Growth Unhinged](https://www.growthunhinged.com/p/the-ai-churn-wave), [SaaStr](https://www.saastr.com/the-wave-of-ai-agent-churn-to-come-prompts-are-portable/))
+
+I think this is the single most important fact about CS at AI-first companies, and it explains every other structural change.
+
+You cannot run a traditional CSM-led, per-seat-priced CS motion when your category-wide NRR is 48%. The unit economics don't work. You have to either:
+
+- **(a)** push ACVs up dramatically so the per-account economics support a high-touch motion,
+- **(b)** build genuine switching cost through deep operational integration (which is what FDEs are for), or
+- **(c)** tie revenue directly to outcomes so you only collect when value is delivered.
+
+The AI-first companies are doing all three at once.
+
+### 4. Measurement looks different
+
+The 2022 CSM dashboard — adoption %, NPS, health score, renewal rate — doesn't survive contact with an outcome-priced agent product. What replaces it:
+
+- **Outcome volume and quality** — because that's literally what's being billed.
+- **M3-rebased cohort retention** instead of raw retention. a16z's recommended method, to filter out "AI tourists" who try, hit one moment, then churn before the product can compound.
+- **The "smiling curve"** — churned customers returning as the product gets better. This is a real phenomenon a16z documented at multiple AI-native companies. It implies retention is product-trajectory-driven, not relationship-driven.
+- **Switching-cost depth** — how integrated the product is into the customer's operations. This is the moat. The FDE's job is to build it.
+
+The dashboard has become less about *the customer's behavior* and more about *the product's trajectory and the integration depth*. That's a quiet but huge shift in what the post-sales function is responsible for.
+
+## What I'm seeing from my seat
+
+Some of this lands differently when you're inside it instead of reading about it.
+
+I'm not at a pure AI-first company — the products I've worked on went Seed → C as traditional B2B SaaS — but I am at companies whose product became an AI product over the last few years, and the conversations with customers changed underneath me.
+
+Three things I notice that the industry conversation captures imperfectly:
+
+**1. Customers don't know how to evaluate AI products.** Sales sells outcomes. The customer signs. In month one, they hit you with: *"How will we actually measure this?"* The honest answer is: we have to design the eval together. This used to be a Product question. Now it's a post-sales question. None of my CS playbooks from 2019 have a chapter for it.
+
+**2. Quality regressions are real and they're CS tickets.** A model updates. A prompt changes. The customer's success rate drops 4 percentage points. They notice. They open a ticket. Whose ticket is it? Engineering's? Product's? CS's? Every team I've talked to has improvised an answer. I don't know that anyone has the right one.
+
+**3. Usage going down is sometimes the win.** When the AI gets better, agents need fewer turns. Customers ask fewer follow-up questions. Tickets resolve in shorter sessions. The 2022 health score (which weights usage positively) reads this as a churn signal. The 2026 reality is the opposite. I've had to argue this point with my own dashboards, which is a strange experience.
+
+## What this means for people doing CS today
+
+If you're in CS at a traditional B2B SaaS company, here's the honest read:
+
+The function you have been doing isn't going away — there are still thousands of companies that need exactly the role as it was. But the *highest-leverage* version of CS in 2026 is migrating toward the FDE / Deployment Strategist model at AI-first companies. The career trajectory, the comp, the equity, the proximity to interesting problems — all of it is concentrating there.
+
+The people who can credibly take those roles are not pure-CSM profiles. They are people who can hold two halves:
+
+- **Commercial fluency + outcome ownership** (the traditional CS strength)
+- **Technical depth that lets them participate in the engineering side** (the new requirement)
+
+That's not most CS profiles. It's a small population. If you can credibly do both, the demand for you in the next 18 months will be unusual.
+
+## What I'm still figuring out
+
+I'm trying to be honest about what I don't know. Some open questions:
+
+1. Is the FDE/DS model going to stay this dominant, or does "Customer Success" come back as a separate function once AI-first companies mature past the early-deployment phase?
+2. What's the right post-sales staffing model below roughly $1M ACV? Palantir-style 1:1 embedding only works at very high contract sizes. The math for mid-market AI is wide open.
+3. Where does eval co-design with the customer actually live, organizationally? Today it's CS-adjacent at most AI-first companies but nobody owns it cleanly.
+4. How do outcome-based contracts get renewed when the AI's capability shifts every quarter? Sierra, Decagon, and Adobe are working this out in production.
+5. Is there a clean career bridge for current CSMs into Deployment Strategist roles, or is the technical bar high enough that the population is locked out?
+
+## What I'd love pushback on
+
+If you work in post-sales at an AI-first company — Anthropic, OpenAI, Dust, Sierra, Decagon, Glean, Cresta, Mistral, or any of the others — and any of this reads wrong, I want to hear it. I'm writing from the seat of someone who has done CS at scale for a product that *became* an AI product, not from inside an AI-first org. The view from the inside is the one I'd most like to correct against.
+
+Specifically:
+
+- Am I overstating the death of the CSM title? Are there AI-first companies where the function is alive and well under that name?
+- The retention numbers — do they match what you're seeing day-to-day, or is the public data lagging the operational reality?
+
+I'll keep these notes updated as I learn.
+
+---
+
+*This is the first in an ongoing series of working notes on Customer Success in the AI era. The next pieces will go deeper on specific stages of the post-sales motion: handoff, kickoff, eval design, QBR replacement, and renewal mechanics.*
+
+*If you want to be notified when those go up, [subscribe to the newsletter](/#subscribe) — and if you want to argue with anything in here, [my LinkedIn DMs are open](https://www.linkedin.com/in/fikretalimov/).*

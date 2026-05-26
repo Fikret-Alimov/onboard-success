@@ -1,0 +1,253 @@
+---
+title: "What AI-First Companies Actually Publish About Deployment & Customer Success — A Public Resource Inventory"
+seoTitle: "AI-First Deployment & CS Resources: Public Inventory (2026)"
+date: "2026-05-26"
+description: "A working inventory of every public deployment guide, FDE methodology doc, eval playbook, and customer-success-adjacent resource published by Anthropic, OpenAI, Palantir, Sierra, Decagon, Cresta, Glean, Salesforce, Intercom, and others. The headline: almost none of them publish a 'Customer Success' playbook — and that gap is the whole story."
+seoDescription: "Direct links to Anthropic's deployment guides, Palantir's FDE methodology, Sierra's outcome-pricing framework, Decagon's customer outcomes, Intercom's AI-first support roles, and more. The definitive map of what's public — and what's missing — in AI deployment content."
+tags: [
+  "customer success",
+  "AI deployment",
+  "forward deployed engineer",
+  "deployment strategist",
+  "Anthropic",
+  "OpenAI",
+  "Palantir",
+  "Sierra",
+  "Decagon",
+  "Cresta",
+  "Glean",
+  "Salesforce Agentforce",
+  "Intercom",
+  "AI-first",
+  "resource inventory"
+]
+author: "Fikret Alimov"
+---
+
+*A scan of what AI-first and agentic companies actually publish about how they do post-sales work — playbooks, deployment guides, methodology, kickoff templates, frameworks. Where there's a primary source, I link it. Where there's no public artifact, I say so — and that's often the more important data point.*
+
+---
+
+## The headline observation
+
+**Almost none of the AI-first companies publish a "Customer Success" playbook.**
+
+What they publish instead falls into three categories:
+
+1. **Engineering-flavored deployment guides** — how to build, evaluate, and operate AI agents in production. Written for the customer's *engineers*, not their CS teams.
+2. **Adoption / transformation frameworks** — high-level enterprise change-management content, usually paired with executive-buyer messaging.
+3. **Implementation accelerators** for their largest customers — the "first 100 customers" programs that look very FDE-flavored.
+
+If you're looking for the equivalent of Gainsight's *Customer Success Playbook* or ChurnZero's CSM materials, written by an AI-first company, **it largely doesn't exist yet**. That gap is itself the content opportunity — and the reason this site exists.
+
+---
+
+## Anthropic
+
+The most prolific publisher of public deployment material among the AI-first cohort.
+
+| Resource | What it is | Audience |
+|---|---|---|
+| [**Building Effective AI Agents**](https://www.anthropic.com/research/building-effective-agents) | Best-practice guide for agentic system design. Used by Coinbase, Intercom, Thomson Reuters as referenced examples. | Engineers building agents |
+| [**The Enterprise AI Transformation Guide**](https://resources.anthropic.com/enterprise-ai-transformation-guide) | Three-step blueprint: foundation → pilots → scaling. References NBIM, Thomson Reuters, Cox Automotive. | Enterprise buyers & program leads |
+| [**Building Trusted AI in the Enterprise** (PDF)](https://assets.anthropic.com/m/66daaa23018ab0fd/original/Anthropic-enterprise-ebook-digital.pdf) | E-book covering planning → deployment. | Enterprise leaders |
+| [**Claude for the Financial Industry — Practical Deployment Guide** (PDF)](https://www-cdn.anthropic.com/files/4zrzovbb/website/34783bca828d7fa331f515ced26f1c9232151b2c.pdf) | Vertical-specific deployment playbook including adoption phases. | Financial services buyers |
+| **The Complete Guide to Building Skills for Claude** (Jan 2026) | 32-page guide on building skills/agents for Claude. | Engineers |
+| [**Demystifying Evals for AI Agents**](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) | Methodology for designing and running evaluation frameworks. | Engineers, DS-types |
+
+**Posture:** technical, transparent, written for builders. No "Customer Success Manager" in the audience targeting. The phasing in the financial deployment guide (Foundation → Pilot → Scale) is the closest thing Anthropic publishes to a CS playbook — and it's still primarily an engineering blueprint.
+
+**Why it matters:** Anthropic's resources are the gold-standard reference. Their evals piece is particularly load-bearing for any "how to define go-live for AI products" work.
+
+---
+
+## OpenAI
+
+Less publicly available CS/deployment material than Anthropic — most enterprise content is gated behind sales conversations or DeployCo (the new $4B PE-backed subsidiary, May 2026).
+
+| Resource | What it is |
+|---|---|
+| **OpenAI Cookbook** | Repository of working code examples for building with the API. Technical, engineer-focused. |
+| **GPT-5 / Agentic best practices** (docs) | Generic API and agent best practices. Engineer-focused. |
+| **DeployCo public posture** (May 2026) | $4B PE-backed subsidiary with embedded engineers. No public methodology yet — reference customers via case studies. |
+| [**Klarna case study**](https://openai.com/index/klarna/) | High-profile reference: Klarna's AI assistant doing the work of 700 agents. |
+
+**Posture:** more sales-led than Anthropic. The public artifact is the customer case study; the methodology stays internal.
+
+---
+
+## Palantir
+
+The original FDE/Deployment Strategist model. Surprisingly, Palantir publishes more public methodology than most AI-first companies — because their model is mature and they're recruiting against it.
+
+| Resource | What it is |
+|---|---|
+| [**A Day in the Life of a Palantir Forward Deployed Software Engineer**](https://blog.palantir.com/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1) | First-person account of the role and process. |
+| [**A Day in the Life of a Palantir Deployment Strategist**](https://blog.palantir.com/a-day-in-the-life-of-a-palantir-deployment-strategist-951cb59a5a96) | First-person account of the DS role ("Echo"). |
+| [**Foundry Program Overview**](https://www.palantir.com/docs/foundry/foundry-adoption/program-overview) | Official methodology for the customer program structure (CoE, governance, roles). |
+| [**Foundry Development Lifecycle**](https://www.palantir.com/docs/foundry/platform-overview/development-life-cycle) | Phased build methodology. |
+| **Foundry Technical Overview** (PDF) | Architecture and capabilities document. |
+| [**Guides and Workflows**](https://www.palantir.com/docs/foundry/guides-and-workflows/overview) | Official cookbook for common implementation patterns. |
+
+**The Echo/Delta terminology:** Palantir uses internal codenames — *Echo* = Deployment Strategist (product-manager flavor), *Delta* = Forward Deployed Software Engineer (technical flavor). Both roles blur into PM/eng/strategist hybrid in practice.
+
+**Center of Excellence (CoE) handoff:** Palantir publishes the maturity curve explicitly — Palantir's team builds and runs in production first; then helps the customer stand up an internal CoE; then transitions ownership. This is the **"champion-out" pattern** that lets FDE scale sub-linearly.
+
+---
+
+## Sierra
+
+Smaller public footprint, but their pricing-as-positioning material is the canonical reference for outcome-based AI agent commercials.
+
+| Resource | What it is |
+|---|---|
+| [**Outcome-Based Pricing for AI Agents**](https://sierra.ai/blog/outcome-based-pricing-for-ai-agents) | Sierra's public framing of why they price on resolved outcomes. |
+| **Customer stories** | WeightWatchers, SiriusXM, Sonos, ADT — all with outcome-volume framings. |
+| **Agent OS** | Sierra's developer-facing platform for building/optimizing agents. |
+
+**Posture:** *"we built the canonical agentic product."* Methodology is implicit in the pricing model rather than explicitly published.
+
+---
+
+## Decagon
+
+| Resource | What it is |
+|---|---|
+| [**Customer Stories**](https://decagon.ai/case-studies) | Chime, Duolingo, ClassPass, Hunter Douglas. |
+| **Pricing transparency** | Per-conversation + per-resolution hybrid. |
+
+**Notable customer outcomes:**
+
+- **Chime:** 70% chat and voice resolution
+- **Duolingo:** 80% deflection rate
+- **ClassPass:** 10× deflection increase
+- **Hunter Douglas:** $1M in revenue attributed to AI-handled conversations
+
+These are the most-quoted reference numbers in the AI agent category. Worth knowing by heart.
+
+---
+
+## Cresta
+
+Published more operationally-focused material than most.
+
+| Resource | What it is |
+|---|---|
+| [**Cresta AI Agent / Agent Operations Center**](https://cresta.com/ai-agent) | Live oversight model — AI conversations monitored by Cresta tooling, flagged for human intervention. |
+| [**Decagon vs Sierra vs Cresta Buyer Guide**](https://cresta.com/guides/decagon-vs-sierra) | Cresta's own competitive positioning document. |
+
+**Notable:** Cresta is closest among the AI agent vendors to publishing CS-style operational content. Their Agent Operations Center is essentially a "post-go-live" framework with a public name.
+
+---
+
+## Dust, Mistral, Glean
+
+Smaller public footprints. The most informative artifacts are their job postings, which reveal the staffing model:
+
+| Company | Most-informative public artifact | What it tells you |
+|---|---|---|
+| **Dust** | [Founding AI Deployment Strategist, Post-Sales](https://jobs.ashbyhq.com/dust/c97de2e4-93e8-4c24-b237-61ff3b16ce3c) | Explicit Post-Sales label; DS hybrid role. |
+| **Mistral** | AI Deployment Strategist, Cybersecurity (Paris, April 2026) | Vertical-organized DS function. |
+| **Glean** | [Customer stories + Gleanvocates community](https://www.glean.com/resources/customer-stories) | Best-documented community-led adoption play among AI-first companies. |
+
+---
+
+## Salesforce Agentforce — the hybrid case
+
+Salesforce is the most prolific publisher of agentic deployment material among legacy SaaS companies — because they have the most to defend.
+
+| Resource | What it is |
+|---|---|
+| [**From Pilot to Playbook: First Year Using Agentforce**](https://www.salesforce.com/news/stories/first-year-agentforce-customer-zero/?bc=OTH) | Salesforce's own "Customer Zero" account of deploying internally. |
+| [**Agentforce Contact Center 100 program**](https://www.nojitter.com/ai-automation/salesforce-launches-agentforce-contact-center) | The first 100 enterprise customers get embedded engineering + executive support to scale fast. |
+| [**Get Ready for Agentforce** (Trailhead)](https://trailhead.salesforce.com/content/learn/trails/get-ready-for-agentforce) | Salesforce's training path. |
+| [**Agentforce in Action: Customer Success Stories**](https://www.salesforce.com/news/stories/agentforce-customer-success-stories/) | Reference customer outcomes. |
+
+**Notable:** Salesforce explicitly used **forward-deployed engineers** for the Agentforce Contact Center 100 program — a hybrid SaaS company adopting the AI-first deployment model for their AI-first product line. That's the most direct evidence that the FDE model is migrating into legacy SaaS, not just defining new entrants.
+
+---
+
+## Intercom — Fin / hybrid case
+
+The richest public CS-adjacent content from any AI-first-leaning company.
+
+| Resource | What it is |
+|---|---|
+| [**2026 Customer Service Transformation Report**](https://www.intercom.com/customer-transformation-report) | Survey of 3,000+ leaders, role evolution, AI adoption data. |
+| [**Inside the AI-First Support Team**](https://www.intercom.com/blog/inside-the-ai-first-support-team/) | The 4 new roles: AI Ops Lead, Knowledge Manager, Conversation Designer, Support Automation Specialist. |
+| [**The AI Deployment Gap Is Widening**](https://www.intercom.com/blog/customer-service-transformation-report-2026/) | Why CS leaders are losing time. |
+| [**How AI Is Evolving Support Careers**](https://www.intercom.com/blog/how-ai-is-evolving-support-careers/) | Practitioner perspective on role transitions. |
+| [**Automating 81% of Customer Service**](https://www.intercom.com/blog/automate-customer-service-while-improving-customer-experience/) | Specific customer transformation account. |
+
+**This is the closest thing in the industry to a published "CS in the AI era" playbook.** Intercom has both the incentive and the product to take this position publicly. Worth reading in full.
+
+---
+
+## The pattern across the industry
+
+If you organize the public CS material by company type:
+
+| Company Type | What they publish about CS/deployment |
+|---|---|
+| **Pure AI-first model providers** (Anthropic, OpenAI) | Engineering deployment guides, eval methodology, enterprise transformation frameworks. *Not* CS playbooks. |
+| **AI agent vendors** (Sierra, Decagon, Cresta) | Pricing-as-positioning, customer outcome case studies, Agent Operations frameworks. Light on CS playbook content. |
+| **Enterprise platform vendors with FDE practice** (Palantir) | Mature role descriptions, methodology (CoE handoff), program structure. Most public methodology. |
+| **Legacy SaaS adding agentic** (Salesforce Agentforce, Intercom Fin, ServiceNow) | The most CS-flavored content. *"How to transition your CS team to AI"* is their content wedge — because their customers are exactly asking this. |
+| **AI-native SMB/mid-market** (Dust, Glean) | Job postings reveal staffing model; public case studies show outcomes. |
+
+---
+
+## Templates and downloadable resources — what actually exists publicly
+
+Most "templates" you'll find from AI-first companies are:
+
+1. **Eval rubric examples** — Anthropic's evals guide, OpenAI's evals documentation.
+2. **Pricing calculators** — Sierra and Decagon publish per-resolution math.
+3. **Implementation accelerators** — gated, customer-only (Salesforce Trailhead is the most accessible exception).
+4. **Onboarding flows for the model itself** — API quickstarts, not customer-onboarding playbooks.
+
+### What's notably absent publicly
+
+- Pre-kickoff customer intake forms
+- Deployment SOWs for AI agents
+- Eval co-design templates (customer-facing)
+- Outcome-attribution worksheets
+- Renewal review templates for outcome-priced products
+- Quality regression incident playbooks
+- Org-design frameworks for AI-first post-sales
+
+**This is the template inventory backlog.** Each one is a downloadable artifact that doesn't exist anywhere else publicly — and that we'll be releasing here, one at a time, alongside this working notes series.
+
+---
+
+## Full source list
+
+- [Anthropic — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents)
+- [Anthropic — Enterprise AI Transformation Guide](https://resources.anthropic.com/enterprise-ai-transformation-guide)
+- [Anthropic Enterprise Ebook (PDF)](https://assets.anthropic.com/m/66daaa23018ab0fd/original/Anthropic-enterprise-ebook-digital.pdf)
+- [Anthropic — Claude for Financial Industry (PDF)](https://www-cdn.anthropic.com/files/4zrzovbb/website/34783bca828d7fa331f515ced26f1c9232151b2c.pdf)
+- [Anthropic — Demystifying Evals](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
+- [OpenAI — Klarna case study](https://openai.com/index/klarna/)
+- [Palantir — Foundry Program Overview](https://www.palantir.com/docs/foundry/foundry-adoption/program-overview)
+- [Palantir — Foundry Development Lifecycle](https://www.palantir.com/docs/foundry/platform-overview/development-life-cycle)
+- [Palantir Blog — FDSE Day in the Life](https://blog.palantir.com/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1)
+- [Palantir Blog — DS Day in the Life](https://blog.palantir.com/a-day-in-the-life-of-a-palantir-deployment-strategist-951cb59a5a96)
+- [Sierra — Outcome-Based Pricing](https://sierra.ai/blog/outcome-based-pricing-for-ai-agents)
+- [Decagon — Customer Stories](https://decagon.ai/case-studies)
+- [Cresta — AI Agent / Agent Operations Center](https://cresta.com/ai-agent)
+- [Cresta — Decagon vs Sierra vs Cresta buyer guide](https://cresta.com/guides/decagon-vs-sierra)
+- [Dust — Founding AI Deployment Strategist, Post-Sales](https://jobs.ashbyhq.com/dust/c97de2e4-93e8-4c24-b237-61ff3b16ce3c)
+- [Glean — Customer Stories](https://www.glean.com/resources/customer-stories)
+- [Salesforce — First Year with Agentforce (Customer Zero)](https://www.salesforce.com/news/stories/first-year-agentforce-customer-zero/?bc=OTH)
+- [Salesforce — Agentforce in Action](https://www.salesforce.com/news/stories/agentforce-customer-success-stories/)
+- [Salesforce — Get Ready for Agentforce Trailhead](https://trailhead.salesforce.com/content/learn/trails/get-ready-for-agentforce)
+- [Intercom — 2026 Customer Service Transformation Report](https://www.intercom.com/customer-transformation-report)
+- [Intercom — Inside the AI-First Support Team](https://www.intercom.com/blog/inside-the-ai-first-support-team/)
+- [Intercom — The AI Deployment Gap Is Widening](https://www.intercom.com/blog/customer-service-transformation-report-2026/)
+- [Intercom — How AI Is Evolving Support Careers](https://www.intercom.com/blog/how-ai-is-evolving-support-careers/)
+
+---
+
+*This inventory will be kept updated as new resources are published. If you spot a missing one — or run post-sales at an AI-first company and want to add yours to the list — [let me know](/contact).*
+
+*Related reading: [What Customer Success Means at AI-First Companies — Notes from May 2026](/playbooks/cs-at-ai-first-companies)*
