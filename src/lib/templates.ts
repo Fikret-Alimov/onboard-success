@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 
+export type TemplateAssetType = "workflow" | "pdf";
+
 export interface TemplateMeta {
   id: string;
   name: string;
@@ -15,6 +17,12 @@ export interface TemplateMeta {
   version: string;
   lastUpdated: string;
   downloads: number;
+  // Optional — defaults to "workflow" (n8n workflow.json) for back compat.
+  assetType?: TemplateAssetType;
+  // Static path under /public for non-workflow assets (e.g. "/downloads/foo.pdf").
+  assetPath?: string;
+  // Filename used in the Content-Disposition header on download.
+  downloadFilename?: string;
 }
 
 export interface TemplateDetail extends TemplateMeta {

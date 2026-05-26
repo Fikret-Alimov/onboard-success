@@ -1,0 +1,18 @@
+{
+  "id": "hybrid-expansion-playbook",
+  "name": "The Hybrid Expansion Playbook v1.0",
+  "description": "The operational playbook for hybrid SaaS post-sales teams: how to expand existing license customers onto a new agentic product line. Four moments, A–G post-demo checklist, 30/60/90 cadence.",
+  "longDescription": "Hybrid SaaS companies — Salesforce, Intercom, HubSpot, Adobe, ServiceNow and the next tier down — are all running the same motion in 2026: take an existing license-based customer and expand them onto a new agentic product. Almost nothing has been written publicly about how to actually run this post-sales motion. This playbook is the first attempt. Covers the four moments that decide whether the expansion lands: use-case identification (mining existing data, not demos), six-role stakeholder mapping, the demo-to-action commitment moment with the A–G checklist, and the Land → Prove → Tell → Travel → Expand 90-day cycle. Includes a consolidated 30/60/90-day cadence and a use-case priority matrix. 17 pages, written from the operator's seat.",
+  "category": "Playbooks",
+  "platform": "PDF",
+  "difficulty": "Strategic",
+  "setupTime": "30 minutes to read",
+  "integrations": ["Hybrid SaaS", "Agentic AI", "Account Expansion", "Outcome-Based Pricing"],
+  "tier": "free",
+  "version": "1.0.0",
+  "lastUpdated": "2026-05-26",
+  "downloads": 0,
+  "assetType": "pdf",
+  "assetPath": "/downloads/hybrid-expansion-playbook-v1.pdf",
+  "downloadFilename": "hybrid-expansion-playbook-v1.pdf"
+}
