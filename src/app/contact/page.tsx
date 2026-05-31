@@ -19,6 +19,7 @@ function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [formMountedAt, setFormMountedAt] = useState<number>(0);
 
   const type = searchParams.get("type") || "";
   const integratorParam = searchParams.get("integrator") || "";
@@ -29,6 +30,7 @@ function ContactForm() {
   const [listing, setListing] = useState("");
 
   useEffect(() => {
+    setFormMountedAt(Date.now());
     if (type === "quote") {
       setCategory("Request a Quote");
       setIntegrator(integratorParam);
@@ -59,6 +61,8 @@ function ContactForm() {
           role: data.role || null,
           integrator: data.integrator || null,
           listing: data.listing || null,
+          website: data.website || "",
+          ts: formMountedAt,
         }),
       });
 
@@ -95,6 +99,27 @@ function ContactForm() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Honeypot — hidden from real users, bots fill everything */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              left: "-10000px",
+              top: "auto",
+              width: "1px",
+              height: "1px",
+              overflow: "hidden",
+            }}
+          >
+            <label htmlFor="website">Website (leave blank)</label>
+            <input
+              type="text"
+              id="website"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
           {error && (
             <div className="text-sm px-4 py-3 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">
               {error}
