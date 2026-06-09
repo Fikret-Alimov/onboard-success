@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Scheduled blog drafts (promoted via cron when QC'd)
+content/posts/_scheduled/
